@@ -1,0 +1,95 @@
+# Flux d'usuari — v1 (Eina de gestió interna per a coworkings)
+
+## Actors
+Un únic rol: **admin/empleat del coworking**. Sense jerarquies de permisos. No hi ha compte de client — tots els clients es gestionen com a dades (directori) dins del tenant, no com a usuaris amb login.
+
+Multitenant: cada coworking és un tenant amb les dades completament aïllades de la resta.
+
+---
+
+## 1. Accés
+
+- Login amb email + contrasenya
+- En entrar, l'usuari accedeix al Dashboard del seu tenant
+
+---
+
+## 2. Dashboard
+
+Pantalla inicial amb:
+- Resum ràpid de reserves d'avui i de la setmana
+- Accessos directes a: **Nova reserva**, **Calendari**, **Recursos**, **Clients**, **Factures**
+
+---
+
+## 3. Gestió de recursos
+
+Prerequisit abans de poder reservar res.
+
+- Llistat d'espais/recursos (sala, taula, despatx...)
+- Alta / edició / baixa, amb nom, capacitat i preu (€/hora o €/dia)
+
+---
+
+## 4. Creació d'una reserva
+
+### 4.1 Selecció de recurs i client
+
+**Recurs**: llista amb cerca ràpida, mostrant nom + capacitat + preu (p. ex. "Sala Blava — 6 persones — 15 €/h"). Filtrable per tipus si n'hi ha molts. En triar-lo, es mostra de seguida la seva disponibilitat.
+
+**Client**:
+- *Existent*: cerca amb autocompletat per nom, email o NIF, consultant el directori de clients ja guardats. Autoemplena les dades fiscals per a la factura.
+- *Nou*: botó "Crear client nou" → formulari inline (nom, NIF/CIF, email, adreça), sense sortir de la pantalla. Es desa al directori per a futures reserves.
+
+### 4.2 Puntual o recurrent
+
+Interruptor a dalt del formulari: **Puntual** / **Recurrent**.
+
+- **Puntual**: data + franja horària (inici i fi).
+- **Recurrent**: apareixen tres camps addicionals:
+  - Freqüència (p. ex. "cada dilluns", "cada dimarts i dijous")
+  - Data d'inici
+  - Condició de final: data concreta, nombre de sessions, o "fins a cancel·lació" (abonament obert)
+
+  El sistema genera automàticament totes les ocurrències i les mostra en una previsualització abans de confirmar (p. ex. "13 ocurrències generades: 1 set, 8 set, 15 set...").
+
+  També apareix el selector de model de preu: **preu per ocurrència** (es multiplica) o **abonament fix mensual** (independent del nombre d'ocurrències).
+
+### 4.3 Validació de disponibilitat
+
+El sistema comprova totes les ocurrències generades (una si és puntual, moltes si és recurrent) contra el calendari existent.
+
+- Si **alguna** ocurrència té conflicte → no es crea res. Es torna al pas anterior mostrant exactament quines dates xoquen, perquè l'admin ajusti l'hora, el recurs, o exclogui aquella data. *(Comportament "tot o res" per defecte — més segur que crear-ne només algunes.)*
+- Si no hi ha conflictes → es continua.
+
+### 4.4 Confirmació
+
+- Es desa la reserva (amb el patró de recurrència si n'hi ha) i totes les ocurrències queden marcades com a "ocupat" al calendari.
+- Si el client era nou, queda desat al directori.
+- Es genera **una factura per cada ocurrència**, amb numeració correlativa pel tenant, desglossament d'IVA, i estat inicial **pendent**. L'import surt del model de preu triat (fix per ocurrència, o abonament mensual dividit entre les ocurrències del mes).
+- Missatge d'èxit amb resum ("Reserva creada — 13 ocurrències, 13 factures generades") i accés directe al calendari o a les factures acabades de crear.
+- **No s'envia cap email automàtic** al client — l'enviament de la factura és sempre una acció manual de l'staff. (Enviament automàtic = fase 2.)
+
+---
+
+## 5. Cancel·lació d'una reserva
+
+1. **Accés**: des del calendari o la llista de reserves, l'admin obre una reserva existent i en veu el detall (recurs, client, dates, preu, factures associades i el seu estat).
+
+2. **Acció "Cancel·lar"**:
+   - Si és **puntual**: confirmació directa ("Segur que vols cancel·lar aquesta reserva?").
+   - Si és **recurrent**: el sistema pregunta l'abast — **"Només aquesta ocurrència"** o **"Aquesta i totes les futures"**. Les ocurrències passades mai es toquen.
+
+3. **Efecte sobre el calendari**: les ocurrències cancel·lades alliberen el slot immediatament (torna a estar disponible per a noves reserves).
+
+4. **Efecte sobre la facturació** — aquí cal una regla clara per motius legals (numeració correlativa obligatòria a Espanya, no es poden eliminar factures ja emeses):
+   - Factura en estat **pendent** (encara no pagada) de l'ocurrència cancel·lada → es marca com **anul·lada**. No es reutilitza ni s'elimina el número: es manté al registre amb aquest estat.
+   - Factura ja **pagada** → **no es cancel·la automàticament**. El sistema avisa que cal gestionar-ho manualment (reemborsament / factura rectificativa). Aquest flux complet de rectificació queda per a fase 2; en v1 només es deixa constància amb una nota a la reserva.
+
+5. **Confirmació**: missatge resum de què s'ha cancel·lat i quines factures han quedat anul·lades.
+
+---
+
+## Notes per al següent pas (model de dades)
+
+Aquest flux ja deixa clares les entitats principals que caldrà definir: **Tenant, Usuari (staff), Recurs, Client, Reserva (amb patró de recurrència opcional), Ocurrència, Factura**. La relació Reserva → Ocurrència → Factura (1 factura per ocurrència) i l'estat d'anul·lació de factures són els punts que més afecten el disseny del model.
