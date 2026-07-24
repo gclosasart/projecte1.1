@@ -108,7 +108,7 @@ export default async function CalendariPage({
               type="month"
               name="mes"
               defaultValue={`${any}-${String(mesIdx + 1).padStart(2, "0")}`}
-              className="rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm text-zinc-950 outline-none focus:border-zinc-950 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm text-zinc-950 outline-none focus:border-indigo-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <button
               type="submit"
@@ -148,7 +148,7 @@ export default async function CalendariPage({
             {DIES.map((nom) => (
               <div
                 key={nom}
-                className="border-b border-black/10 bg-zinc-950 px-2 py-2 text-center text-xs font-semibold text-white dark:border-white/10 dark:bg-zinc-50 dark:text-zinc-950"
+                className="border-b border-black/10 bg-indigo-600 px-2 py-2 text-center text-xs font-semibold text-white dark:border-white/10 dark:bg-indigo-500 dark:text-white"
               >
                 {nom}
               </div>
@@ -172,7 +172,7 @@ export default async function CalendariPage({
                   <span
                     className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-xs ${
                       esAvui
-                        ? "bg-zinc-950 font-semibold text-white dark:bg-zinc-50 dark:text-zinc-950"
+                        ? "bg-indigo-600 font-semibold text-white dark:bg-indigo-500 dark:text-white"
                         : dinsDelMes
                           ? "text-zinc-700 dark:text-zinc-300"
                           : "text-zinc-400 dark:text-zinc-600"

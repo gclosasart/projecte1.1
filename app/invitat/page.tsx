@@ -59,7 +59,7 @@ export default function InvitatPage() {
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
               required
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-zinc-950 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
 
@@ -74,7 +74,7 @@ export default function InvitatPage() {
               onChange={(e) => setConfirmacio(e.target.value)}
               autoComplete="new-password"
               required
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-zinc-950 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
 
@@ -83,7 +83,7 @@ export default function InvitatPage() {
           <button
             type="submit"
             disabled={pending}
-            className="mt-2 rounded-full bg-zinc-950 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
+            className="mt-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
           >
             {pending ? "Desant..." : "Entra"}
           </button>
