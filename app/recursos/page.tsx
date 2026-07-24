@@ -21,7 +21,7 @@ export default async function RecursosPage() {
     .returns<Recurs[]>();
 
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center justify-between border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <div className="flex items-center gap-4">
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
@@ -31,7 +31,7 @@ export default async function RecursosPage() {
         </div>
         <Link
           href="/recursos/nou"
-          className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+          className="rounded-full bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
           Nou recurs
         </Link>

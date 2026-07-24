@@ -36,7 +36,7 @@ export function RecursForm({
           required
           defaultValue={valorsInicials?.nom}
           placeholder="Sala Blava"
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
         />
       </div>
 
@@ -51,7 +51,7 @@ export function RecursForm({
           min={0}
           step={1}
           defaultValue={valorsInicials?.capacitat ?? undefined}
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
         />
       </div>
 
@@ -68,7 +68,7 @@ export function RecursForm({
             step="0.01"
             required
             defaultValue={valorsInicials?.preu}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
           />
         </div>
 
@@ -80,7 +80,7 @@ export function RecursForm({
             id="unitat_preu"
             name="unitat_preu"
             defaultValue={valorsInicials?.unitat_preu ?? "hora"}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-indigo-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
           >
             <option value="hora">€/hora</option>
             <option value="dia">€/dia</option>
@@ -93,7 +93,7 @@ export function RecursForm({
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+        className="mt-2 rounded-full bg-sky-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-600 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
       >
         {pending ? "Desant..." : textBoto}
       </button>

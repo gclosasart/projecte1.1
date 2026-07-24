@@ -77,7 +77,7 @@ export default async function DetallReservaPage({
   const esRecurrent = reserva.tipus === "recurrent";
 
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <Link
           href="/reserves/gestio"

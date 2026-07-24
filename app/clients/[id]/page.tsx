@@ -24,7 +24,7 @@ export default async function EditarClientPage({
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center bg-zinc-50 py-10 dark:bg-black">
+    <div className="flex flex-1 flex-col items-center bg-sky-50 py-10 dark:bg-black">
       <div className="w-full max-w-sm rounded-xl border border-black/10 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-950">
         <Link href="/clients" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
           ← Clients

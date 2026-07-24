@@ -95,7 +95,7 @@ export default async function DashboardPage() {
   );
 
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center justify-between border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <div>
           <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
@@ -143,7 +143,7 @@ export default async function DashboardPage() {
               <Link
                 key={e.href}
                 href={e.href}
-                className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+                className="rounded-full bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
               >
                 {e.label}
               </Link>
