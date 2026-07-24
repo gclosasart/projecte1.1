@@ -13,7 +13,7 @@ export default function ReservesPage() {
       <main className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-6 py-8 sm:flex-row sm:items-start">
         <Link
           href="/reserves/nova"
-          className="flex flex-1 flex-col gap-1 rounded-xl border border-black/10 bg-white p-6 transition-colors hover:border-sky-500 dark:border-white/10 dark:bg-zinc-950 dark:hover:border-indigo-500"
+          className="flex flex-1 flex-col gap-1 rounded-xl border border-black/10 bg-white p-6 transition-colors hover:border-sky-600 dark:border-white/10 dark:bg-zinc-950 dark:hover:border-indigo-500"
         >
           <span className="text-base font-semibold text-zinc-950 dark:text-zinc-50">Nova reserva</span>
           <span className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -23,7 +23,7 @@ export default function ReservesPage() {
 
         <Link
           href="/reserves/gestio"
-          className="flex flex-1 flex-col gap-1 rounded-xl border border-black/10 bg-white p-6 transition-colors hover:border-sky-500 dark:border-white/10 dark:bg-zinc-950 dark:hover:border-indigo-500"
+          className="flex flex-1 flex-col gap-1 rounded-xl border border-black/10 bg-white p-6 transition-colors hover:border-sky-600 dark:border-white/10 dark:bg-zinc-950 dark:hover:border-indigo-500"
         >
           <span className="text-base font-semibold text-zinc-950 dark:text-zinc-50">Gestiona reserves</span>
           <span className="text-sm text-zinc-500 dark:text-zinc-400">

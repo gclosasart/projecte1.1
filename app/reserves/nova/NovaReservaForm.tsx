@@ -97,7 +97,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
         </p>
         <Link
           href="/reserves/gestio"
-          className="mt-4 inline-block rounded-full bg-sky-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-600 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+          className="mt-4 inline-block rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
           Veure les reserves
         </Link>
@@ -123,7 +123,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
             name="recurs_id"
             value={recursId}
             onChange={(e) => setRecursId(e.target.value)}
-            className="mt-2 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-2 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {recursos.map((r) => (
               <option key={r.id} value={r.id}>
@@ -141,14 +141,14 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
           <button
             type="button"
             onClick={() => setClientMode("existent")}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "existent" ? "bg-sky-500 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "existent" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
             Client existent
           </button>
           <button
             type="button"
             onClick={() => setClientMode("nou")}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "nou" ? "bg-sky-500 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "nou" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
             Crear client nou
           </button>
@@ -163,7 +163,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
               placeholder="Cerca per nom, email o NIF..."
               value={clientQuery}
               onChange={(e) => setClientQuery(e.target.value)}
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <div className="max-h-40 overflow-y-auto rounded-lg border border-black/10 dark:border-white/10">
               {clientsFiltrats.length === 0 ? (
@@ -174,7 +174,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                     key={c.id}
                     type="button"
                     onClick={() => setClientId(c.id)}
-                    className={`block w-full px-3 py-2 text-left text-sm ${clientId === c.id ? "bg-sky-500 text-white dark:bg-indigo-500 dark:text-white" : "hover:bg-sky-50 dark:hover:bg-zinc-900"}`}
+                    className={`block w-full px-3 py-2 text-left text-sm ${clientId === c.id ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "hover:bg-sky-50 dark:hover:bg-zinc-900"}`}
                   >
                     {c.nom} {c.nif ? `· ${c.nif}` : ""} {c.email ? `· ${c.email}` : ""}
                   </button>
@@ -189,23 +189,23 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
               name="client_nom"
               placeholder="Nom"
               required={clientMode === "nou"}
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_nif"
               placeholder="NIF/CIF"
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_email"
               type="email"
               placeholder="Email"
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_adreca"
               placeholder="Adreça"
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         )}
@@ -219,14 +219,14 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
           <button
             type="button"
             onClick={() => setTipus("puntual")}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "puntual" ? "bg-sky-500 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "puntual" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
             Puntual
           </button>
           <button
             type="button"
             onClick={() => setTipus("recurrent")}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "recurrent" ? "bg-sky-500 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "recurrent" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
             Recurrent
           </button>
@@ -244,7 +244,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
               value={dataInici}
               onChange={(e) => setDataInici(e.target.value)}
               required
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -255,7 +255,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
               value={horaInici}
               onChange={(e) => setHoraInici(e.target.value)}
               required
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -266,7 +266,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
               value={horaFi}
               onChange={(e) => setHoraFi(e.target.value)}
               required
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         </div>
@@ -279,7 +279,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                 {DIES_SETMANA.map((d) => (
                   <label
                     key={d.num}
-                    className={`cursor-pointer rounded-full px-3 py-1 text-sm ${diesSetmana.includes(d.num) ? "bg-sky-500 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+                    className={`cursor-pointer rounded-full px-3 py-1 text-sm ${diesSetmana.includes(d.num) ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
                   >
                     <input
                       type="checkbox"
@@ -427,7 +427,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
         <button
           type="submit"
           disabled={pending || recursos.length === 0}
-          className="mt-4 rounded-full bg-sky-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+          className="mt-4 rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
           {pending ? "Creant..." : "Confirma la reserva"}
         </button>

@@ -83,7 +83,7 @@ export default async function FacturesPage() {
                   <form action={marcarPagada.bind(null, f.id)}>
                     <button
                       type="submit"
-                      className="rounded-full bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+                      className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
                     >
                       Marca com a pagada
                     </button>

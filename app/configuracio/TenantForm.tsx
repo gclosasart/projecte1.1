@@ -33,7 +33,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
           type="text"
           required
           defaultValue={valorsInicials.nom_comercial}
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
@@ -47,7 +47,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
           type="text"
           defaultValue={valorsInicials.rao_social ?? undefined}
           placeholder="Per a la factura"
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
@@ -61,7 +61,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
           type="text"
           defaultValue={valorsInicials.nif ?? undefined}
           placeholder="Del coworking, no del client"
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
@@ -77,7 +77,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
           name="adreca_fiscal"
           type="text"
           defaultValue={valorsInicials.adreca_fiscal ?? undefined}
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
@@ -89,7 +89,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 self-start rounded-full bg-sky-500 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-600 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+        className="mt-2 self-start rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
       >
         {pending ? "Desant..." : "Desa els canvis"}
       </button>
