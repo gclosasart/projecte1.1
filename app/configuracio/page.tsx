@@ -1,0 +1,55 @@
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { TenantForm } from "./TenantForm";
+
+export default async function ConfiguracioPage() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("tenant_id, rol")
+    .eq("id", user!.id)
+    .single();
+
+  const potEditar = profile?.rol === "tenant_admin" || profile?.rol === "tecnic";
+
+  const { data: tenant } = profile?.tenant_id
+    ? await supabase
+        .from("tenants")
+        .select("nom_comercial, rao_social, nif, adreca_fiscal")
+        .eq("id", profile.tenant_id)
+        .single()
+    : { data: null };
+
+  return (
+    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-black">
+      <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
+        <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
+          ← Dashboard
+        </Link>
+        <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
+          Dades del coworking
+        </h1>
+      </header>
+
+      <main className="mx-auto w-full max-w-sm flex-1 px-6 py-8">
+        {!potEditar || !tenant ? (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            No tens permisos per veure aquestes dades, o el teu usuari no té cap tenant assignat.
+          </p>
+        ) : (
+          <div className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950">
+            <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+              Aquestes dades apareixen com a emissor a cada factura.
+            </p>
+            <TenantForm valorsInicials={tenant} />
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
