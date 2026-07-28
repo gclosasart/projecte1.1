@@ -1,36 +1,52 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "./actions";
+import { NotesDelDia } from "./NotesDelDia";
+import { ForecastChart } from "./ForecastChart";
 
-type OcurrenciaAmbReserva = {
+type OcurrenciaAvui = {
   id: string;
-  data: string;
   hora_inici: string;
   hora_fi: string;
+  estat: string;
   reserves: {
     recursos: { nom: string } | null;
     clients: { nom: string } | null;
   } | null;
 };
 
-const MODUL_PER_ENLLAÇ: Record<string, string> = {
-  Reserves: "reserves",
-  Calendari: "reserves",
-  Recursos: "recursos",
-  Clients: "clients",
-  Factures: "factures",
+type OcurrenciaSetmana = {
+  data: string;
+  reserves: { recurs_id: string } | null;
 };
 
-const ENLLACOS = [
-  { label: "Reserves", href: "/reserves" },
-  { label: "Calendari", href: "/calendari" },
-  { label: "Recursos", href: "/recursos" },
-  { label: "Clients", href: "/clients" },
-  { label: "Factures", href: "/factures" },
+const SECUNDARIS = [
+  { label: "Gestiona reserves", href: "/reserves/gestio", modul: "reserves" },
+  { label: "Calendari", href: "/calendari", modul: "reserves" },
+  { label: "Recursos", href: "/recursos", modul: "recursos" },
+  { label: "Clients", href: "/clients", modul: "clients" },
+  { label: "Factures", href: "/factures", modul: "factures" },
 ];
+
+const DIES_CURTS = ["dg", "dl", "dt", "dc", "dj", "dv", "ds"];
+
+const ESTAT_ESTIL: Record<string, string> = {
+  activa: "bg-sky-100 text-sky-800 dark:bg-sky-950/40 dark:text-sky-300",
+  "cancel·lada": "bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+};
+
+const FACTURA_ESTIL: Record<string, string> = {
+  pendent: "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300",
+  pagada: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
+  "anul·lada": "bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+};
 
 function toISODate(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function araHHMMSS(d: Date) {
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
 function potAccedir(rol: string, permisos: string[], modul: string) {
@@ -38,18 +54,12 @@ function potAccedir(rol: string, permisos: string[], modul: string) {
   return permisos.includes(modul);
 }
 
-function OcurrenciaItem({ oc }: { oc: OcurrenciaAmbReserva }) {
-  const recurs = oc.reserves?.recursos?.nom ?? "Recurs desconegut";
-  const client = oc.reserves?.clients?.nom ?? "Client desconegut";
+function StatTile({ valor, etiqueta }: { valor: number; etiqueta: string }) {
   return (
-    <li className="flex items-center justify-between border-b border-black/5 py-2 text-sm last:border-0 dark:border-white/5">
-      <span className="text-zinc-900 dark:text-zinc-100">
-        {recurs} — {client}
-      </span>
-      <span className="text-zinc-500 dark:text-zinc-400">
-        {oc.hora_inici.slice(0, 5)}–{oc.hora_fi.slice(0, 5)}
-      </span>
-    </li>
+    <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+      <p className="text-3xl font-semibold tabular-nums text-zinc-950 dark:text-zinc-50">{valor}</p>
+      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{etiqueta}</p>
+    </div>
   );
 }
 
@@ -62,7 +72,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("nom, rol, permisos, tenants(nom_comercial)")
+    .select("nom, rol, permisos, tenant_id, tenants(nom_comercial)")
     .eq("id", user!.id)
     .single();
 
@@ -70,29 +80,106 @@ export default async function DashboardPage() {
   const permisos = (profile?.permisos as string[] | null) ?? [];
   const tenantNom = (profile?.tenants as unknown as { nom_comercial: string } | null)
     ?.nom_comercial;
+  const potNovaReserva = potAccedir(rol, permisos, "reserves");
 
-  const avui = new Date();
+  const ara = new Date();
+  const avui = new Date(ara);
+  avui.setHours(0, 0, 0, 0);
+  const avuiISO = toISODate(avui);
+  const araStr = araHHMMSS(ara);
+
   const finSetmana = new Date(avui);
   finSetmana.setDate(avui.getDate() + 6);
-  const avuiISO = toISODate(avui);
   const finSetmanaISO = toISODate(finSetmana);
 
-  const { data: ocurrencies } = await supabase
+  // Bloc 1 i 2: ocurrències d'avui
+  const { data: ocurrenciesAvui } = await supabase
     .from("ocurrencies")
-    .select("id, data, hora_inici, hora_fi, reserves(recursos(nom), clients(nom))")
+    .select("id, hora_inici, hora_fi, estat, reserves(recursos(nom), clients(nom))")
+    .eq("data", avuiISO)
+    .order("hora_inici")
+    .returns<OcurrenciaAvui[]>();
+
+  const ocIds = (ocurrenciesAvui ?? []).map((o) => o.id);
+  const { data: facturesAvui } =
+    ocIds.length > 0
+      ? await supabase
+          .from("factures")
+          .select("id, ocurrencia_id, numero, estat")
+          .in("ocurrencia_id", ocIds)
+      : { data: [] as { id: string; ocurrencia_id: string; numero: number; estat: string }[] };
+
+  const facturaPerOc = new Map((facturesAvui ?? []).map((f) => [f.ocurrencia_id, f]));
+
+  const activesAvui = (ocurrenciesAvui ?? []).filter((o) => o.estat === "activa");
+  const comencenAvui = activesAvui.filter((o) => o.hora_inici > araStr).length;
+  const acabenAvui = activesAvui.filter((o) => o.hora_fi > araStr).length;
+  const recursosReservatsAvui = activesAvui.length;
+  const ocupatsAraMateix = activesAvui.filter(
+    (o) => o.hora_inici <= araStr && o.hora_fi > araStr,
+  ).length;
+
+  // Bloc 3: notes del dia
+  const { data: notes } = await supabase
+    .from("notes_dia")
+    .select("id, contingut, fet")
+    .eq("data", avuiISO)
+    .order("created_at");
+
+  // Bloc 4: previsió 7 dies
+  const { data: reservesNoves } = await supabase
+    .from("reserves")
+    .select("data_inici")
+    .gte("data_inici", avuiISO)
+    .lte("data_inici", finSetmanaISO);
+
+  const { data: ocurrenciesSetmana } = await supabase
+    .from("ocurrencies")
+    .select("data, reserves(recurs_id)")
     .eq("estat", "activa")
     .gte("data", avuiISO)
     .lte("data", finSetmanaISO)
-    .order("data")
-    .order("hora_inici")
-    .returns<OcurrenciaAmbReserva[]>();
+    .returns<OcurrenciaSetmana[]>();
 
-  const deAvui = ocurrencies?.filter((oc) => oc.data === avuiISO) ?? [];
-  const restaSetmana = ocurrencies?.filter((oc) => oc.data !== avuiISO) ?? [];
+  const { count: totalRecursosActius } = await supabase
+    .from("recursos")
+    .select("id", { count: "exact", head: true })
+    .eq("actiu", true);
 
-  const enllaçosVisibles = ENLLACOS.filter((e) =>
-    potAccedir(rol, permisos, MODUL_PER_ENLLAÇ[e.label]),
-  );
+  const novesPerDia = new Map<string, number>();
+  for (const r of reservesNoves ?? []) {
+    if (!r.data_inici) continue;
+    novesPerDia.set(r.data_inici, (novesPerDia.get(r.data_inici) ?? 0) + 1);
+  }
+
+  const sessionsPerDia = new Map<string, number>();
+  const recursosPerDia = new Map<string, Set<string>>();
+  for (const o of ocurrenciesSetmana ?? []) {
+    sessionsPerDia.set(o.data, (sessionsPerDia.get(o.data) ?? 0) + 1);
+    const recursId = o.reserves?.recurs_id;
+    if (recursId) {
+      const set = recursosPerDia.get(o.data) ?? new Set<string>();
+      set.add(recursId);
+      recursosPerDia.set(o.data, set);
+    }
+  }
+
+  const diesForecast = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(avui);
+    d.setDate(avui.getDate() + i);
+    const iso = toISODate(d);
+    const label = `${DIES_CURTS[d.getDay()]} ${d.getDate()}`;
+    const ocupacioPercent =
+      totalRecursosActius && totalRecursosActius > 0
+        ? Math.round(((recursosPerDia.get(iso)?.size ?? 0) / totalRecursosActius) * 100)
+        : null;
+    return {
+      label,
+      comencen: novesPerDia.get(iso) ?? 0,
+      sessions: sessionsPerDia.get(iso) ?? 0,
+      ocupacioPercent,
+    };
+  });
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
@@ -133,57 +220,139 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-6 py-8">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10">
+        {/* Acció principal + navegació secundària */}
+        <section className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
+              Bon dia{profile?.nom ? `, ${profile.nom}` : ""}
+            </h1>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              Aquesta és la situació d&apos;avui al teu coworking.
+            </p>
+          </div>
+          {potNovaReserva && (
+            <Link
+              href="/reserves/nova"
+              className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
+            >
+              + Nova reserva
+            </Link>
+          )}
+        </section>
+
+        <nav className="-mt-6 flex flex-wrap gap-2">
+          {SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => (
+            <Link
+              key={e.href}
+              href={e.href}
+              className="rounded-full border border-black/10 px-3.5 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-sky-600 hover:text-sky-700 dark:border-white/10 dark:text-zinc-400 dark:hover:border-sky-500 dark:hover:text-sky-400"
+            >
+              {e.label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* Bloc 1: situació d'avui */}
         <section>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Accessos directes
+            Situació d&apos;avui
           </h2>
-          <div className="flex flex-wrap gap-3">
-            {enllaçosVisibles.map((e) => (
-              <Link
-                key={e.href}
-                href={e.href}
-                className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
-              >
-                {e.label}
-              </Link>
-            ))}
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <StatTile valor={comencenAvui} etiqueta="Reserves que comencen" />
+            <StatTile valor={acabenAvui} etiqueta="Reserves que acaben" />
+            <StatTile valor={recursosReservatsAvui} etiqueta="Recursos reservats avui" />
+            <StatTile valor={ocupatsAraMateix} etiqueta="Ocupats ara mateix" />
           </div>
         </section>
 
-        <div className="grid gap-6 sm:grid-cols-2">
-          <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-            <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-              Reserves d&apos;avui
-            </h2>
-            {deAvui.length === 0 ? (
-              <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
-                Cap reserva avui.
-              </p>
-            ) : (
-              <ul className="mt-3">
-                {deAvui.map((oc) => (
-                  <OcurrenciaItem key={oc.id} oc={oc} />
-                ))}
-              </ul>
-            )}
-          </section>
+        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr]">
+          <div className="flex flex-col gap-10">
+            {/* Bloc 2: taula de reserves d'avui */}
+            <section>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                Reserves d&apos;avui
+              </h2>
+              {!ocurrenciesAvui || ocurrenciesAvui.length === 0 ? (
+                <div className="rounded-xl border border-black/10 bg-white p-8 text-center dark:border-white/10 dark:bg-zinc-950">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Cap reserva per avui.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-zinc-950">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-black/10 text-left text-xs uppercase tracking-wide text-zinc-500 dark:border-white/10 dark:text-zinc-400">
+                        <th className="px-4 py-3 font-medium">Client</th>
+                        <th className="px-4 py-3 font-medium">Recurs</th>
+                        <th className="px-4 py-3 font-medium">Hora</th>
+                        <th className="px-4 py-3 font-medium">Estat</th>
+                        <th className="px-4 py-3 font-medium">Factura</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ocurrenciesAvui.map((oc) => {
+                        const factura = facturaPerOc.get(oc.id);
+                        return (
+                          <tr
+                            key={oc.id}
+                            className="border-b border-black/5 last:border-0 dark:border-white/5"
+                          >
+                            <td className="px-4 py-3 text-zinc-900 dark:text-zinc-100">
+                              {oc.reserves?.clients?.nom ?? "—"}
+                            </td>
+                            <td className="px-4 py-3 text-zinc-900 dark:text-zinc-100">
+                              {oc.reserves?.recursos?.nom ?? "—"}
+                            </td>
+                            <td className="px-4 py-3 tabular-nums text-zinc-500 dark:text-zinc-400">
+                              {oc.hora_inici.slice(0, 5)}–{oc.hora_fi.slice(0, 5)}
+                            </td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={`rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[oc.estat] ?? ""}`}
+                              >
+                                {oc.estat}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              {factura ? (
+                                <Link
+                                  href="/factures"
+                                  className={`rounded-full px-2 py-0.5 text-xs font-medium hover:underline ${FACTURA_ESTIL[factura.estat] ?? ""}`}
+                                >
+                                  #{factura.numero}
+                                </Link>
+                              ) : (
+                                <span className="text-zinc-400 dark:text-zinc-600">—</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
 
-          <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-            <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-              Resta de la setmana
+            {/* Bloc 4: previsió */}
+            <section>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                Previsió dels propers 7 dies
+              </h2>
+              <div className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950">
+                <ForecastChart dies={diesForecast} />
+              </div>
+            </section>
+          </div>
+
+          {/* Bloc 3: notes del dia */}
+          <section>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              Notes del dia
             </h2>
-            {restaSetmana.length === 0 ? (
-              <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
-                Cap reserva més aquesta setmana.
-              </p>
-            ) : (
-              <ul className="mt-3">
-                {restaSetmana.map((oc) => (
-                  <OcurrenciaItem key={oc.id} oc={oc} />
-                ))}
-              </ul>
-            )}
+            <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+              <NotesDelDia notes={notes ?? []} />
+            </div>
           </section>
         </div>
       </main>

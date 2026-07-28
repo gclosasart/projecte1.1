@@ -21,7 +21,7 @@ type Factura = {
 
 const ESTAT_ESTIL: Record<string, string> = {
   pendent:
-    "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
+    "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300",
   pagada:
     "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
   "anul·lada":

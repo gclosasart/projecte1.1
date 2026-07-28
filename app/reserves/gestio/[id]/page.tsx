@@ -28,7 +28,7 @@ const ESTAT_RESERVA_ESTIL: Record<string, string> = {
 
 // Estat de pagament de la FACTURA — verd només vol dir "pagada", no "reserva activa".
 const ESTAT_FACTURA_ESTIL: Record<string, string> = {
-  pendent: "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
+  pendent: "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300",
   pagada: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
   "anul·lada": "bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
 };
@@ -109,7 +109,7 @@ export default async function DetallReservaPage({
           </p>
 
           {reserva.notes && (
-            <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
+            <div className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-300">
               {reserva.notes.split("\n").map((linia: string, i: number) => (
                 <p key={i}>{linia}</p>
               ))}

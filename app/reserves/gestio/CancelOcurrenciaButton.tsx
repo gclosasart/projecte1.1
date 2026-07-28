@@ -29,7 +29,7 @@ export function CancelOcurrenciaButton({
       <div className="flex flex-col items-end gap-1">
         <span className="text-sm text-emerald-700 dark:text-emerald-400">Cancel·lada.</span>
         {resultat.avisos && (
-          <div className="max-w-64 rounded-lg border border-amber-300 bg-amber-50 p-2 text-xs text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
+          <div className="max-w-64 rounded-lg border border-red-300 bg-red-50 p-2 text-xs text-red-800 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-300">
             {resultat.avisos.map((a, i) => (
               <p key={i}>{a}</p>
             ))}

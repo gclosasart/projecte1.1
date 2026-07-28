@@ -415,7 +415,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
         )}
 
         {state.conflictes && state.conflictes.length > 0 && (
-          <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
+          <div className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-300">
             No es pot crear la reserva: hi ha conflicte d&apos;horari a {state.conflictes.join(", ")}.
             Ajusta el recurs, l&apos;hora o exclou aquestes dates.
           </div>

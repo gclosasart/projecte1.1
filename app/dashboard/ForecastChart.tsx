@@ -1,0 +1,57 @@
+type DiaForecast = {
+  label: string;
+  comencen: number;
+  sessions: number;
+  ocupacioPercent: number | null;
+};
+
+export function ForecastChart({ dies }: { dies: DiaForecast[] }) {
+  const maxVal = Math.max(1, ...dies.map((d) => Math.max(d.comencen, d.sessions)));
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-sky-600" aria-hidden />
+          Reserves noves
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-sky-200 dark:bg-sky-900" aria-hidden />
+          Sessions del dia
+        </span>
+      </div>
+
+      <div className="flex items-end justify-between gap-2 border-b border-zinc-300 pb-0 dark:border-zinc-700">
+        {dies.map((d) => (
+          <div key={d.label} className="flex flex-1 flex-col items-center gap-1.5">
+            <div className="flex h-32 items-end gap-1">
+              <div
+                className="group/bar relative w-3.5 rounded-t bg-sky-600"
+                style={{ height: `${(d.comencen / maxVal) * 100}%`, minHeight: d.comencen > 0 ? "4px" : "0" }}
+              >
+                <span className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-900 px-1.5 py-0.5 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover/bar:opacity-100 dark:bg-zinc-100 dark:text-zinc-900">
+                  {d.comencen} noves
+                </span>
+              </div>
+              <div
+                className="group/bar relative w-3.5 rounded-t bg-sky-200 dark:bg-sky-900"
+                style={{ height: `${(d.sessions / maxVal) * 100}%`, minHeight: d.sessions > 0 ? "4px" : "0" }}
+              >
+                <span className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-900 px-1.5 py-0.5 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover/bar:opacity-100 dark:bg-zinc-100 dark:text-zinc-900">
+                  {d.sessions} sessions
+                </span>
+              </div>
+            </div>
+            <p className="text-xs font-medium text-zinc-600 dark:text-zinc-300">{d.label}</p>
+            <p className="text-[11px] tabular-nums text-zinc-400 dark:text-zinc-500">
+              {d.ocupacioPercent === null ? "—" : `${d.ocupacioPercent}%`}
+            </p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-1 text-center text-[11px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+        % ocupació estimada
+      </p>
+    </div>
+  );
+}
