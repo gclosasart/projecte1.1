@@ -193,6 +193,14 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          {rol === "tecnic" && (
+            <Link
+              href="/tecnic"
+              className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
+            >
+              Panell de tècnic
+            </Link>
+          )}
           {(rol === "tenant_admin" || rol === "tecnic") && (
             <>
               <Link
