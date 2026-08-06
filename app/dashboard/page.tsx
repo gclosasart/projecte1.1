@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "./actions";
 import { NotesDelDia } from "./NotesDelDia";
@@ -77,6 +78,12 @@ export default async function DashboardPage() {
     .single();
 
   const rol = profile?.rol ?? "user";
+
+  // El tècnic no té cap tenant propi: el dashboard operatiu no li diu res.
+  if (rol === "tecnic") {
+    redirect("/tecnic");
+  }
+
   const permisos = (profile?.permisos as string[] | null) ?? [];
   const tenantNom = (profile?.tenants as unknown as { nom_comercial: string } | null)
     ?.nom_comercial;

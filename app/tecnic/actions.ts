@@ -60,6 +60,37 @@ export async function crearTenant(
   return { ...ESTAT_INICIAL, success: true };
 }
 
+export async function eliminarTenant(
+  tenantId: string,
+  _prevState: TecnicFormState,
+  formData: FormData,
+): Promise<TecnicFormState> {
+  if (!(await assegurarTecnic())) {
+    return { ...ESTAT_INICIAL, error: "Només el tècnic pot eliminar tenants." };
+  }
+
+  const confirmacio = formData.get("confirmacio");
+  if (typeof confirmacio !== "string" || confirmacio.trim().toUpperCase() !== "ELIMINA") {
+    return { ...ESTAT_INICIAL, error: 'Has d\'escriure "ELIMINA" per confirmar.' };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("tenants").delete().eq("id", tenantId);
+
+  if (error) {
+    if (error.code === "23503") {
+      return {
+        ...ESTAT_INICIAL,
+        error: "No es pot eliminar: aquest tenant té equip, recursos, clients o reserves associats.",
+      };
+    }
+    return { ...ESTAT_INICIAL, error: "No s'ha pogut eliminar el tenant." };
+  }
+
+  revalidatePath("/tecnic");
+  return { ...ESTAT_INICIAL, success: true };
+}
+
 export async function convidarAdminTenant(
   tenantId: string,
   _prevState: TecnicFormState,

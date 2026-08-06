@@ -3,17 +3,13 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DetallsForm } from "./DetallsForm";
 import { NotesTenant } from "./NotesTenant";
+import { MembreActions } from "./MembreActions";
 
 type Membre = {
   id: string;
   nom: string | null;
   email: string | null;
   rol: string;
-};
-
-const ROL_LABEL: Record<string, string> = {
-  tenant_admin: "Administrador",
-  user: "Empleat",
 };
 
 export default async function DetallTenantPage({
@@ -99,7 +95,7 @@ export default async function DetallTenantPage({
               {membres.map((m) => (
                 <li
                   key={m.id}
-                  className="flex items-center justify-between rounded-xl border border-black/10 bg-white p-3 dark:border-white/10 dark:bg-zinc-950"
+                  className="flex flex-wrap items-start justify-between gap-3 rounded-xl border border-black/10 bg-white p-3 dark:border-white/10 dark:bg-zinc-950"
                 >
                   <div>
                     <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
@@ -107,9 +103,12 @@ export default async function DetallTenantPage({
                     </p>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">{m.email}</p>
                   </div>
-                  <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                    {ROL_LABEL[m.rol] ?? m.rol}
-                  </span>
+                  <MembreActions
+                    tenantId={tenantId}
+                    profileId={m.id}
+                    email={m.email}
+                    rolActual={m.rol}
+                  />
                 </li>
               ))}
             </ul>

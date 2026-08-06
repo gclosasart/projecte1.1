@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { signOut } from "@/app/dashboard/actions";
 import { CreaTenantForm } from "./CreaTenantForm";
 import { ConvidaAdminInline } from "./ConvidaAdminInline";
+import { DeleteTenantInline } from "./DeleteTenantInline";
 
 type Tenant = {
   id: string;
@@ -70,13 +72,18 @@ export default async function TecnicPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
-        <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-          ← Dashboard
-        </Link>
+      <header className="flex items-center justify-between gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
           Panell de tècnic
         </h1>
+        <form action={signOut}>
+          <button
+            type="submit"
+            className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
+          >
+            Tanca sessió
+          </button>
+        </form>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
@@ -118,7 +125,10 @@ export default async function TecnicPage() {
                         {t.quota_mensual != null && ` · ${t.quota_mensual} €/mes`}
                       </p>
                     </Link>
-                    <ConvidaAdminInline tenantId={t.id} />
+                    <div className="flex items-center gap-3">
+                      <ConvidaAdminInline tenantId={t.id} />
+                      <DeleteTenantInline tenantId={t.id} />
+                    </div>
                   </div>
                 </li>
               ))}

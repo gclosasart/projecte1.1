@@ -85,3 +85,58 @@ export async function eliminarNotaTenant(tenantId: string, id: string) {
   await supabase.from("notes_tenant").delete().eq("id", id);
   revalidatePath(`/tecnic/${tenantId}`);
 }
+
+export type MembreActionState = {
+  error: string | null;
+  missatge: string | null;
+};
+
+const MEMBRE_ESTAT_INICIAL: MembreActionState = { error: null, missatge: null };
+
+export async function canviarRolMembre(
+  tenantId: string,
+  profileId: string,
+  nouRol: "tenant_admin" | "user",
+): Promise<MembreActionState> {
+  if (!(await assegurarTecnic())) {
+    return { ...MEMBRE_ESTAT_INICIAL, error: "Només el tècnic pot fer això." };
+  }
+  if (nouRol !== "tenant_admin" && nouRol !== "user") {
+    return { ...MEMBRE_ESTAT_INICIAL, error: "Rol no vàlid." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("profiles")
+    .update({ rol: nouRol })
+    .eq("id", profileId)
+    .eq("tenant_id", tenantId);
+
+  if (error) {
+    return { ...MEMBRE_ESTAT_INICIAL, error: "No s'ha pogut canviar el rol." };
+  }
+
+  revalidatePath(`/tecnic/${tenantId}`);
+  return { ...MEMBRE_ESTAT_INICIAL, missatge: "Rol actualitzat." };
+}
+
+export async function enviarResetContrasenya(email: string): Promise<MembreActionState> {
+  if (!(await assegurarTecnic())) {
+    return { ...MEMBRE_ESTAT_INICIAL, error: "Només el tècnic pot fer això." };
+  }
+  if (!email) {
+    return { ...MEMBRE_ESTAT_INICIAL, error: "Falta l'email." };
+  }
+
+  const supabase = await createClient();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${siteUrl}/invitat`,
+  });
+
+  if (error) {
+    return { ...MEMBRE_ESTAT_INICIAL, error: "No s'ha pogut enviar l'email de restabliment." };
+  }
+
+  return { ...MEMBRE_ESTAT_INICIAL, missatge: "Email de restabliment enviat." };
+}
