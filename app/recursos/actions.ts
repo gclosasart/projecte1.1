@@ -113,6 +113,16 @@ export async function eliminarRecurs(
 
   const supabase = await createClient();
 
+  const { data: recurs } = await supabase
+    .from("recursos")
+    .select("bloquejat")
+    .eq("id", id)
+    .single();
+
+  if (!recurs?.bloquejat) {
+    return { error: "Cal bloquejar el recurs abans de poder eliminar-lo." };
+  }
+
   // reserves.recurs_id té esborrat en cascada: cal bloquejar-ho manualment
   // per no perdre l'historial de reserves/factures (veure model de dades).
   const { count } = await supabase
@@ -122,7 +132,7 @@ export async function eliminarRecurs(
 
   if (count && count > 0) {
     return {
-      error: `No es pot eliminar: aquest recurs té ${count} reserva${count === 1 ? "" : "s"} associada${count === 1 ? "" : "es"}. Dona'l de baixa en comptes.`,
+      error: `No es pot eliminar: aquest recurs té ${count} reserva${count === 1 ? "" : "s"} associada${count === 1 ? "" : "es"}.`,
     };
   }
 
@@ -136,8 +146,11 @@ export async function eliminarRecurs(
   redirect("/recursos");
 }
 
-export async function canviarEstatActiu(id: string, nouEstat: boolean) {
+export async function canviarBloquejat(id: string, nouEstat: boolean) {
   const supabase = await createClient();
-  await supabase.from("recursos").update({ actiu: nouEstat }).eq("id", id);
+  await supabase
+    .from("recursos")
+    .update(nouEstat ? { bloquejat: true, actiu: false } : { bloquejat: false, actiu: true })
+    .eq("id", id);
   revalidatePath("/recursos");
 }

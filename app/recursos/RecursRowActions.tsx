@@ -3,9 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { DeleteRecursInline } from "./DeleteRecursInline";
-import { canviarEstatActiu, eliminarRecurs } from "./actions";
+import { canviarBloquejat, eliminarRecurs } from "./actions";
 
-export function RecursRowActions({ id, actiu }: { id: string; actiu: boolean }) {
+export function RecursRowActions({
+  id,
+  bloquejat,
+}: {
+  id: string;
+  bloquejat: boolean;
+}) {
   const [confirmant, setConfirmant] = useState(false);
 
   if (confirmant) {
@@ -25,21 +31,23 @@ export function RecursRowActions({ id, actiu }: { id: string; actiu: boolean }) 
       >
         Edita
       </Link>
-      <form action={canviarEstatActiu.bind(null, id, !actiu)}>
+      <form action={canviarBloquejat.bind(null, id, !bloquejat)}>
         <button
           type="submit"
           className="text-sm font-medium text-zinc-500 hover:underline dark:text-zinc-400"
         >
-          {actiu ? "Dona de baixa" : "Reactiva"}
+          {bloquejat ? "Desbloqueja" : "Bloqueja"}
         </button>
       </form>
-      <button
-        type="button"
-        onClick={() => setConfirmant(true)}
-        className="text-sm font-medium text-red-600 hover:underline dark:text-red-400"
-      >
-        Elimina
-      </button>
+      {bloquejat && (
+        <button
+          type="button"
+          onClick={() => setConfirmant(true)}
+          className="text-sm font-medium text-red-600 hover:underline dark:text-red-400"
+        >
+          Elimina
+        </button>
+      )}
     </div>
   );
 }
