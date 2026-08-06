@@ -8,6 +8,7 @@ type Tenant = {
   nom_comercial: string;
   rao_social: string | null;
   nif: string | null;
+  quota_mensual: number | null;
   created_at: string;
 };
 
@@ -38,7 +39,7 @@ export default async function TecnicPage() {
 
   const { data: tenants } = await supabase
     .from("tenants")
-    .select("id, nom_comercial, rao_social, nif, created_at")
+    .select("id, nom_comercial, rao_social, nif, quota_mensual, created_at")
     .order("created_at", { ascending: false })
     .returns<Tenant[]>();
 
@@ -102,7 +103,7 @@ export default async function TecnicPage() {
                   className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
+                    <Link href={`/tecnic/${t.id}`} className="min-w-0 flex-1 hover:underline">
                       <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
                         {t.nom_comercial}
                       </p>
@@ -114,8 +115,9 @@ export default async function TecnicPage() {
                         {(admins.get(t.id) ?? 0) === 0 && " (sense administrador)"}
                         {" · "}
                         {recursosPerTenant.get(t.id) ?? 0} recursos actius
+                        {t.quota_mensual != null && ` · ${t.quota_mensual} €/mes`}
                       </p>
-                    </div>
+                    </Link>
                     <ConvidaAdminInline tenantId={t.id} />
                   </div>
                 </li>
