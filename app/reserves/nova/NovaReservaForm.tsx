@@ -255,8 +255,9 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
               name="data_inici"
               value={dataInici}
               onChange={(e) => setDataInici(e.target.value)}
+              onClick={(e) => e.currentTarget.showPicker?.()}
               required
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -266,8 +267,9 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
               name="hora_inici"
               value={horaInici}
               onChange={(e) => setHoraInici(e.target.value)}
+              onClick={(e) => e.currentTarget.showPicker?.()}
               required
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -277,8 +279,9 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
               name="hora_fi"
               value={horaFi}
               onChange={(e) => setHoraFi(e.target.value)}
+              onClick={(e) => e.currentTarget.showPicker?.()}
               required
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         </div>
@@ -324,8 +327,9 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                     name="condicio_data"
                     value={condicioData}
                     onChange={(e) => setCondicioData(e.target.value)}
+                    onClick={(e) => e.currentTarget.showPicker?.()}
                     disabled={condicioTipus !== "data"}
-                    className="rounded-lg border border-black/10 bg-white px-2 py-1 text-sm text-zinc-950 outline-none disabled:opacity-40 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+                    className="cursor-pointer rounded-lg border border-black/10 bg-white px-2 py-1 text-sm text-zinc-950 outline-none disabled:cursor-not-allowed disabled:opacity-40 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
                   />
                 </label>
                 <label className="flex items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300">
