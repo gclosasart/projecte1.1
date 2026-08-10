@@ -31,7 +31,6 @@ function nomsRecursosOcurrencia(oc: OcurrenciaAvui): string {
 const SECUNDARIS = [
   { label: "Gestiona reserves", href: "/reserves/gestio", modul: "reserves" },
   { label: "Calendari", href: "/calendari", modul: "reserves" },
-  { label: "Disponibilitat", href: "/disponibilitat", modul: "reserves" },
   { label: "Recursos", href: "/recursos", modul: "recursos" },
   { label: "Clients", href: "/clients", modul: "clients" },
   { label: "Factures", href: "/factures", modul: "factures" },
@@ -69,6 +68,28 @@ function StatTile({ valor, etiqueta }: { valor: number; etiqueta: string }) {
       <p className="text-3xl font-semibold tabular-nums text-zinc-950 dark:text-zinc-50">{valor}</p>
       <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{etiqueta}</p>
     </div>
+  );
+}
+
+function StatLinkTile({ href, etiqueta }: { href: string; etiqueta: string }) {
+  return (
+    <Link
+      href={href}
+      className="group flex flex-col justify-between rounded-xl border border-black/10 bg-white p-5 transition-colors hover:border-sky-600 dark:border-white/10 dark:bg-zinc-950 dark:hover:border-indigo-500"
+    >
+      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-sky-600 text-white transition-transform group-hover:translate-x-0.5 dark:bg-indigo-500">
+        <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden>
+          <path
+            d="M4 10h12m0 0-4.5-4.5M16 10l-4.5 4.5"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{etiqueta}</p>
+    </Link>
   );
 }
 
@@ -298,6 +319,9 @@ export default async function DashboardPage() {
             <StatTile valor={comencenAvui} etiqueta="Reserves que comencen" />
             <StatTile valor={recursosReservatsAvui} etiqueta="Recursos reservats avui" />
             <StatTile valor={ocupatsAraMateix} etiqueta="Ocupats ara mateix" />
+            {potAccedir(rol, permisos, "reserves") && (
+              <StatLinkTile href="/disponibilitat" etiqueta="Disponibilitat" />
+            )}
           </div>
         </section>
 
