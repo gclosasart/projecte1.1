@@ -7,7 +7,13 @@ type Nota = {
   id: string;
   contingut: string;
   fet: boolean;
+  hora: string;
+  autorNom: string | null;
 };
+
+function inicialAutor(nom: string | null): string {
+  return nom?.trim().charAt(0).toUpperCase() || "?";
+}
 
 export function NotesDelDia({ notes }: { notes: Nota[] }) {
   const [pending, startTransition] = useTransition();
@@ -28,11 +34,11 @@ export function NotesDelDia({ notes }: { notes: Nota[] }) {
   return (
     <div className="flex flex-col gap-3">
       {notes.length === 0 ? (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">Cap nota per avui.</p>
+        <p className="text-base text-zinc-500 dark:text-zinc-400">Cap nota per avui.</p>
       ) : (
-        <ul className="flex flex-col gap-1.5">
+        <ul className="flex max-h-[7.5rem] flex-col gap-1.5 overflow-y-auto pr-1">
           {notes.map((n) => (
-            <li key={n.id} className="group flex items-center gap-2.5">
+            <li key={n.id} className="group flex h-9 shrink-0 items-center gap-2.5">
               <input
                 type="checkbox"
                 checked={n.fet}
@@ -40,9 +46,18 @@ export function NotesDelDia({ notes }: { notes: Nota[] }) {
                 className="h-4 w-4 shrink-0 accent-sky-600"
               />
               <span
-                className={`flex-1 text-sm ${n.fet ? "text-zinc-400 line-through dark:text-zinc-600" : "text-zinc-900 dark:text-zinc-100"}`}
+                title={n.autorNom ?? undefined}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky-600 text-xs font-semibold text-white dark:bg-indigo-500"
+              >
+                {inicialAutor(n.autorNom)}
+              </span>
+              <span
+                className={`flex-1 truncate text-base ${n.fet ? "text-zinc-400 line-through dark:text-zinc-600" : "text-zinc-900 dark:text-zinc-100"}`}
               >
                 {n.contingut}
+              </span>
+              <span className="shrink-0 text-xs tabular-nums text-zinc-400 dark:text-zinc-500">
+                {n.hora}
               </span>
               <button
                 type="button"

@@ -134,11 +134,25 @@ export default async function DashboardPage() {
   ).length;
 
   // Bloc 3: notes del dia
-  const { data: notes } = await supabase
+  const { data: notesRaw } = await supabase
     .from("notes_dia")
-    .select("id, contingut, fet")
+    .select("id, contingut, fet, created_at, profiles(nom, email)")
     .eq("data", avuiISO)
-    .order("created_at");
+    .order("created_at")
+    .returns<
+      { id: string; contingut: string; fet: boolean; created_at: string; profiles: { nom: string | null; email: string | null } | null }[]
+    >();
+
+  const notes = (notesRaw ?? []).map((n) => {
+    const d = new Date(n.created_at);
+    return {
+      id: n.id,
+      contingut: n.contingut,
+      fet: n.fet,
+      hora: `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`,
+      autorNom: n.profiles?.nom ?? n.profiles?.email ?? null,
+    };
+  });
 
   // Bloc 4: previsió 7 dies
   const { data: reservesNoves } = await supabase
@@ -372,7 +386,7 @@ export default async function DashboardPage() {
               Notes del dia
             </h2>
             <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-              <NotesDelDia notes={notes ?? []} />
+              <NotesDelDia notes={notes} />
             </div>
           </section>
         </div>
