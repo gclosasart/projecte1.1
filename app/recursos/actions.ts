@@ -28,6 +28,7 @@ type CampsRecurs = {
   capacitat: number | null;
   preu: number;
   unitat_preu: "hora" | "dia";
+  quantitat: number;
 };
 
 function llegirCamps(formData: FormData): { ok: true; camps: CampsRecurs } | { ok: false; error: string } {
@@ -35,6 +36,7 @@ function llegirCamps(formData: FormData): { ok: true; camps: CampsRecurs } | { o
   const capacitat = formData.get("capacitat");
   const preu = formData.get("preu");
   const unitat_preu = formData.get("unitat_preu");
+  const quantitat = formData.get("quantitat");
 
   if (typeof nom !== "string" || !nom.trim()) {
     return { ok: false, error: "El nom és obligatori." };
@@ -50,10 +52,14 @@ function llegirCamps(formData: FormData): { ok: true; camps: CampsRecurs } | { o
   if (unitat_preu !== "hora" && unitat_preu !== "dia") {
     return { ok: false, error: "La unitat de preu no és vàlida." };
   }
+  const quantitatNum = Number(quantitat);
+  if (typeof quantitat !== "string" || quantitat === "" || !Number.isInteger(quantitatNum) || quantitatNum < 1) {
+    return { ok: false, error: "Les unitats disponibles no són vàlides." };
+  }
 
   return {
     ok: true,
-    camps: { nom: nom.trim(), capacitat: capacitatNum, preu: preuNum, unitat_preu },
+    camps: { nom: nom.trim(), capacitat: capacitatNum, preu: preuNum, unitat_preu, quantitat: quantitatNum },
   };
 }
 

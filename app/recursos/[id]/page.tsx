@@ -14,7 +14,7 @@ export default async function EditarRecursPage({
 
   const { data: recurs } = await supabase
     .from("recursos")
-    .select("nom, capacitat, preu, unitat_preu")
+    .select("nom, capacitat, preu, unitat_preu, quantitat")
     .eq("id", id)
     .single();
 

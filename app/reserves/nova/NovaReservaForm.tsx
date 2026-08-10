@@ -11,6 +11,7 @@ type Recurs = {
   capacitat: number | null;
   preu: number;
   unitat_preu: "hora" | "dia";
+  quantitat: number;
 };
 
 type Client = {
@@ -137,6 +138,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                 />
                 <span className="text-zinc-950 dark:text-zinc-50">
                   {r.nom} — {r.capacitat ?? "?"} persones — {r.preu} €/{r.unitat_preu === "hora" ? "h" : "dia"}
+                  {r.quantitat > 1 ? ` — ${r.quantitat} unitats` : ""}
                 </span>
               </label>
             ))}

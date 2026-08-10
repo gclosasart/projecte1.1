@@ -8,7 +8,7 @@ export default async function NovaReservaPage() {
   const [{ data: recursos }, { data: clients }] = await Promise.all([
     supabase
       .from("recursos")
-      .select("id, nom, capacitat, preu, unitat_preu")
+      .select("id, nom, capacitat, preu, unitat_preu, quantitat")
       .eq("actiu", true)
       .order("nom"),
     supabase.from("clients").select("id, nom, nif, email").order("nom"),

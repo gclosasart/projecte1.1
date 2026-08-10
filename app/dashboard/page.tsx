@@ -31,6 +31,7 @@ function nomsRecursosOcurrencia(oc: OcurrenciaAvui): string {
 const SECUNDARIS = [
   { label: "Gestiona reserves", href: "/reserves/gestio", modul: "reserves" },
   { label: "Calendari", href: "/calendari", modul: "reserves" },
+  { label: "Disponibilitat", href: "/disponibilitat", modul: "reserves" },
   { label: "Recursos", href: "/recursos", modul: "recursos" },
   { label: "Clients", href: "/clients", modul: "clients" },
   { label: "Factures", href: "/factures", modul: "factures" },
@@ -127,7 +128,6 @@ export default async function DashboardPage() {
 
   const activesAvui = (ocurrenciesAvui ?? []).filter((o) => o.estat === "activa");
   const comencenAvui = activesAvui.filter((o) => o.hora_inici > araStr).length;
-  const acabenAvui = activesAvui.filter((o) => o.hora_fi > araStr).length;
   const recursosReservatsAvui = activesAvui.length;
   const ocupatsAraMateix = activesAvui.filter(
     (o) => o.hora_inici <= araStr && o.hora_fi > araStr,
@@ -282,7 +282,6 @@ export default async function DashboardPage() {
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             <StatTile valor={comencenAvui} etiqueta="Reserves que comencen" />
-            <StatTile valor={acabenAvui} etiqueta="Reserves que acaben" />
             <StatTile valor={recursosReservatsAvui} etiqueta="Recursos reservats avui" />
             <StatTile valor={ocupatsAraMateix} etiqueta="Ocupats ara mateix" />
           </div>

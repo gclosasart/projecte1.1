@@ -8,6 +8,7 @@ type ValorsRecurs = {
   capacitat: number | null;
   preu: number;
   unitat_preu: string;
+  quantitat: number;
 };
 
 export function RecursForm({
@@ -40,19 +41,37 @@ export function RecursForm({
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="capacitat" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Capacitat (persones)
-        </label>
-        <input
-          id="capacitat"
-          name="capacitat"
-          type="number"
-          min={0}
-          step={1}
-          defaultValue={valorsInicials?.capacitat ?? undefined}
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
-        />
+      <div className="flex gap-4">
+        <div className="flex flex-1 flex-col gap-1.5">
+          <label htmlFor="capacitat" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            Capacitat (persones)
+          </label>
+          <input
+            id="capacitat"
+            name="capacitat"
+            type="number"
+            min={0}
+            step={1}
+            defaultValue={valorsInicials?.capacitat ?? undefined}
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+          />
+        </div>
+
+        <div className="flex flex-1 flex-col gap-1.5">
+          <label htmlFor="quantitat" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            Unitats disponibles
+          </label>
+          <input
+            id="quantitat"
+            name="quantitat"
+            type="number"
+            min={1}
+            step={1}
+            required
+            defaultValue={valorsInicials?.quantitat ?? 1}
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+          />
+        </div>
       </div>
 
       <div className="flex gap-4">

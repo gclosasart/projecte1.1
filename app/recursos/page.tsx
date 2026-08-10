@@ -10,6 +10,7 @@ type Recurs = {
   unitat_preu: string;
   actiu: boolean;
   bloquejat: boolean;
+  quantitat: number;
 };
 
 export default async function RecursosPage() {
@@ -17,7 +18,7 @@ export default async function RecursosPage() {
 
   const { data: recursos } = await supabase
     .from("recursos")
-    .select("id, nom, capacitat, preu, unitat_preu, actiu, bloquejat")
+    .select("id, nom, capacitat, preu, unitat_preu, actiu, bloquejat, quantitat")
     .order("nom")
     .returns<Recurs[]>();
 
@@ -67,6 +68,7 @@ export default async function RecursosPage() {
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     {r.capacitat != null ? `${r.capacitat} persones — ` : ""}
                     {r.preu} €/{r.unitat_preu === "hora" ? "h" : "dia"}
+                    {r.quantitat > 1 ? ` — ${r.quantitat} unitats disponibles` : ""}
                   </p>
                 </div>
                 <RecursRowActions id={r.id} bloquejat={r.bloquejat} />
