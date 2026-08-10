@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArxivaButton } from "./ArxivaButton";
-import { ESTAT_RESERVA_ESTIL, type Reserva } from "./tipus";
+import { ESTAT_RESERVA_ESTIL, nomsRecursos, type Reserva } from "./tipus";
 
 export function ReservaCard({ r }: { r: Reserva }) {
   return (
@@ -8,7 +8,7 @@ export function ReservaCard({ r }: { r: Reserva }) {
       <div className="flex items-start justify-between gap-2">
         <Link href={`/reserves/gestio/${r.id}`} className="min-w-0 flex-1 hover:underline">
           <p className="truncate text-sm font-medium text-zinc-950 dark:text-zinc-50">
-            {r.recursos?.nom ?? "Recurs desconegut"} — {r.clients?.nom ?? "Client desconegut"}
+            {nomsRecursos(r)} — {r.clients?.nom ?? "Client desconegut"}
             <span
               className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_RESERVA_ESTIL[r.estat] ?? ""}`}
             >

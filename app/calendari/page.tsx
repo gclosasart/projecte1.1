@@ -25,10 +25,17 @@ type Ocurrencia = {
   hora_inici: string;
   hora_fi: string;
   reserves: {
-    recursos: { nom: string } | null;
+    reserva_recursos: { recursos: { nom: string } | null }[];
     clients: { nom: string } | null;
   } | null;
 };
+
+function nomsRecursosOcurrencia(oc: Ocurrencia): string {
+  const noms = (oc.reserves?.reserva_recursos ?? [])
+    .map((rr) => rr.recursos?.nom)
+    .filter((n): n is string => Boolean(n));
+  return noms.length > 0 ? noms.join(" + ") : "?";
+}
 
 function toISODate(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -79,7 +86,7 @@ export default async function CalendariPage({
   const supabase = await createClient();
   const { data: ocurrencies } = await supabase
     .from("ocurrencies")
-    .select("id, data, hora_inici, hora_fi, reserves(recursos(nom), clients(nom))")
+    .select("id, data, hora_inici, hora_fi, reserves(reserva_recursos(recursos(nom)), clients(nom))")
     .eq("estat", "activa")
     .gte("data", toISODate(graellaInici))
     .lte("data", toISODate(graellaFi))
@@ -186,9 +193,9 @@ export default async function CalendariPage({
                       <li
                         key={oc.id}
                         className="truncate rounded bg-zinc-100 px-1 py-0.5 text-[11px] leading-tight text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
-                        title={`${oc.hora_inici.slice(0, 5)}–${oc.hora_fi.slice(0, 5)} ${oc.reserves?.recursos?.nom ?? ""} — ${oc.reserves?.clients?.nom ?? ""}`}
+                        title={`${oc.hora_inici.slice(0, 5)}–${oc.hora_fi.slice(0, 5)} ${nomsRecursosOcurrencia(oc)} — ${oc.reserves?.clients?.nom ?? ""}`}
                       >
-                        {oc.hora_inici.slice(0, 5)} {oc.reserves?.recursos?.nom ?? "?"}
+                        {oc.hora_inici.slice(0, 5)} {nomsRecursosOcurrencia(oc)}
                       </li>
                     ))}
                     {restants > 0 && (

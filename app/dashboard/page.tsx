@@ -11,15 +11,22 @@ type OcurrenciaAvui = {
   hora_fi: string;
   estat: string;
   reserves: {
-    recursos: { nom: string } | null;
+    reserva_recursos: { recursos: { nom: string } | null }[];
     clients: { nom: string } | null;
   } | null;
 };
 
 type OcurrenciaSetmana = {
   data: string;
-  reserves: { recurs_id: string } | null;
+  reserves: { reserva_recursos: { recurs_id: string }[] } | null;
 };
+
+function nomsRecursosOcurrencia(oc: OcurrenciaAvui): string {
+  const noms = (oc.reserves?.reserva_recursos ?? [])
+    .map((rr) => rr.recursos?.nom)
+    .filter((n): n is string => Boolean(n));
+  return noms.length > 0 ? noms.join(" + ") : "—";
+}
 
 const SECUNDARIS = [
   { label: "Gestiona reserves", href: "/reserves/gestio", modul: "reserves" },
@@ -102,7 +109,7 @@ export default async function DashboardPage() {
   // Bloc 1 i 2: ocurrències d'avui
   const { data: ocurrenciesAvui } = await supabase
     .from("ocurrencies")
-    .select("id, hora_inici, hora_fi, estat, reserves(recursos(nom), clients(nom))")
+    .select("id, hora_inici, hora_fi, estat, reserves(reserva_recursos(recursos(nom)), clients(nom))")
     .eq("data", avuiISO)
     .order("hora_inici")
     .returns<OcurrenciaAvui[]>();
@@ -142,7 +149,7 @@ export default async function DashboardPage() {
 
   const { data: ocurrenciesSetmana } = await supabase
     .from("ocurrencies")
-    .select("data, reserves(recurs_id)")
+    .select("data, reserves(reserva_recursos(recurs_id))")
     .eq("estat", "activa")
     .gte("data", avuiISO)
     .lte("data", finSetmanaISO)
@@ -163,10 +170,10 @@ export default async function DashboardPage() {
   const recursosPerDia = new Map<string, Set<string>>();
   for (const o of ocurrenciesSetmana ?? []) {
     sessionsPerDia.set(o.data, (sessionsPerDia.get(o.data) ?? 0) + 1);
-    const recursId = o.reserves?.recurs_id;
-    if (recursId) {
+    const recursIds = o.reserves?.reserva_recursos.map((rr) => rr.recurs_id) ?? [];
+    if (recursIds.length > 0) {
       const set = recursosPerDia.get(o.data) ?? new Set<string>();
-      set.add(recursId);
+      for (const rid of recursIds) set.add(rid);
       recursosPerDia.set(o.data, set);
     }
   }
@@ -316,7 +323,7 @@ export default async function DashboardPage() {
                               {oc.reserves?.clients?.nom ?? "—"}
                             </td>
                             <td className="px-4 py-3 text-zinc-900 dark:text-zinc-100">
-                              {oc.reserves?.recursos?.nom ?? "—"}
+                              {nomsRecursosOcurrencia(oc)}
                             </td>
                             <td className="px-4 py-3 tabular-nums text-zinc-500 dark:text-zinc-400">
                               {oc.hora_inici.slice(0, 5)}–{oc.hora_fi.slice(0, 5)}

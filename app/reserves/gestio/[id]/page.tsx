@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { CancelOcurrenciaButton } from "../CancelOcurrenciaButton";
+import { EditaRecursosReserva } from "../EditaRecursosReserva";
 
 type Ocurrencia = {
   id: string;
@@ -44,7 +45,7 @@ export default async function DetallReservaPage({
   const { data: reserva } = await supabase
     .from("reserves")
     .select(
-      "id, tipus, frequencia, data_inici, condicio_final, model_preu, preu_base_snapshot, estat, notes, recursos(nom), clients(nom)",
+      "id, tipus, frequencia, data_inici, condicio_final, model_preu, preu_base_snapshot, estat, notes, reserva_recursos(recursos(id, nom)), clients(nom)",
     )
     .eq("id", id)
     .single();
@@ -53,8 +54,21 @@ export default async function DetallReservaPage({
     notFound();
   }
 
-  const recurs = reserva.recursos as unknown as { nom: string } | null;
+  const recursosReserva = reserva.reserva_recursos as unknown as
+    | { recursos: { id: string; nom: string } | null }[]
+    | null;
+  const recursosSeleccionats = (recursosReserva ?? [])
+    .map((rr) => rr.recursos)
+    .filter((r): r is { id: string; nom: string } => Boolean(r));
+  const nomsRecursos = recursosSeleccionats.length > 0
+    ? recursosSeleccionats.map((r) => r.nom).join(" + ")
+    : "Recurs desconegut";
   const client = reserva.clients as unknown as { nom: string } | null;
+
+  const { data: totsRecursos } = await supabase
+    .from("recursos")
+    .select("id, nom")
+    .order("nom");
 
   const { data: ocurrencies } = await supabase
     .from("ocurrencies")
@@ -91,7 +105,7 @@ export default async function DetallReservaPage({
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
           <p className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
-            {recurs?.nom ?? "Recurs desconegut"} — {client?.nom ?? "Client desconegut"}
+            {nomsRecursos} — {client?.nom ?? "Client desconegut"}
             <span
               className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_RESERVA_ESTIL[reserva.estat] ?? ""}`}
             >
@@ -116,6 +130,19 @@ export default async function DetallReservaPage({
             </div>
           )}
         </section>
+
+        {reserva.estat === "activa" && (
+          <section className="mt-6 rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+            <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">Recursos</h2>
+            <div className="mt-3">
+              <EditaRecursosReserva
+                reservaId={reserva.id}
+                recursosDisponibles={totsRecursos ?? []}
+                recursIdsActuals={recursosSeleccionats.map((r) => r.id)}
+              />
+            </div>
+          </section>
+        )}
 
         <section className="mt-6">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">

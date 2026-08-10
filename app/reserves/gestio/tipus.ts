@@ -7,9 +7,14 @@ export type Reserva = {
   model_preu: string | null;
   estat: string;
   arxivada: boolean;
-  recursos: { nom: string } | null;
+  reserva_recursos: { recursos: { nom: string } | null }[];
   clients: { nom: string } | null;
 };
+
+export function nomsRecursos(r: { reserva_recursos: { recursos: { nom: string } | null }[] }): string {
+  const noms = r.reserva_recursos.map((rr) => rr.recursos?.nom).filter((n): n is string => Boolean(n));
+  return noms.length > 0 ? noms.join(" + ") : "Recurs desconegut";
+}
 
 // Estat de la RESERVA (activa/cancel·lada) — no confondre amb el pagament de la factura.
 export const ESTAT_RESERVA_ESTIL: Record<string, string> = {

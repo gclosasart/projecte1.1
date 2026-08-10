@@ -38,19 +38,18 @@ export async function crearReserva(
     return { ...ESTAT_INICIAL, error: "El teu usuari no té cap tenant assignat." };
   }
 
-  const recurs_id = formData.get("recurs_id");
-  if (typeof recurs_id !== "string" || !recurs_id) {
-    return { ...ESTAT_INICIAL, error: "Selecciona un recurs." };
+  const recurs_ids = formData.getAll("recurs_ids").filter((v): v is string => typeof v === "string" && v !== "");
+  if (recurs_ids.length === 0) {
+    return { ...ESTAT_INICIAL, error: "Selecciona almenys un recurs." };
   }
 
-  const { data: recurs } = await supabase
+  const { data: recursos } = await supabase
     .from("recursos")
     .select("preu, unitat_preu")
-    .eq("id", recurs_id)
-    .single();
+    .in("id", recurs_ids);
 
-  if (!recurs) {
-    return { ...ESTAT_INICIAL, error: "Recurs no trobat." };
+  if (!recursos || recursos.length !== recurs_ids.length) {
+    return { ...ESTAT_INICIAL, error: "Algun recurs seleccionat no s'ha trobat." };
   }
 
   let client_id: string;
@@ -167,8 +166,7 @@ export async function crearReserva(
 
   const preusBase = calcularPreusBase({
     dates,
-    preuRecurs: recurs.preu,
-    unitatPreu: recurs.unitat_preu as "hora" | "dia",
+    recursos: recursos.map((r) => ({ preu: r.preu, unitat_preu: r.unitat_preu as "hora" | "dia" })),
     horaInici: hora_inici,
     horaFi: hora_fi,
     modelPreu,
@@ -177,7 +175,7 @@ export async function crearReserva(
 
   const { data: resultat, error: rpcError } = await supabase.rpc("crear_reserva", {
     p_tenant_id: tenant_id,
-    p_recurs_id: recurs_id,
+    p_recurs_ids: recurs_ids,
     p_client_id: client_id,
     p_creat_per: user!.id,
     p_tipus: tipus,

@@ -123,11 +123,9 @@ export async function eliminarRecurs(
     return { error: "Cal bloquejar el recurs abans de poder eliminar-lo." };
   }
 
-  // reserves.recurs_id té esborrat en cascada: cal bloquejar-ho manualment
-  // per no perdre l'historial de reserves/factures (veure model de dades).
   const { count } = await supabase
-    .from("reserves")
-    .select("id", { count: "exact", head: true })
+    .from("reserva_recursos")
+    .select("reserva_id", { count: "exact", head: true })
     .eq("recurs_id", id);
 
   if (count && count > 0) {

@@ -79,18 +79,21 @@ export function textCondicioFinal(
 
 export function calcularPreusBase(params: {
   dates: string[];
-  preuRecurs: number;
-  unitatPreu: "hora" | "dia";
+  recursos: { preu: number; unitat_preu: "hora" | "dia" }[];
   horaInici: string;
   horaFi: string;
   modelPreu: "per_ocurrencia" | "abonament_fix";
   preuAbonament?: number;
 }): number[] {
-  const { dates, preuRecurs, unitatPreu, horaInici, horaFi, modelPreu, preuAbonament } = params;
+  const { dates, recursos, horaInici, horaFi, modelPreu, preuAbonament } = params;
 
   if (modelPreu === "per_ocurrencia") {
-    const unitats = unitatPreu === "hora" ? calcularHores(horaInici, horaFi) : 1;
-    return dates.map(() => Math.round(preuRecurs * unitats * 100) / 100);
+    const hores = calcularHores(horaInici, horaFi);
+    const totalPerOcurrencia = recursos.reduce((acc, r) => {
+      const unitats = r.unitat_preu === "hora" ? hores : 1;
+      return acc + r.preu * unitats;
+    }, 0);
+    return dates.map(() => Math.round(totalPerOcurrencia * 100) / 100);
   }
 
   const fee = preuAbonament ?? 0;

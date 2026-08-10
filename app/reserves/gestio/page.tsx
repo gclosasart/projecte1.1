@@ -10,7 +10,7 @@ export default async function GestioReservesPage() {
   const { data: reserves } = await supabase
     .from("reserves")
     .select(
-      "id, tipus, frequencia, data_inici, condicio_final, model_preu, estat, arxivada, recursos(nom), clients(nom)",
+      "id, tipus, frequencia, data_inici, condicio_final, model_preu, estat, arxivada, reserva_recursos(recursos(nom)), clients(nom)",
     )
     .order("data_inici", { ascending: false })
     .returns<Reserva[]>();

@@ -28,8 +28,12 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
     ESTAT_INICIAL,
   );
 
-  const [recursId, setRecursId] = useState(recursos[0]?.id ?? "");
-  const recurs = recursos.find((r) => r.id === recursId);
+  const [recursIds, setRecursIds] = useState<string[]>(recursos[0] ? [recursos[0].id] : []);
+  const recursosSeleccionats = recursos.filter((r) => recursIds.includes(r.id));
+
+  function toggleRecurs(id: string) {
+    setRecursIds((prev) => (prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]));
+  }
 
   const [clientMode, setClientMode] = useState<"existent" | "nou">("existent");
   const [clientQuery, setClientQuery] = useState("");
@@ -74,17 +78,16 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
   }, [tipus, dataInici, diesSetmana, condicioTipus, condicioData, condicioSessions]);
 
   const preusPrevistos = useMemo(() => {
-    if (!recurs || datesPrevistes.length === 0 || horaInici >= horaFi) return [];
+    if (recursosSeleccionats.length === 0 || datesPrevistes.length === 0 || horaInici >= horaFi) return [];
     return calcularPreusBase({
       dates: datesPrevistes,
-      preuRecurs: recurs.preu,
-      unitatPreu: recurs.unitat_preu,
+      recursos: recursosSeleccionats.map((r) => ({ preu: r.preu, unitat_preu: r.unitat_preu })),
       horaInici,
       horaFi,
       modelPreu: tipus === "recurrent" ? modelPreu : "per_ocurrencia",
       preuAbonament: preuAbonament ? Number(preuAbonament) : undefined,
     });
-  }, [recurs, datesPrevistes, horaInici, horaFi, tipus, modelPreu, preuAbonament]);
+  }, [recursosSeleccionats, datesPrevistes, horaInici, horaFi, tipus, modelPreu, preuAbonament]);
 
   const totalPrevist = preusPrevistos.reduce((acc, p) => acc + p, 0);
 
@@ -109,7 +112,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
     <form action={formAction} className="flex flex-col gap-8">
       {/* Recurs */}
       <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">1. Recurs</h2>
+        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">1. Recursos</h2>
         {recursos.length === 0 ? (
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
             No hi ha cap recurs actiu.{" "}
@@ -119,18 +122,25 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
             .
           </p>
         ) : (
-          <select
-            name="recurs_id"
-            value={recursId}
-            onChange={(e) => setRecursId(e.target.value)}
-            className="mt-2 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
-          >
+          <div className="mt-2 flex flex-col gap-2">
             {recursos.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.nom} — {r.capacitat ?? "?"} persones — {r.preu} €/{r.unitat_preu === "hora" ? "h" : "dia"}
-              </option>
+              <label
+                key={r.id}
+                className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm ${recursIds.includes(r.id) ? "border-sky-600 bg-sky-50 dark:border-indigo-500 dark:bg-indigo-950/20" : "border-black/10 dark:border-white/10"}`}
+              >
+                <input
+                  type="checkbox"
+                  name="recurs_ids"
+                  value={r.id}
+                  checked={recursIds.includes(r.id)}
+                  onChange={() => toggleRecurs(r.id)}
+                />
+                <span className="text-zinc-950 dark:text-zinc-50">
+                  {r.nom} — {r.capacitat ?? "?"} persones — {r.preu} €/{r.unitat_preu === "hora" ? "h" : "dia"}
+                </span>
+              </label>
             ))}
-          </select>
+          </div>
         )}
       </section>
 

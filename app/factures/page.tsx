@@ -13,11 +13,18 @@ type Factura = {
   ocurrencies: {
     data: string;
     reserves: {
-      recursos: { nom: string } | null;
+      reserva_recursos: { recursos: { nom: string } | null }[];
       clients: { nom: string } | null;
     } | null;
   } | null;
 };
+
+function nomsRecursosFactura(f: Factura): string {
+  const noms = (f.ocurrencies?.reserves?.reserva_recursos ?? [])
+    .map((rr) => rr.recursos?.nom)
+    .filter((n): n is string => Boolean(n));
+  return noms.length > 0 ? noms.join(" + ") : "Recurs desconegut";
+}
 
 const ESTAT_ESTIL: Record<string, string> = {
   pendent:
@@ -34,7 +41,7 @@ export default async function FacturesPage() {
   const { data: factures } = await supabase
     .from("factures")
     .select(
-      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, ocurrencies(data, reserves(recursos(nom), clients(nom)))",
+      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
     )
     .order("numero", { ascending: false })
     .returns<Factura[]>();
@@ -71,7 +78,7 @@ export default async function FacturesPage() {
                   </p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     {f.ocurrencies?.reserves?.clients?.nom ?? "Client desconegut"} ·{" "}
-                    {f.ocurrencies?.reserves?.recursos?.nom ?? "Recurs desconegut"} ·{" "}
+                    {nomsRecursosFactura(f)} ·{" "}
                     {f.ocurrencies?.data ?? f.data_emissio}
                   </p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
