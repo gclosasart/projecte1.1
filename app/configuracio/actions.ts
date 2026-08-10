@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 
 export type TenantFormState = {
   error: string | null;
@@ -14,6 +15,7 @@ export async function actualitzarTenant(
   _prevState: TenantFormState,
   formData: FormData,
 ): Promise<TenantFormState> {
+  const t = await getDict();
   const supabase = await createClient();
   const {
     data: { user },
@@ -26,10 +28,10 @@ export async function actualitzarTenant(
     .single();
 
   if (!profile || (profile.rol !== "tenant_admin" && profile.rol !== "tecnic")) {
-    return { ...ESTAT_INICIAL, error: "No tens permisos per editar aquestes dades." };
+    return { ...ESTAT_INICIAL, error: t.configuracio.errorSensePermisos };
   }
   if (!profile.tenant_id) {
-    return { ...ESTAT_INICIAL, error: "El teu usuari no té cap tenant assignat." };
+    return { ...ESTAT_INICIAL, error: t.configuracio.errorSenseTenant };
   }
 
   const nom_comercial = formData.get("nom_comercial");
@@ -38,7 +40,7 @@ export async function actualitzarTenant(
   const adreca_fiscal = formData.get("adreca_fiscal");
 
   if (typeof nom_comercial !== "string" || !nom_comercial.trim()) {
-    return { ...ESTAT_INICIAL, error: "El nom comercial és obligatori." };
+    return { ...ESTAT_INICIAL, error: t.configuracio.errorNomComercialObligatori };
   }
 
   const { error } = await supabase
@@ -53,7 +55,7 @@ export async function actualitzarTenant(
     .eq("id", profile.tenant_id);
 
   if (error) {
-    return { ...ESTAT_INICIAL, error: "No s'han pogut desar les dades." };
+    return { ...ESTAT_INICIAL, error: t.configuracio.errorDesar };
   }
 
   revalidatePath("/configuracio");

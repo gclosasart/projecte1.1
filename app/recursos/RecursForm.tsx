@@ -11,14 +11,28 @@ type ValorsRecurs = {
   quantitat: number;
 };
 
+type Textos = {
+  nom: string;
+  nomPlaceholder: string;
+  capacitatPersones: string;
+  unitatsDisponiblesLabel: string;
+  preu: string;
+  unitat: string;
+  perHora: string;
+  perDia: string;
+  desant: string;
+};
+
 export function RecursForm({
   action,
   valorsInicials,
   textBoto,
+  textos,
 }: {
   action: (prevState: RecursFormState, formData: FormData) => Promise<RecursFormState>;
   valorsInicials?: ValorsRecurs;
   textBoto: string;
+  textos: Textos;
 }) {
   const [state, formAction, pending] = useActionState<RecursFormState, FormData>(action, {
     error: null,
@@ -28,7 +42,7 @@ export function RecursForm({
     <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <label htmlFor="nom" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Nom
+          {textos.nom}
         </label>
         <input
           id="nom"
@@ -36,7 +50,7 @@ export function RecursForm({
           type="text"
           required
           defaultValue={valorsInicials?.nom}
-          placeholder="Sala Blava"
+          placeholder={textos.nomPlaceholder}
           className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
         />
       </div>
@@ -44,7 +58,7 @@ export function RecursForm({
       <div className="flex gap-4">
         <div className="flex flex-1 flex-col gap-1.5">
           <label htmlFor="capacitat" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-            Capacitat (persones)
+            {textos.capacitatPersones}
           </label>
           <input
             id="capacitat"
@@ -59,7 +73,7 @@ export function RecursForm({
 
         <div className="flex flex-1 flex-col gap-1.5">
           <label htmlFor="quantitat" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-            Unitats disponibles
+            {textos.unitatsDisponiblesLabel}
           </label>
           <input
             id="quantitat"
@@ -77,7 +91,7 @@ export function RecursForm({
       <div className="flex gap-4">
         <div className="flex flex-1 flex-col gap-1.5">
           <label htmlFor="preu" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-            Preu
+            {textos.preu}
           </label>
           <input
             id="preu"
@@ -93,7 +107,7 @@ export function RecursForm({
 
         <div className="flex flex-1 flex-col gap-1.5">
           <label htmlFor="unitat_preu" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-            Unitat
+            {textos.unitat}
           </label>
           <select
             id="unitat_preu"
@@ -101,8 +115,8 @@ export function RecursForm({
             defaultValue={valorsInicials?.unitat_preu ?? "hora"}
             className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
           >
-            <option value="hora">€/hora</option>
-            <option value="dia">€/dia</option>
+            <option value="hora">{textos.perHora}</option>
+            <option value="dia">{textos.perDia}</option>
           </select>
         </div>
       </div>
@@ -114,7 +128,7 @@ export function RecursForm({
         disabled={pending}
         className="mt-2 rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
       >
-        {pending ? "Desant..." : textBoto}
+        {pending ? textos.desant : textBoto}
       </button>
     </form>
   );

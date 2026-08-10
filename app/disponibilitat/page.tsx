@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 
 type Recurs = {
   id: string;
@@ -40,6 +41,7 @@ export default async function DisponibilitatPage({
   searchParams: Promise<{ data?: string }>;
 }) {
   const { data: dataParam } = await searchParams;
+  const t = await getDict();
   const avui = new Date();
   avui.setHours(0, 0, 0, 0);
   const dataSeleccionada =
@@ -82,9 +84,9 @@ export default async function DisponibilitatPage({
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <div className="flex items-center gap-4">
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-            ← Dashboard
+            ← {t.comu.dashboard}
           </Link>
-          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Disponibilitat</h1>
+          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.disponibilitat.titol}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <form method="get" className="flex items-center gap-1.5">
@@ -98,38 +100,37 @@ export default async function DisponibilitatPage({
               type="submit"
               className="rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-black/5 dark:border-white/10 dark:text-zinc-300 dark:hover:bg-white/5"
             >
-              Vés-hi
+              {t.disponibilitat.vesHi}
             </button>
           </form>
           <Link
             href={`/disponibilitat?data=${toISODate(dAnterior)}`}
             className="rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-black/5 dark:border-white/10 dark:text-zinc-300 dark:hover:bg-white/5"
           >
-            ← Dia anterior
+            {t.disponibilitat.diaAnterior}
           </Link>
           <Link
             href={`/disponibilitat?data=${toISODate(avui)}`}
             className="rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-black/5 dark:border-white/10 dark:text-zinc-300 dark:hover:bg-white/5"
           >
-            Avui
+            {t.disponibilitat.avui}
           </Link>
           <Link
             href={`/disponibilitat?data=${toISODate(dSeguent)}`}
             className="rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-black/5 dark:border-white/10 dark:text-zinc-300 dark:hover:bg-white/5"
           >
-            Dia següent →
+            {t.disponibilitat.diaSeguent}
           </Link>
         </div>
       </header>
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
         <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
-          Unitats lliures de cada recurs el {dataSeleccionada} (tenint en compte l&apos;hora de cada
-          reserva, no només si hi ha alguna reserva aquell dia).
+          {t.disponibilitat.descripcio(dataSeleccionada)}
         </p>
 
         {!recursos || recursos.length === 0 ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">No hi ha cap recurs actiu.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.disponibilitat.capRecursActiu}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {recursos.map((r) => {
@@ -154,7 +155,7 @@ export default async function DisponibilitatPage({
                       >
                         {lliures}
                       </span>{" "}
-                      lliures de {r.quantitat}
+                      {t.disponibilitat.lliuresDe(r.quantitat)}
                     </p>
                   </div>
                   <div className="mt-2 h-2 overflow-hidden rounded-full bg-sky-100 dark:bg-zinc-800">

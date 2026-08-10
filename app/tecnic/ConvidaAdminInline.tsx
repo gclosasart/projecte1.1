@@ -1,11 +1,18 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import type { Dict } from "@/lib/i18n";
 import { convidarAdminTenant, type TecnicFormState } from "./actions";
 
 const ESTAT_INICIAL: TecnicFormState = { error: null, success: false };
 
-export function ConvidaAdminInline({ tenantId }: { tenantId: string }) {
+export function ConvidaAdminInline({
+  tenantId,
+  textos: t,
+}: {
+  tenantId: string;
+  textos: Dict["tecnic"];
+}) {
   const [obert, setObert] = useState(false);
   const action = convidarAdminTenant.bind(null, tenantId);
   const [state, formAction, pending] = useActionState<TecnicFormState, FormData>(
@@ -14,7 +21,7 @@ export function ConvidaAdminInline({ tenantId }: { tenantId: string }) {
   );
 
   if (state.success) {
-    return <p className="text-sm text-emerald-700 dark:text-emerald-400">Invitació enviada.</p>;
+    return <p className="text-sm text-emerald-700 dark:text-emerald-400">{t.invitacioEnviada}</p>;
   }
 
   if (!obert) {
@@ -24,7 +31,7 @@ export function ConvidaAdminInline({ tenantId }: { tenantId: string }) {
         onClick={() => setObert(true)}
         className="text-sm font-medium text-sky-700 hover:underline dark:text-sky-400"
       >
-        Convida un admin
+        {t.convidaAdmin}
       </button>
     );
   }
@@ -34,14 +41,14 @@ export function ConvidaAdminInline({ tenantId }: { tenantId: string }) {
       <input
         type="email"
         name="email"
-        placeholder="Email"
+        placeholder={t.emailPlaceholder}
         required
         className="w-48 rounded-lg border border-black/10 bg-white px-2.5 py-1.5 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
       />
       <input
         type="text"
         name="nom"
-        placeholder="Nom (opcional)"
+        placeholder={t.nomOpcionalPlaceholder}
         className="w-36 rounded-lg border border-black/10 bg-white px-2.5 py-1.5 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
       />
       <button
@@ -49,14 +56,14 @@ export function ConvidaAdminInline({ tenantId }: { tenantId: string }) {
         disabled={pending}
         className="rounded-full bg-sky-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-700 disabled:opacity-50"
       >
-        {pending ? "..." : "Convida"}
+        {pending ? "..." : t.convida}
       </button>
       <button
         type="button"
         onClick={() => setObert(false)}
         className="text-sm text-zinc-500 hover:underline dark:text-zinc-400"
       >
-        Cancel·la
+        {t.cancela}
       </button>
       {state.error && (
         <p className="w-full text-sm text-red-600 dark:text-red-400">{state.error}</p>

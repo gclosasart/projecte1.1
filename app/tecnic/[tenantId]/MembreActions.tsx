@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import type { Dict } from "@/lib/i18n";
 import {
   canviarRolMembre,
   enviarResetContrasenya,
@@ -12,11 +13,13 @@ export function MembreActions({
   profileId,
   email,
   rolActual,
+  textos: t,
 }: {
   tenantId: string;
   profileId: string;
   email: string | null;
   rolActual: string;
+  textos: Dict["tecnic"]["detall"];
 }) {
   const [pending, startTransition] = useTransition();
   const [missatge, setMissatge] = useState<MembreActionState | null>(null);
@@ -45,8 +48,8 @@ export function MembreActions({
           onChange={(e) => canviarRol(e.target.value as "tenant_admin" | "user")}
           className="rounded-lg border border-black/10 bg-white px-2 py-1 text-xs text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         >
-          <option value="tenant_admin">Administrador</option>
-          <option value="user">Empleat</option>
+          <option value="tenant_admin">{t.administrador}</option>
+          <option value="user">{t.empleat}</option>
         </select>
         <button
           type="button"
@@ -54,7 +57,7 @@ export function MembreActions({
           disabled={pending || !email}
           className="text-xs font-medium text-sky-700 hover:underline disabled:opacity-40 dark:text-sky-400"
         >
-          Reset contrasenya
+          {t.resetContrasenya}
         </button>
       </div>
       {missatge?.error && <p className="text-xs text-red-600 dark:text-red-400">{missatge.error}</p>}

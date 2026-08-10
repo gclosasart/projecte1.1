@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { marcarPagada } from "./actions";
 
 type Factura = {
@@ -19,11 +20,11 @@ type Factura = {
   } | null;
 };
 
-function nomsRecursosFactura(f: Factura): string {
+function nomsRecursosFactura(f: Factura, recursDesconegut: string): string {
   const noms = (f.ocurrencies?.reserves?.reserva_recursos ?? [])
     .map((rr) => rr.recursos?.nom)
     .filter((n): n is string => Boolean(n));
-  return noms.length > 0 ? noms.join(" + ") : "Recurs desconegut";
+  return noms.length > 0 ? noms.join(" + ") : recursDesconegut;
 }
 
 const ESTAT_ESTIL: Record<string, string> = {
@@ -37,6 +38,7 @@ const ESTAT_ESTIL: Record<string, string> = {
 
 export default async function FacturesPage() {
   const supabase = await createClient();
+  const t = await getDict();
 
   const { data: factures } = await supabase
     .from("factures")
@@ -50,16 +52,14 @@ export default async function FacturesPage() {
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-          ← Dashboard
+          ← {t.comu.dashboard}
         </Link>
-        <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Factures</h1>
+        <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.factures.titol}</h1>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
         {!factures || factures.length === 0 ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Encara no s&apos;ha generat cap factura.
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.factures.capFactura}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {factures.map((f) => (
@@ -69,20 +69,21 @@ export default async function FacturesPage() {
               >
                 <div>
                   <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                    Factura #{f.numero}
+                    {t.factures.factura(f.numero)}
                     <span
                       className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[f.estat] ?? ""}`}
                     >
-                      {f.estat}
+                      {t.comu.estats[f.estat] ?? f.estat}
                     </span>
                   </p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {f.ocurrencies?.reserves?.clients?.nom ?? "Client desconegut"} ·{" "}
-                    {nomsRecursosFactura(f)} ·{" "}
+                    {f.ocurrencies?.reserves?.clients?.nom ?? t.factures.clientDesconegut} ·{" "}
+                    {nomsRecursosFactura(f, t.factures.recursDesconegut)} ·{" "}
                     {f.ocurrencies?.data ?? f.data_emissio}
                   </p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Base {f.base_imposable} € + IVA {f.iva_percent}% = <strong>{f.total} €</strong>
+                    {t.factures.basePrefix(String(f.base_imposable), String(f.iva_percent))}
+                    <strong>{f.total} €</strong>
                   </p>
                 </div>
 
@@ -92,7 +93,7 @@ export default async function FacturesPage() {
                       type="submit"
                       className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
                     >
-                      Marca com a pagada
+                      {t.factures.marcaPagada}
                     </button>
                   </form>
                 )}

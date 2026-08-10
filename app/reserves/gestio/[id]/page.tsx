@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { CancelOcurrenciaButton } from "../CancelOcurrenciaButton";
 import { EditaRecursosReserva } from "../EditaRecursosReserva";
 
@@ -41,6 +42,7 @@ export default async function DetallReservaPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
+  const t = await getDict();
 
   const { data: reserva } = await supabase
     .from("reserves")
@@ -62,7 +64,7 @@ export default async function DetallReservaPage({
     .filter((r): r is { id: string; nom: string } => Boolean(r));
   const nomsRecursos = recursosSeleccionats.length > 0
     ? recursosSeleccionats.map((r) => r.nom).join(" + ")
-    : "Recurs desconegut";
+    : t.reservaGestio.recursDesconegut;
   const client = reserva.clients as unknown as { nom: string } | null;
 
   const { data: totsRecursos } = await supabase
@@ -97,29 +99,34 @@ export default async function DetallReservaPage({
           href="/reserves/gestio"
           className="text-sm text-zinc-500 hover:underline dark:text-zinc-400"
         >
-          ← Gestiona reserves
+          ← {t.reservaGestio.titol}
         </Link>
-        <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Detall de la reserva</h1>
+        <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
+          {t.reservaGestio.detall.titol}
+        </h1>
       </header>
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
           <p className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
-            {nomsRecursos} — {client?.nom ?? "Client desconegut"}
+            {nomsRecursos} — {client?.nom ?? t.reservaGestio.clientDesconegut}
             <span
               className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_RESERVA_ESTIL[reserva.estat] ?? ""}`}
             >
-              {reserva.estat}
+              {t.comu.estats[reserva.estat] ?? reserva.estat}
             </span>
           </p>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            {esRecurrent ? "Recurrent" : "Puntual"} · des del {reserva.data_inici}
+            {esRecurrent ? t.reservaGestio.recurrent : t.reservaGestio.puntual} ·{" "}
+            {t.reservaGestio.desDel(reserva.data_inici)}
             {reserva.frequencia ? ` · ${reserva.frequencia}` : ""}
             {reserva.condicio_final ? ` · ${reserva.condicio_final}` : ""}
           </p>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-            Preu base: {reserva.preu_base_snapshot} €
-            {reserva.model_preu ? ` · ${reserva.model_preu === "per_ocurrencia" ? "preu per ocurrència" : "abonament fix"}` : ""}
+            {t.reservaGestio.detall.preuBase(String(reserva.preu_base_snapshot))}
+            {reserva.model_preu
+              ? ` · ${reserva.model_preu === "per_ocurrencia" ? t.reservaGestio.detall.preuPerOcurrencia : t.reservaGestio.detall.abonamentFix}`
+              : ""}
           </p>
 
           {reserva.notes && (
@@ -133,12 +140,21 @@ export default async function DetallReservaPage({
 
         {reserva.estat === "activa" && (
           <section className="mt-6 rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-            <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">Recursos</h2>
+            <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
+              {t.reservaGestio.detall.recursos}
+            </h2>
             <div className="mt-3">
               <EditaRecursosReserva
                 reservaId={reserva.id}
                 recursosDisponibles={totsRecursos ?? []}
                 recursIdsActuals={recursosSeleccionats.map((r) => r.id)}
+                textos={{
+                  capRecursDonatAlta: t.reservaGestio.detall.capRecursDonatAlta,
+                  noEsPotFerCanvi: t.reservaGestio.detall.noEsPotFerCanvi,
+                  recursosActualitzats: t.reservaGestio.detall.recursosActualitzats,
+                  actualitzant: t.reservaGestio.detall.actualitzant,
+                  actualitzaRecursos: t.reservaGestio.detall.actualitzaRecursos,
+                }}
               />
             </div>
           </section>
@@ -146,7 +162,7 @@ export default async function DetallReservaPage({
 
         <section className="mt-6">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Ocurrències i factures
+            {t.reservaGestio.detall.ocurrenciesIFactures}
           </h2>
           <ul className="flex flex-col gap-3">
             {(ocurrencies ?? []).map((oc) => {
@@ -162,7 +178,7 @@ export default async function DetallReservaPage({
                       <span
                         className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_RESERVA_ESTIL[oc.estat] ?? ""}`}
                       >
-                        {oc.estat}
+                        {t.comu.estats[oc.estat] ?? oc.estat}
                       </span>
                     </p>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -170,11 +186,11 @@ export default async function DetallReservaPage({
                       {factura && (
                         <>
                           {" "}
-                          · Factura #{factura.numero}{" "}
+                          · {t.reservaGestio.detall.factura(factura.numero)}{" "}
                           <span
                             className={`rounded-full px-2 py-0.5 text-xs ${ESTAT_FACTURA_ESTIL[factura.estat] ?? ""}`}
                           >
-                            {factura.estat}
+                            {t.comu.estats[factura.estat] ?? factura.estat}
                           </span>
                         </>
                       )}
@@ -186,6 +202,7 @@ export default async function DetallReservaPage({
                       ocurrenciaId={oc.id}
                       reservaId={reserva.id}
                       esRecurrent={esRecurrent}
+                      textos={t.reservaGestio.detall}
                     />
                   )}
                 </li>

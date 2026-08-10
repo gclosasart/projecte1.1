@@ -10,14 +10,24 @@ type ValorsClient = {
   adreca: string | null;
 };
 
+type Textos = {
+  nom: string;
+  nif: string;
+  email: string;
+  adreca: string;
+  desant: string;
+};
+
 export function ClientForm({
   action,
   valorsInicials,
   textBoto,
+  textos,
 }: {
   action: (prevState: ClientFormState, formData: FormData) => Promise<ClientFormState>;
   valorsInicials?: ValorsClient;
   textBoto: string;
+  textos: Textos;
 }) {
   const [state, formAction, pending] = useActionState<ClientFormState, FormData>(action, {
     error: null,
@@ -27,7 +37,7 @@ export function ClientForm({
     <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <label htmlFor="nom" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Nom
+          {textos.nom}
         </label>
         <input
           id="nom"
@@ -41,7 +51,7 @@ export function ClientForm({
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="nif" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          NIF/CIF
+          {textos.nif}
         </label>
         <input
           id="nif"
@@ -54,7 +64,7 @@ export function ClientForm({
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="email" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Email
+          {textos.email}
         </label>
         <input
           id="email"
@@ -67,7 +77,7 @@ export function ClientForm({
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="adreca" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Adreça
+          {textos.adreca}
         </label>
         <input
           id="adreca"
@@ -85,7 +95,7 @@ export function ClientForm({
         disabled={pending}
         className="mt-2 rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
       >
-        {pending ? "Desant..." : textBoto}
+        {pending ? textos.desant : textBoto}
       </button>
     </form>
   );

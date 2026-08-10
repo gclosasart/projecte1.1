@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 
 export type DetallTenantState = {
   error: string | null;
@@ -30,8 +31,9 @@ export async function actualitzarDetallsTenant(
   _prevState: DetallTenantState,
   formData: FormData,
 ): Promise<DetallTenantState> {
+  const t = await getDict();
   if (!(await assegurarTecnic())) {
-    return { ...ESTAT_INICIAL, error: "Només el tècnic pot editar això." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.detall.errorNomesTecnic };
   }
 
   const especificacions = formData.get("especificacions");
@@ -40,7 +42,7 @@ export async function actualitzarDetallsTenant(
     typeof quotaRaw === "string" && quotaRaw.trim() !== "" ? Number(quotaRaw) : null;
 
   if (quota_mensual !== null && (Number.isNaN(quota_mensual) || quota_mensual < 0)) {
-    return { ...ESTAT_INICIAL, error: "La quota no és vàlida." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.detall.errorQuota };
   }
 
   const supabase = await createClient();
@@ -54,7 +56,7 @@ export async function actualitzarDetallsTenant(
     .eq("id", tenantId);
 
   if (error) {
-    return { ...ESTAT_INICIAL, error: "No s'ha pogut desar." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.detall.errorDesar };
   }
 
   revalidatePath(`/tecnic/${tenantId}`);
@@ -98,11 +100,12 @@ export async function canviarRolMembre(
   profileId: string,
   nouRol: "tenant_admin" | "user",
 ): Promise<MembreActionState> {
+  const t = await getDict();
   if (!(await assegurarTecnic())) {
-    return { ...MEMBRE_ESTAT_INICIAL, error: "Només el tècnic pot fer això." };
+    return { ...MEMBRE_ESTAT_INICIAL, error: t.tecnic.detall.errorNomesTecnicFer };
   }
   if (nouRol !== "tenant_admin" && nouRol !== "user") {
-    return { ...MEMBRE_ESTAT_INICIAL, error: "Rol no vàlid." };
+    return { ...MEMBRE_ESTAT_INICIAL, error: t.tecnic.detall.errorRolInvalid };
   }
 
   const supabase = await createClient();
@@ -113,19 +116,20 @@ export async function canviarRolMembre(
     .eq("tenant_id", tenantId);
 
   if (error) {
-    return { ...MEMBRE_ESTAT_INICIAL, error: "No s'ha pogut canviar el rol." };
+    return { ...MEMBRE_ESTAT_INICIAL, error: t.tecnic.detall.errorCanviarRol };
   }
 
   revalidatePath(`/tecnic/${tenantId}`);
-  return { ...MEMBRE_ESTAT_INICIAL, missatge: "Rol actualitzat." };
+  return { ...MEMBRE_ESTAT_INICIAL, missatge: t.tecnic.detall.rolActualitzat };
 }
 
 export async function enviarResetContrasenya(email: string): Promise<MembreActionState> {
+  const t = await getDict();
   if (!(await assegurarTecnic())) {
-    return { ...MEMBRE_ESTAT_INICIAL, error: "Només el tècnic pot fer això." };
+    return { ...MEMBRE_ESTAT_INICIAL, error: t.tecnic.detall.errorNomesTecnicFer };
   }
   if (!email) {
-    return { ...MEMBRE_ESTAT_INICIAL, error: "Falta l'email." };
+    return { ...MEMBRE_ESTAT_INICIAL, error: t.tecnic.detall.errorFaltaEmail };
   }
 
   const supabase = await createClient();
@@ -135,8 +139,8 @@ export async function enviarResetContrasenya(email: string): Promise<MembreActio
   });
 
   if (error) {
-    return { ...MEMBRE_ESTAT_INICIAL, error: "No s'ha pogut enviar l'email de restabliment." };
+    return { ...MEMBRE_ESTAT_INICIAL, error: t.tecnic.detall.errorEnviarReset };
   }
 
-  return { ...MEMBRE_ESTAT_INICIAL, missatge: "Email de restabliment enviat." };
+  return { ...MEMBRE_ESTAT_INICIAL, missatge: t.tecnic.detall.resetEnviat };
 }

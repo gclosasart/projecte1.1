@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 
 export type ClientFormState = {
   error: string | null;
@@ -30,14 +31,17 @@ async function tenantIdActual() {
   return profile?.tenant_id as string | null | undefined;
 }
 
-function llegirCamps(formData: FormData): { ok: true; camps: CampsClient } | { ok: false; error: string } {
+async function llegirCamps(
+  formData: FormData,
+): Promise<{ ok: true; camps: CampsClient } | { ok: false; error: string }> {
+  const t = await getDict();
   const nom = formData.get("nom");
   const nif = formData.get("nif");
   const email = formData.get("email");
   const adreca = formData.get("adreca");
 
   if (typeof nom !== "string" || !nom.trim()) {
-    return { ok: false, error: "El nom és obligatori." };
+    return { ok: false, error: t.clients.errorNomObligatori };
   }
 
   return {
@@ -55,19 +59,20 @@ export async function crearClient(
   _prevState: ClientFormState,
   formData: FormData,
 ): Promise<ClientFormState> {
-  const resultat = llegirCamps(formData);
+  const t = await getDict();
+  const resultat = await llegirCamps(formData);
   if (!resultat.ok) return { error: resultat.error };
 
   const tenant_id = await tenantIdActual();
   if (!tenant_id) {
-    return { error: "El teu usuari no té cap tenant assignat." };
+    return { error: t.clients.errorSenseTenant };
   }
 
   const supabase = await createClient();
   const { error } = await supabase.from("clients").insert({ ...resultat.camps, tenant_id });
 
   if (error) {
-    return { error: "No s'ha pogut crear el client." };
+    return { error: t.clients.errorCrear };
   }
 
   revalidatePath("/clients");
@@ -79,9 +84,10 @@ export async function eliminarClient(
   _prevState: ClientFormState,
   formData: FormData,
 ): Promise<ClientFormState> {
+  const t = await getDict();
   const confirmacio = formData.get("confirmacio");
   if (typeof confirmacio !== "string" || confirmacio.trim().toUpperCase() !== "ELIMINA") {
-    return { error: 'Has d\'escriure "ELIMINA" per confirmar.' };
+    return { error: t.clients.errorConfirmacio };
   }
 
   const supabase = await createClient();
@@ -89,9 +95,9 @@ export async function eliminarClient(
 
   if (error) {
     if (error.code === "23503") {
-      return { error: "No es pot eliminar: aquest client té reserves associades." };
+      return { error: t.clients.errorReservesAssociades };
     }
-    return { error: "No s'ha pogut eliminar el client." };
+    return { error: t.clients.errorEliminar };
   }
 
   revalidatePath("/clients");
@@ -103,14 +109,15 @@ export async function actualitzarClient(
   _prevState: ClientFormState,
   formData: FormData,
 ): Promise<ClientFormState> {
-  const resultat = llegirCamps(formData);
+  const t = await getDict();
+  const resultat = await llegirCamps(formData);
   if (!resultat.ok) return { error: resultat.error };
 
   const supabase = await createClient();
   const { error } = await supabase.from("clients").update(resultat.camps).eq("id", id);
 
   if (error) {
-    return { error: "No s'ha pogut desar el client." };
+    return { error: t.clients.errorDesar };
   }
 
   revalidatePath("/clients");

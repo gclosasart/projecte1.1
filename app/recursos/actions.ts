@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 
 export type RecursFormState = {
   error: string | null;
@@ -31,7 +32,10 @@ type CampsRecurs = {
   quantitat: number;
 };
 
-function llegirCamps(formData: FormData): { ok: true; camps: CampsRecurs } | { ok: false; error: string } {
+async function llegirCamps(
+  formData: FormData,
+): Promise<{ ok: true; camps: CampsRecurs } | { ok: false; error: string }> {
+  const t = await getDict();
   const nom = formData.get("nom");
   const capacitat = formData.get("capacitat");
   const preu = formData.get("preu");
@@ -39,22 +43,22 @@ function llegirCamps(formData: FormData): { ok: true; camps: CampsRecurs } | { o
   const quantitat = formData.get("quantitat");
 
   if (typeof nom !== "string" || !nom.trim()) {
-    return { ok: false, error: "El nom és obligatori." };
+    return { ok: false, error: t.recursos.errorNomObligatori };
   }
   const preuNum = Number(preu);
   if (typeof preu !== "string" || preu === "" || Number.isNaN(preuNum) || preuNum < 0) {
-    return { ok: false, error: "El preu no és vàlid." };
+    return { ok: false, error: t.recursos.errorPreu };
   }
   const capacitatNum = capacitat ? Number(capacitat) : null;
   if (capacitat && (Number.isNaN(capacitatNum) || (capacitatNum ?? 0) < 0)) {
-    return { ok: false, error: "La capacitat no és vàlida." };
+    return { ok: false, error: t.recursos.errorCapacitat };
   }
   if (unitat_preu !== "hora" && unitat_preu !== "dia") {
-    return { ok: false, error: "La unitat de preu no és vàlida." };
+    return { ok: false, error: t.recursos.errorUnitatPreu };
   }
   const quantitatNum = Number(quantitat);
   if (typeof quantitat !== "string" || quantitat === "" || !Number.isInteger(quantitatNum) || quantitatNum < 1) {
-    return { ok: false, error: "Les unitats disponibles no són vàlides." };
+    return { ok: false, error: t.recursos.errorQuantitat };
   }
 
   return {
@@ -67,12 +71,13 @@ export async function crearRecurs(
   _prevState: RecursFormState,
   formData: FormData,
 ): Promise<RecursFormState> {
-  const resultat = llegirCamps(formData);
+  const t = await getDict();
+  const resultat = await llegirCamps(formData);
   if (!resultat.ok) return { error: resultat.error };
 
   const tenant_id = await tenantIdActual();
   if (!tenant_id) {
-    return { error: "El teu usuari no té cap tenant assignat." };
+    return { error: t.recursos.errorSenseTenant };
   }
 
   const supabase = await createClient();
@@ -81,7 +86,7 @@ export async function crearRecurs(
     .insert({ ...resultat.camps, tenant_id });
 
   if (error) {
-    return { error: "No s'ha pogut crear el recurs." };
+    return { error: t.recursos.errorCrear };
   }
 
   revalidatePath("/recursos");
@@ -93,14 +98,15 @@ export async function actualitzarRecurs(
   _prevState: RecursFormState,
   formData: FormData,
 ): Promise<RecursFormState> {
-  const resultat = llegirCamps(formData);
+  const t = await getDict();
+  const resultat = await llegirCamps(formData);
   if (!resultat.ok) return { error: resultat.error };
 
   const supabase = await createClient();
   const { error } = await supabase.from("recursos").update(resultat.camps).eq("id", id);
 
   if (error) {
-    return { error: "No s'ha pogut desar el recurs." };
+    return { error: t.recursos.errorDesar };
   }
 
   revalidatePath("/recursos");
@@ -112,9 +118,10 @@ export async function eliminarRecurs(
   _prevState: RecursFormState,
   formData: FormData,
 ): Promise<RecursFormState> {
+  const t = await getDict();
   const confirmacio = formData.get("confirmacio");
   if (typeof confirmacio !== "string" || confirmacio.trim().toUpperCase() !== "ELIMINA") {
-    return { error: 'Has d\'escriure "ELIMINA" per confirmar.' };
+    return { error: t.recursos.errorConfirmacio };
   }
 
   const supabase = await createClient();
@@ -126,7 +133,7 @@ export async function eliminarRecurs(
     .single();
 
   if (!recurs?.bloquejat) {
-    return { error: "Cal bloquejar el recurs abans de poder eliminar-lo." };
+    return { error: t.recursos.errorCalBloquejar };
   }
 
   const { count } = await supabase
@@ -135,15 +142,13 @@ export async function eliminarRecurs(
     .eq("recurs_id", id);
 
   if (count && count > 0) {
-    return {
-      error: `No es pot eliminar: aquest recurs té ${count} reserva${count === 1 ? "" : "s"} associada${count === 1 ? "" : "es"}.`,
-    };
+    return { error: t.recursos.errorReservesAssociades(count) };
   }
 
   const { error } = await supabase.from("recursos").delete().eq("id", id);
 
   if (error) {
-    return { error: "No s'ha pogut eliminar el recurs." };
+    return { error: t.recursos.errorEliminar };
   }
 
   revalidatePath("/recursos");

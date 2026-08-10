@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { DetallsForm } from "./DetallsForm";
 import { NotesTenant } from "./NotesTenant";
 import { MembreActions } from "./MembreActions";
@@ -19,6 +20,7 @@ export default async function DetallTenantPage({
 }) {
   const { tenantId } = await params;
   const supabase = await createClient();
+  const t = await getDict();
 
   const {
     data: { user },
@@ -34,9 +36,7 @@ export default async function DetallTenantPage({
     return (
       <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
         <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Aquesta pantalla és només per al tècnic.
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.nomesPerTecnic}</p>
         </main>
       </div>
     );
@@ -69,7 +69,7 @@ export default async function DetallTenantPage({
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <Link href="/tecnic" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-          ← Panell de tècnic
+          ← {t.tecnic.titol}
         </Link>
         <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
           {tenant.nom_comercial}
@@ -77,19 +77,14 @@ export default async function DetallTenantPage({
       </header>
 
       <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-8">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Vista només de gestió — no s&apos;hi veuen ni s&apos;hi toquen les reserves, clients o
-          factures reals d&apos;aquest tenant.
-        </p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.detall.vistaNomesGestio}</p>
 
         <section>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Equip
+            {t.tecnic.detall.equip}
           </h2>
           {!membres || membres.length === 0 ? (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Aquest tenant encara no té ningú a l&apos;equip.
-            </p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.detall.capMembre}</p>
           ) : (
             <ul className="flex flex-col gap-2">
               {membres.map((m) => (
@@ -99,7 +94,7 @@ export default async function DetallTenantPage({
                 >
                   <div>
                     <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                      {m.nom ?? m.email ?? "Sense nom"}
+                      {m.nom ?? m.email ?? t.tecnic.detall.senseNom}
                     </p>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">{m.email}</p>
                   </div>
@@ -108,6 +103,7 @@ export default async function DetallTenantPage({
                     profileId={m.id}
                     email={m.email}
                     rolActual={m.rol}
+                    textos={t.tecnic.detall}
                   />
                 </li>
               ))}
@@ -117,21 +113,24 @@ export default async function DetallTenantPage({
 
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-            Especificacions i quota
+            {t.tecnic.detall.especificacionsIQuota}
           </h2>
           <div className="mt-4">
             <DetallsForm
               tenantId={tenantId}
               especificacionsInicials={tenant.especificacions}
               quotaInicial={tenant.quota_mensual}
+              textos={t.tecnic.detall}
             />
           </div>
         </section>
 
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-          <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">Notes</h2>
+          <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
+            {t.tecnic.detall.notes}
+          </h2>
           <div className="mt-4">
-            <NotesTenant tenantId={tenantId} notes={notes ?? []} />
+            <NotesTenant tenantId={tenantId} notes={notes ?? []} textos={t.tecnic.detall} />
           </div>
         </section>
       </main>

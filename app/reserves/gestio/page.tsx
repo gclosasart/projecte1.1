@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { ReservaCard } from "./ReservaCard";
 import { ArxivadesSection } from "./ArxivadesSection";
 import type { Reserva } from "./tipus";
 
 export default async function GestioReservesPage() {
   const supabase = await createClient();
+  const t = await getDict();
 
   const { data: reserves } = await supabase
     .from("reserves")
@@ -57,40 +59,49 @@ export default async function GestioReservesPage() {
     }
   }
 
+  const textosCard = {
+    clientDesconegut: t.reservaGestio.clientDesconegut,
+    recursDesconegut: t.reservaGestio.recursDesconegut,
+    puntual: t.reservaGestio.puntual,
+    recurrent: t.reservaGestio.recurrent,
+    desDel: t.reservaGestio.desDel,
+    arxiva: t.reservaGestio.arxiva,
+    desarxiva: t.reservaGestio.desarxiva,
+    estats: t.comu.estats,
+  };
+
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center justify-between gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <div className="flex items-center gap-4">
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-            ← Dashboard
+            ← {t.comu.dashboard}
           </Link>
-          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Gestiona reserves</h1>
+          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.reservaGestio.titol}</h1>
         </div>
         <Link
           href="/reserves/nova"
           className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
-          Nova reserva
+          {t.reservaGestio.novaReserva}
         </Link>
       </header>
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
         {visibles.length === 0 ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Encara no hi ha cap reserva creada.
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capReservaCreada}</p>
         ) : (
           <div className="grid gap-6 md:grid-cols-2">
             <section>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                En curs ({enCurs.length})
+                {t.reservaGestio.enCurs(enCurs.length)}
               </h2>
               {enCurs.length === 0 ? (
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">Cap reserva en curs.</p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capEnCurs}</p>
               ) : (
                 <ul className="flex flex-col gap-3">
                   {enCurs.map((r) => (
-                    <ReservaCard key={r.id} r={r} />
+                    <ReservaCard key={r.id} r={r} textos={textosCard} />
                   ))}
                 </ul>
               )}
@@ -99,14 +110,14 @@ export default async function GestioReservesPage() {
             <div className="flex flex-col gap-6">
               <section>
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Pagades ({pagades.length})
+                  {t.reservaGestio.pagades(pagades.length)}
                 </h2>
                 {pagades.length === 0 ? (
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Cap reserva totalment pagada.</p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capPagada}</p>
                 ) : (
                   <ul className="flex flex-col gap-3">
                     {pagades.map((r) => (
-                      <ReservaCard key={r.id} r={r} />
+                      <ReservaCard key={r.id} r={r} textos={textosCard} />
                     ))}
                   </ul>
                 )}
@@ -114,14 +125,14 @@ export default async function GestioReservesPage() {
 
               <section>
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Cancel·lades ({cancellades.length})
+                  {t.reservaGestio.cancellades(cancellades.length)}
                 </h2>
                 {cancellades.length === 0 ? (
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Cap reserva cancel·lada.</p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capCancellada}</p>
                 ) : (
                   <ul className="flex flex-col gap-3">
                     {cancellades.map((r) => (
-                      <ReservaCard key={r.id} r={r} />
+                      <ReservaCard key={r.id} r={r} textos={textosCard} />
                     ))}
                   </ul>
                 )}
@@ -130,7 +141,7 @@ export default async function GestioReservesPage() {
           </div>
         )}
 
-        <ArxivadesSection reserves={arxivades} />
+        <ArxivadesSection reserves={arxivades} textos={{ ...textosCard, arxivades: t.reservaGestio.arxivades }} />
       </main>
     </div>
   );

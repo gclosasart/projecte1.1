@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getDict } from "@/lib/i18n";
 
 export type TecnicFormState = {
   error: string | null;
@@ -30,8 +31,9 @@ export async function crearTenant(
   _prevState: TecnicFormState,
   formData: FormData,
 ): Promise<TecnicFormState> {
+  const t = await getDict();
   if (!(await assegurarTecnic())) {
-    return { ...ESTAT_INICIAL, error: "Només el tècnic pot crear tenants." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorNomesTecnicCrear };
   }
 
   const nom_comercial = formData.get("nom_comercial");
@@ -40,7 +42,7 @@ export async function crearTenant(
   const adreca_fiscal = formData.get("adreca_fiscal");
 
   if (typeof nom_comercial !== "string" || !nom_comercial.trim()) {
-    return { ...ESTAT_INICIAL, error: "El nom comercial és obligatori." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorNomComercialObligatori };
   }
 
   const supabase = await createClient();
@@ -53,7 +55,7 @@ export async function crearTenant(
   });
 
   if (error) {
-    return { ...ESTAT_INICIAL, error: "No s'ha pogut crear el tenant." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorCrear };
   }
 
   revalidatePath("/tecnic");
@@ -65,13 +67,14 @@ export async function eliminarTenant(
   _prevState: TecnicFormState,
   formData: FormData,
 ): Promise<TecnicFormState> {
+  const t = await getDict();
   if (!(await assegurarTecnic())) {
-    return { ...ESTAT_INICIAL, error: "Només el tècnic pot eliminar tenants." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorNomesTecnicEliminar };
   }
 
   const confirmacio = formData.get("confirmacio");
   if (typeof confirmacio !== "string" || confirmacio.trim().toUpperCase() !== "ELIMINA") {
-    return { ...ESTAT_INICIAL, error: 'Has d\'escriure "ELIMINA" per confirmar.' };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorConfirmacio };
   }
 
   const supabase = await createClient();
@@ -81,10 +84,10 @@ export async function eliminarTenant(
     if (error.code === "23503") {
       return {
         ...ESTAT_INICIAL,
-        error: "No es pot eliminar: aquest tenant té equip, recursos, clients o reserves associats.",
+        error: t.tecnic.errorReservesAssociades,
       };
     }
-    return { ...ESTAT_INICIAL, error: "No s'ha pogut eliminar el tenant." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorEliminar };
   }
 
   revalidatePath("/tecnic");
@@ -96,15 +99,16 @@ export async function convidarAdminTenant(
   _prevState: TecnicFormState,
   formData: FormData,
 ): Promise<TecnicFormState> {
+  const t = await getDict();
   if (!(await assegurarTecnic())) {
-    return { ...ESTAT_INICIAL, error: "Només el tècnic pot convidar administradors." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorNomesTecnicConvidar };
   }
 
   const email = formData.get("email");
   const nom = formData.get("nom");
 
   if (typeof email !== "string" || !email.trim()) {
-    return { ...ESTAT_INICIAL, error: "Introdueix un email vàlid." };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorEmailInvalid };
   }
 
   const admin = createAdminClient();
@@ -121,7 +125,7 @@ export async function convidarAdminTenant(
   });
 
   if (error) {
-    return { ...ESTAT_INICIAL, error: `No s'ha pogut enviar la invitació: ${error.message}` };
+    return { ...ESTAT_INICIAL, error: t.tecnic.errorEnviarInvitacio(error.message) };
   }
 
   revalidatePath("/tecnic");

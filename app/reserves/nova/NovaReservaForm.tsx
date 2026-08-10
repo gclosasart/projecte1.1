@@ -2,8 +2,9 @@
 
 import { useActionState, useMemo, useState } from "react";
 import Link from "next/link";
+import type { Dict } from "@/lib/i18n";
 import { crearReserva, type NovaReservaState } from "./actions";
-import { DIES_SETMANA, calcularPreusBase, generarDates, type CondicioTipus } from "./recurrencia";
+import { calcularPreusBase, generarDates, type CondicioTipus } from "./recurrencia";
 
 type Recurs = {
   id: string;
@@ -23,7 +24,15 @@ type Client = {
 
 const ESTAT_INICIAL: NovaReservaState = { error: null, conflictes: null, exit: null };
 
-export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; clients: Client[] }) {
+export function NovaReservaForm({
+  recursos,
+  clients,
+  textos: t,
+}: {
+  recursos: Recurs[];
+  clients: Client[];
+  textos: Dict["reservaNova"];
+}) {
   const [state, formAction, pending] = useActionState<NovaReservaState, FormData>(
     crearReserva,
     ESTAT_INICIAL,
@@ -96,14 +105,13 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
     return (
       <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6 text-center dark:border-emerald-900/40 dark:bg-emerald-950/20">
         <p className="text-lg font-semibold text-emerald-800 dark:text-emerald-300">
-          Reserva creada — {state.exit.numOcurrencies} ocurrències, {state.exit.numOcurrencies} factures
-          generades
+          {t.reservaCreada(state.exit.numOcurrencies)}
         </p>
         <Link
           href="/reserves/gestio"
           className="mt-4 inline-block rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
-          Veure les reserves
+          {t.veuReserves}
         </Link>
       </div>
     );
@@ -113,12 +121,12 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
     <form action={formAction} className="flex flex-col gap-8">
       {/* Recurs */}
       <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">1. Recursos</h2>
+        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{t.pas1Recursos}</h2>
         {recursos.length === 0 ? (
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-            No hi ha cap recurs actiu.{" "}
+            {t.capRecursActiu}{" "}
             <Link href="/recursos/nou" className="underline">
-              Crea&apos;n un primer
+              {t.creaPrimerRecurs}
             </Link>
             .
           </p>
@@ -137,8 +145,9 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                   onChange={() => toggleRecurs(r.id)}
                 />
                 <span className="text-zinc-950 dark:text-zinc-50">
-                  {r.nom} — {r.capacitat ?? "?"} persones — {r.preu} €/{r.unitat_preu === "hora" ? "h" : "dia"}
-                  {r.quantitat > 1 ? ` — ${r.quantitat} unitats` : ""}
+                  {r.nom} — {t.personesCurt(r.capacitat ?? 0)} — {r.preu} €/
+                  {r.unitat_preu === "hora" ? "h" : t.perDiaCurt}
+                  {r.quantitat > 1 ? ` — ${t.unitatsCurt(r.quantitat)}` : ""}
                 </span>
               </label>
             ))}
@@ -148,21 +157,21 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
 
       {/* Client */}
       <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">2. Client</h2>
+        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{t.pas2Client}</h2>
         <div className="mt-3 flex gap-2">
           <button
             type="button"
             onClick={() => setClientMode("existent")}
             className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "existent" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
-            Client existent
+            {t.clientExistent}
           </button>
           <button
             type="button"
             onClick={() => setClientMode("nou")}
             className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "nou" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
-            Crear client nou
+            {t.creaClientNou}
           </button>
         </div>
 
@@ -172,14 +181,14 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
             <input type="hidden" name="client_id" value={clientId} />
             <input
               type="text"
-              placeholder="Cerca per nom, email o NIF..."
+              placeholder={t.cercaClient}
               value={clientQuery}
               onChange={(e) => setClientQuery(e.target.value)}
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <div className="max-h-40 overflow-y-auto rounded-lg border border-black/10 dark:border-white/10">
               {clientsFiltrats.length === 0 ? (
-                <p className="p-3 text-sm text-zinc-500 dark:text-zinc-400">Cap client trobat.</p>
+                <p className="p-3 text-sm text-zinc-500 dark:text-zinc-400">{t.capClientTrobat}</p>
               ) : (
                 clientsFiltrats.map((c) => (
                   <button
@@ -199,24 +208,24 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
             <input type="hidden" name="client_mode" value="nou" />
             <input
               name="client_nom"
-              placeholder="Nom"
+              placeholder={t.nomClientPlaceholder}
               required={clientMode === "nou"}
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_nif"
-              placeholder="NIF/CIF"
+              placeholder={t.nifPlaceholder}
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_email"
               type="email"
-              placeholder="Email"
+              placeholder={t.emailPlaceholder}
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_adreca"
-              placeholder="Adreça"
+              placeholder={t.adrecaPlaceholder}
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
@@ -225,7 +234,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
 
       {/* Puntual / Recurrent */}
       <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">3. Quan</h2>
+        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{t.pas3Quan}</h2>
 
         <div className="mt-3 flex gap-2">
           <button
@@ -233,14 +242,14 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
             onClick={() => setTipus("puntual")}
             className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "puntual" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
-            Puntual
+            {t.puntual}
           </button>
           <button
             type="button"
             onClick={() => setTipus("recurrent")}
             className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "recurrent" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
-            Recurrent
+            {t.recurrent}
           </button>
         </div>
         <input type="hidden" name="tipus" value={tipus} />
@@ -248,7 +257,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
         <div className="mt-4 flex flex-wrap gap-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              {tipus === "puntual" ? "Data" : "Data d'inici"}
+              {tipus === "puntual" ? t.data : t.dataInici}
             </label>
             <input
               type="date"
@@ -261,7 +270,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Hora inici</label>
+            <label className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.horaInici}</label>
             <input
               type="time"
               name="hora_inici"
@@ -273,7 +282,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Hora fi</label>
+            <label className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.horaFi}</label>
             <input
               type="time"
               name="hora_fi"
@@ -289,9 +298,9 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
         {tipus === "recurrent" && (
           <div className="mt-5 flex flex-col gap-4 border-t border-black/5 pt-4 dark:border-white/5">
             <div>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Freqüència</p>
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.frequencia}</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                {DIES_SETMANA.map((d) => (
+                {t.diesSetmana.map((d) => (
                   <label
                     key={d.num}
                     className={`cursor-pointer rounded-full px-3 py-1 text-sm ${diesSetmana.includes(d.num) ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
@@ -311,7 +320,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
             </div>
 
             <div>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Condició de final</p>
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.condicioFinal}</p>
               <div className="mt-2 flex flex-wrap items-center gap-4">
                 <label className="flex items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300">
                   <input
@@ -321,7 +330,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                     checked={condicioTipus === "data"}
                     onChange={() => setCondicioTipus("data")}
                   />
-                  Data concreta
+                  {t.dataConcreta}
                   <input
                     type="date"
                     name="condicio_data"
@@ -340,7 +349,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                     checked={condicioTipus === "sessions"}
                     onChange={() => setCondicioTipus("sessions")}
                   />
-                  Núm. sessions
+                  {t.numSessions}
                   <input
                     type="number"
                     name="condicio_sessions"
@@ -359,18 +368,16 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                     checked={condicioTipus === "obert"}
                     onChange={() => setCondicioTipus("obert")}
                   />
-                  Fins a cancel·lació
+                  {t.finsCancelacioLabel}
                 </label>
               </div>
               {condicioTipus === "obert" && (
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                  Es generen les properes {52} ocurrències com a màxim; caldrà ampliar-les més endavant.
-                </p>
+                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{t.avisObert}</p>
               )}
             </div>
 
             <div>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Model de preu</p>
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.modelDePreu}</p>
               <div className="mt-2 flex flex-wrap items-center gap-4">
                 <label className="flex items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300">
                   <input
@@ -380,7 +387,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                     checked={modelPreu === "per_ocurrencia"}
                     onChange={() => setModelPreu("per_ocurrencia")}
                   />
-                  Preu per ocurrència
+                  {t.preuPerOcurrencia}
                 </label>
                 <label className="flex items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300">
                   <input
@@ -390,13 +397,13 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
                     checked={modelPreu === "abonament_fix"}
                     onChange={() => setModelPreu("abonament_fix")}
                   />
-                  Abonament fix mensual
+                  {t.abonamentFixMensual}
                   <input
                     type="number"
                     name="preu_abonament"
                     min={0}
                     step="0.01"
-                    placeholder="€/mes"
+                    placeholder={t.perMesPlaceholder}
                     value={preuAbonament}
                     onChange={(e) => setPreuAbonament(e.target.value)}
                     disabled={modelPreu !== "abonament_fix"}
@@ -411,20 +418,19 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
 
       {/* Previsualització */}
       <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">4. Previsualització</h2>
+        <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{t.pas4Previsualitzacio}</h2>
         {datesPrevistes.length === 0 ? (
-          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-            Omple la data per veure les ocurrències generades.
-          </p>
+          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">{t.ompleData}</p>
         ) : (
           <>
             <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">
-              {datesPrevistes.length} ocurrències generades: {datesPrevistes.slice(0, 6).join(", ")}
+              {t.ocurrenciesGenerades(datesPrevistes.length)}
+              {datesPrevistes.slice(0, 6).join(", ")}
               {datesPrevistes.length > 6 ? "…" : ""}
             </p>
             {preusPrevistos.length > 0 && (
               <p className="mt-1 text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                Import total estimat: {totalPrevist.toFixed(2)} € (+ IVA)
+                {t.importTotalEstimat(totalPrevist.toFixed(2))}
               </p>
             )}
           </>
@@ -432,8 +438,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
 
         {state.conflictes && state.conflictes.length > 0 && (
           <div className="mt-3 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-300">
-            No es pot crear la reserva: hi ha conflicte d&apos;horari a {state.conflictes.join(", ")}.
-            Ajusta el recurs, l&apos;hora o exclou aquestes dates.
+            {t.conflicteHorari(state.conflictes.join(", "))}
           </div>
         )}
         {state.error && (
@@ -445,7 +450,7 @@ export function NovaReservaForm({ recursos, clients }: { recursos: Recurs[]; cli
           disabled={pending || recursos.length === 0}
           className="mt-4 rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
-          {pending ? "Creant..." : "Confirma la reserva"}
+          {pending ? t.creant : t.confirmaReserva}
         </button>
       </section>
     </form>

@@ -3,14 +3,26 @@
 import { useState, useTransition } from "react";
 import { cancelarOcurrencia, type CancelState } from "./actions";
 
+type Textos = {
+  cancella: string;
+  cancellant: string;
+  cancellada: string;
+  segurCancelar: string;
+  nomesAquesta: string;
+  aquestaIFutures: string;
+  enrere: string;
+};
+
 export function CancelOcurrenciaButton({
   ocurrenciaId,
   reservaId,
   esRecurrent,
+  textos,
 }: {
   ocurrenciaId: string;
   reservaId: string;
   esRecurrent: boolean;
+  textos: Textos;
 }) {
   const [mode, setMode] = useState<"idle" | "triant">("idle");
   const [resultat, setResultat] = useState<CancelState | null>(null);
@@ -27,7 +39,7 @@ export function CancelOcurrenciaButton({
   if (resultat && !resultat.error) {
     return (
       <div className="flex flex-col items-end gap-1">
-        <span className="text-sm text-emerald-700 dark:text-emerald-400">Cancel·lada.</span>
+        <span className="text-sm text-emerald-700 dark:text-emerald-400">{textos.cancellada}</span>
         {resultat.avisos && (
           <div className="max-w-64 rounded-lg border border-red-300 bg-red-50 p-2 text-xs text-red-800 dark:border-red-900/40 dark:bg-red-950/20 dark:text-red-300">
             {resultat.avisos.map((a, i) => (
@@ -49,7 +61,7 @@ export function CancelOcurrenciaButton({
             disabled={pending}
             className="text-sm font-medium text-red-600 hover:underline disabled:opacity-40 dark:text-red-400"
           >
-            Cancel·la
+            {textos.cancella}
           </button>
         ) : (
           <button
@@ -58,12 +70,12 @@ export function CancelOcurrenciaButton({
             disabled={pending}
             className="text-sm font-medium text-red-600 hover:underline disabled:opacity-40 dark:text-red-400"
           >
-            {pending ? "Cancel·lant..." : "Cancel·la"}
+            {pending ? textos.cancellant : textos.cancella}
           </button>
         )
       ) : (
         <div className="flex flex-col items-end gap-1.5 rounded-lg border border-red-200 bg-red-50 p-2 dark:border-red-900/40 dark:bg-red-950/20">
-          <p className="text-xs text-red-700 dark:text-red-400">Segur que vols cancel·lar?</p>
+          <p className="text-xs text-red-700 dark:text-red-400">{textos.segurCancelar}</p>
           <div className="flex gap-2">
             <button
               type="button"
@@ -71,7 +83,7 @@ export function CancelOcurrenciaButton({
               disabled={pending}
               className="text-xs font-medium text-red-700 hover:underline disabled:opacity-40 dark:text-red-400"
             >
-              Només aquesta
+              {textos.nomesAquesta}
             </button>
             <button
               type="button"
@@ -79,14 +91,14 @@ export function CancelOcurrenciaButton({
               disabled={pending}
               className="text-xs font-medium text-red-700 hover:underline disabled:opacity-40 dark:text-red-400"
             >
-              Aquesta i futures
+              {textos.aquestaIFutures}
             </button>
             <button
               type="button"
               onClick={() => setMode("idle")}
               className="text-xs text-zinc-500 hover:underline dark:text-zinc-400"
             >
-              Enrere
+              {textos.enrere}
             </button>
           </div>
         </div>

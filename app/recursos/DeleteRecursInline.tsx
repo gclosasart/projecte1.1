@@ -3,12 +3,20 @@
 import { useActionState, useState } from "react";
 import type { RecursFormState } from "./actions";
 
+type Textos = {
+  escriuElimina: string;
+  confirma: string;
+  cancela: string;
+};
+
 export function DeleteRecursInline({
   action,
   onCancel,
+  textos,
 }: {
   action: (prevState: RecursFormState, formData: FormData) => Promise<RecursFormState>;
   onCancel?: () => void;
+  textos: Textos;
 }) {
   const [state, formAction, pending] = useActionState<RecursFormState, FormData>(action, {
     error: null,
@@ -23,7 +31,7 @@ export function DeleteRecursInline({
           type="text"
           name="confirmacio"
           autoComplete="off"
-          placeholder='Escriu "ELIMINA"'
+          placeholder={textos.escriuElimina}
           value={confirmText}
           onChange={(e) => setConfirmText(e.target.value)}
           className="w-36 rounded-lg border border-red-300 bg-white px-2 py-1 text-sm text-zinc-950 outline-none focus:border-red-600 dark:border-red-900/50 dark:bg-zinc-900 dark:text-zinc-50"
@@ -33,7 +41,7 @@ export function DeleteRecursInline({
           disabled={!confirmat || pending}
           className="rounded-full bg-red-600 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {pending ? "..." : "Confirma"}
+          {pending ? "..." : textos.confirma}
         </button>
         {onCancel && (
           <button
@@ -41,7 +49,7 @@ export function DeleteRecursInline({
             onClick={onCancel}
             className="text-sm text-zinc-500 hover:underline dark:text-zinc-400"
           >
-            Cancel·la
+            {textos.cancela}
           </button>
         )}
       </div>

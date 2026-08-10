@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getDict } from "@/lib/i18n";
 
 export type ConvidaState = {
   error: string | null;
@@ -30,12 +31,13 @@ export async function convidarStaff(
   _prevState: ConvidaState,
   formData: FormData,
 ): Promise<ConvidaState> {
+  const t = await getDict();
   const perfil = await perfilActual();
   if (!perfil || (perfil.rol !== "tenant_admin" && perfil.rol !== "tecnic")) {
-    return { ...ESTAT_INICIAL, error: "No tens permisos per convidar personal." };
+    return { ...ESTAT_INICIAL, error: t.equip.errorSensePermisosConvidar };
   }
   if (!perfil.tenant_id) {
-    return { ...ESTAT_INICIAL, error: "El teu usuari no té cap tenant assignat." };
+    return { ...ESTAT_INICIAL, error: t.equip.errorSenseTenant };
   }
 
   const email = formData.get("email");
@@ -44,10 +46,10 @@ export async function convidarStaff(
   const permisos = formData.getAll("permisos").filter((p): p is string => typeof p === "string");
 
   if (typeof email !== "string" || !email.trim()) {
-    return { ...ESTAT_INICIAL, error: "Introdueix un email vàlid." };
+    return { ...ESTAT_INICIAL, error: t.equip.errorEmailInvalid };
   }
   if (rol !== "tenant_admin" && rol !== "user") {
-    return { ...ESTAT_INICIAL, error: "Selecciona un rol vàlid." };
+    return { ...ESTAT_INICIAL, error: t.equip.errorRolInvalid };
   }
 
   const admin = createAdminClient();
@@ -64,7 +66,7 @@ export async function convidarStaff(
   });
 
   if (error) {
-    return { ...ESTAT_INICIAL, error: `No s'ha pogut enviar la invitació: ${error.message}` };
+    return { ...ESTAT_INICIAL, error: t.equip.errorEnviarInvitacio(error.message) };
   }
 
   revalidatePath("/equip");

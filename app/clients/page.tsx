@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { ClientRowActions } from "./ClientRowActions";
 
 type Client = {
@@ -11,6 +12,7 @@ type Client = {
 
 export default async function ClientsPage() {
   const supabase = await createClient();
+  const t = await getDict();
 
   const { data: clients } = await supabase
     .from("clients")
@@ -25,21 +27,19 @@ export default async function ClientsPage() {
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
             ← Dashboard
           </Link>
-          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Clients</h1>
+          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.clients.titol}</h1>
         </div>
         <Link
           href="/clients/nou"
           className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
-          Nou client
+          {t.clients.nouClient}
         </Link>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
         {!clients || clients.length === 0 ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Encara no hi ha cap client donat d&apos;alta.
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.clients.capClient}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {clients.map((c) => (
@@ -50,10 +50,19 @@ export default async function ClientsPage() {
                 <div>
                   <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">{c.nom}</p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {[c.nif, c.email].filter(Boolean).join(" · ") || "Sense dades de contacte"}
+                    {[c.nif, c.email].filter(Boolean).join(" · ") || t.clients.senseDadesContacte}
                   </p>
                 </div>
-                <ClientRowActions id={c.id} />
+                <ClientRowActions
+                  id={c.id}
+                  textos={{
+                    edita: t.comu.edita,
+                    elimina: t.comu.elimina,
+                    confirma: t.comu.confirma,
+                    cancela: t.comu.cancela,
+                    escriuElimina: t.recursos.escriuElimina,
+                  }}
+                />
               </li>
             ))}
           </ul>

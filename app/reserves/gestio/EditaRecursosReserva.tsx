@@ -5,14 +5,24 @@ import { actualitzarRecursosReserva, type ModificarRecursosState } from "./actio
 
 const ESTAT_INICIAL: ModificarRecursosState = { error: null, conflictes: null, exit: false };
 
+type Textos = {
+  capRecursDonatAlta: string;
+  noEsPotFerCanvi: (dates: string) => string;
+  recursosActualitzats: string;
+  actualitzant: string;
+  actualitzaRecursos: string;
+};
+
 export function EditaRecursosReserva({
   reservaId,
   recursosDisponibles,
   recursIdsActuals,
+  textos,
 }: {
   reservaId: string;
   recursosDisponibles: { id: string; nom: string }[];
   recursIdsActuals: string[];
+  textos: Textos;
 }) {
   const actualitzarAmbId = actualitzarRecursosReserva.bind(null, reservaId);
   const [state, formAction, pending] = useActionState<ModificarRecursosState, FormData>(
@@ -29,7 +39,7 @@ export function EditaRecursosReserva({
   return (
     <form action={formAction} className="flex flex-col gap-3">
       {recursosDisponibles.length === 0 ? (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">No hi ha cap recurs donat d&apos;alta.</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">{textos.capRecursDonatAlta}</p>
       ) : (
         <div className="flex flex-wrap gap-2">
           {recursosDisponibles.map((r) => (
@@ -53,12 +63,12 @@ export function EditaRecursosReserva({
 
       {state.conflictes && state.conflictes.length > 0 && (
         <p className="text-sm text-red-600 dark:text-red-400">
-          No es pot fer el canvi: hi ha conflicte d&apos;horari a {state.conflictes.join(", ")}.
+          {textos.noEsPotFerCanvi(state.conflictes.join(", "))}
         </p>
       )}
       {state.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
       {state.exit && !pending && (
-        <p className="text-sm text-emerald-700 dark:text-emerald-400">Recursos actualitzats.</p>
+        <p className="text-sm text-emerald-700 dark:text-emerald-400">{textos.recursosActualitzats}</p>
       )}
 
       <button
@@ -66,7 +76,7 @@ export function EditaRecursosReserva({
         disabled={pending || recursosDisponibles.length === 0}
         className="self-start rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
       >
-        {pending ? "Actualitzant..." : "Actualitza recursos"}
+        {pending ? textos.actualitzant : textos.actualitzaRecursos}
       </button>
     </form>
   );

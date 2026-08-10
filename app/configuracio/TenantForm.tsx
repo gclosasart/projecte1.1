@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import type { Dict } from "@/lib/i18n";
 import { actualitzarTenant, type TenantFormState } from "./actions";
 
 type ValorsTenant = {
@@ -12,7 +13,13 @@ type ValorsTenant = {
 
 const ESTAT_INICIAL: TenantFormState = { error: null, success: false };
 
-export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant }) {
+export function TenantForm({
+  valorsInicials,
+  textos: t,
+}: {
+  valorsInicials: ValorsTenant;
+  textos: Dict["configuracio"];
+}) {
   const [state, formAction, pending] = useActionState<TenantFormState, FormData>(
     actualitzarTenant,
     ESTAT_INICIAL,
@@ -25,7 +32,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
           htmlFor="nom_comercial"
           className="text-sm font-medium text-zinc-900 dark:text-zinc-100"
         >
-          Nom comercial
+          {t.nomComercial}
         </label>
         <input
           id="nom_comercial"
@@ -39,28 +46,28 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="rao_social" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Raó social
+          {t.raoSocial}
         </label>
         <input
           id="rao_social"
           name="rao_social"
           type="text"
           defaultValue={valorsInicials.rao_social ?? undefined}
-          placeholder="Per a la factura"
+          placeholder={t.raoSocialPlaceholder}
           className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="nif" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          NIF
+          {t.nif}
         </label>
         <input
           id="nif"
           name="nif"
           type="text"
           defaultValue={valorsInicials.nif ?? undefined}
-          placeholder="Del coworking, no del client"
+          placeholder={t.nifPlaceholder}
           className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
@@ -70,7 +77,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
           htmlFor="adreca_fiscal"
           className="text-sm font-medium text-zinc-900 dark:text-zinc-100"
         >
-          Adreça fiscal
+          {t.adrecaFiscal}
         </label>
         <input
           id="adreca_fiscal"
@@ -83,7 +90,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
 
       {state.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
       {state.success && (
-        <p className="text-sm text-emerald-700 dark:text-emerald-400">Dades desades.</p>
+        <p className="text-sm text-emerald-700 dark:text-emerald-400">{t.dadesDesades}</p>
       )}
 
       <button
@@ -91,7 +98,7 @@ export function TenantForm({ valorsInicials }: { valorsInicials: ValorsTenant })
         disabled={pending}
         className="mt-2 self-start rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
       >
-        {pending ? "Desant..." : "Desa els canvis"}
+        {pending ? t.desant : t.desaCanvis}
       </button>
     </form>
   );

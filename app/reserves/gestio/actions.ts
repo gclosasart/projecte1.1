@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { calcularHores } from "../nova/recurrencia";
 
 export type CancelState = {
@@ -16,6 +17,7 @@ export async function cancelarOcurrencia(
   abast: "nomes_aquesta" | "aquesta_i_futures",
   reservaId: string,
 ): Promise<CancelState> {
+  const t = await getDict();
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("cancelar_ocurrencia", {
     p_ocurrencia_id: ocurrenciaId,
@@ -23,12 +25,12 @@ export async function cancelarOcurrencia(
   });
 
   if (error) {
-    return { ...ESTAT_INICIAL, error: "No s'ha pogut cancel·lar la reserva." };
+    return { ...ESTAT_INICIAL, error: t.reservaGestio.detall.errorCancelar };
   }
 
   const resposta = data as { ok: boolean; error?: string; avisos?: string[] };
   if (!resposta.ok) {
-    return { ...ESTAT_INICIAL, error: resposta.error ?? "No s'ha pogut cancel·lar." };
+    return { ...ESTAT_INICIAL, error: resposta.error ?? t.reservaGestio.detall.errorCancelarGeneric };
   }
 
   revalidatePath("/reserves/gestio");
@@ -58,11 +60,12 @@ export async function actualitzarRecursosReserva(
   _prevState: ModificarRecursosState,
   formData: FormData,
 ): Promise<ModificarRecursosState> {
+  const t = await getDict();
   const supabase = await createClient();
 
   const recursIds = formData.getAll("recurs_ids").filter((v): v is string => typeof v === "string" && v !== "");
   if (recursIds.length === 0) {
-    return { ...ESTAT_INICIAL_RECURSOS, error: "Selecciona almenys un recurs." };
+    return { ...ESTAT_INICIAL_RECURSOS, error: t.reservaGestio.errorSeleccionaRecurs };
   }
 
   const { data: reserva } = await supabase
@@ -72,7 +75,7 @@ export async function actualitzarRecursosReserva(
     .single();
 
   if (!reserva) {
-    return { ...ESTAT_INICIAL_RECURSOS, error: "Reserva no trobada." };
+    return { ...ESTAT_INICIAL_RECURSOS, error: t.reservaGestio.errorReservaNoTrobada };
   }
 
   let ocurrenciaIds: string[] = [];
@@ -85,7 +88,7 @@ export async function actualitzarRecursosReserva(
       .in("id", recursIds);
 
     if (!recursos || recursos.length !== recursIds.length) {
-      return { ...ESTAT_INICIAL_RECURSOS, error: "Algun recurs seleccionat no s'ha trobat." };
+      return { ...ESTAT_INICIAL_RECURSOS, error: t.reservaGestio.errorRecursTrobat };
     }
 
     const { data: activa } = await supabase
@@ -112,7 +115,7 @@ export async function actualitzarRecursosReserva(
   });
 
   if (error) {
-    return { ...ESTAT_INICIAL_RECURSOS, error: "No s'han pogut actualitzar els recursos." };
+    return { ...ESTAT_INICIAL_RECURSOS, error: t.reservaGestio.errorActualitzarRecursos };
   }
 
   const resposta = data as { ok: boolean; conflictes?: string[] };

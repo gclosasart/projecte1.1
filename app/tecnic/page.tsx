@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDict, getIdioma } from "@/lib/i18n";
+import { SelectorIdioma } from "../SelectorIdioma";
 import { signOut } from "@/app/dashboard/actions";
 import { CreaTenantForm } from "./CreaTenantForm";
 import { ConvidaAdminInline } from "./ConvidaAdminInline";
@@ -16,6 +18,8 @@ type Tenant = {
 
 export default async function TecnicPage() {
   const supabase = await createClient();
+  const t = await getDict();
+  const idioma = await getIdioma();
 
   const {
     data: { user },
@@ -31,9 +35,7 @@ export default async function TecnicPage() {
     return (
       <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
         <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Aquesta pantalla és només per al tècnic.
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.nomesPerTecnic}</p>
         </main>
       </div>
     );
@@ -74,60 +76,63 @@ export default async function TecnicPage() {
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center justify-between gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
-          Panell de tècnic
+          {t.tecnic.titol}
         </h1>
-        <form action={signOut}>
-          <button
-            type="submit"
-            className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
-          >
-            Tanca sessió
-          </button>
-        </form>
+        <div className="flex items-center gap-3">
+          <SelectorIdioma actual={idioma} textos={t.comu.idiomes} />
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
+            >
+              {t.comu.surt}
+            </button>
+          </form>
+        </div>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-            Crea un tenant nou
+            {t.tecnic.creaTenantNou}
           </h2>
           <div className="mt-4">
-            <CreaTenantForm />
+            <CreaTenantForm textos={t.tecnic} />
           </div>
         </section>
 
         <section className="mt-8">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Tenants ({tenants?.length ?? 0})
+            {t.tecnic.tenants(tenants?.length ?? 0)}
           </h2>
           {!tenants || tenants.length === 0 ? (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">Encara no hi ha cap tenant.</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.capTenant}</p>
           ) : (
             <ul className="flex flex-col gap-3">
-              {tenants.map((t) => (
+              {tenants.map((tn) => (
                 <li
-                  key={t.id}
+                  key={tn.id}
                   className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <Link href={`/tecnic/${t.id}`} className="min-w-0 flex-1 hover:underline">
+                    <Link href={`/tecnic/${tn.id}`} className="min-w-0 flex-1 hover:underline">
                       <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                        {t.nom_comercial}
+                        {tn.nom_comercial}
                       </p>
                       <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        {[t.rao_social, t.nif].filter(Boolean).join(" · ") || "Sense dades fiscals"}
+                        {[tn.rao_social, tn.nif].filter(Boolean).join(" · ") || t.tecnic.senseDadesFiscals}
                       </p>
                       <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-                        {staff.get(t.id) ?? 0} persones a l&apos;equip
-                        {(admins.get(t.id) ?? 0) === 0 && " (sense administrador)"}
+                        {t.tecnic.persones(staff.get(tn.id) ?? 0)}
+                        {(admins.get(tn.id) ?? 0) === 0 && t.tecnic.senseAdmin}
                         {" · "}
-                        {recursosPerTenant.get(t.id) ?? 0} recursos actius
-                        {t.quota_mensual != null && ` · ${t.quota_mensual} €/mes`}
+                        {t.tecnic.recursosActius(recursosPerTenant.get(tn.id) ?? 0)}
+                        {tn.quota_mensual != null && t.tecnic.perMes(tn.quota_mensual)}
                       </p>
                     </Link>
                     <div className="flex items-center gap-3">
-                      <ConvidaAdminInline tenantId={t.id} />
-                      <DeleteTenantInline tenantId={t.id} />
+                      <ConvidaAdminInline tenantId={tn.id} textos={t.tecnic} />
+                      <DeleteTenantInline tenantId={tn.id} textos={t.tecnic} />
                     </div>
                   </div>
                 </li>

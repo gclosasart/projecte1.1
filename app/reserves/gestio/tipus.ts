@@ -11,9 +11,12 @@ export type Reserva = {
   clients: { nom: string } | null;
 };
 
-export function nomsRecursos(r: { reserva_recursos: { recursos: { nom: string } | null }[] }): string {
+export function nomsRecursos(
+  r: { reserva_recursos: { recursos: { nom: string } | null }[] },
+  recursDesconegut: string,
+): string {
   const noms = r.reserva_recursos.map((rr) => rr.recursos?.nom).filter((n): n is string => Boolean(n));
-  return noms.length > 0 ? noms.join(" + ") : "Recurs desconegut";
+  return noms.length > 0 ? noms.join(" + ") : recursDesconegut;
 }
 
 // Estat de la RESERVA (activa/cancel·lada) — no confondre amb el pagament de la factura.

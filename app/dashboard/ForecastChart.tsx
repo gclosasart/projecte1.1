@@ -9,7 +9,15 @@ type DiaForecast = {
   ocupacioPercent: number | null;
 };
 
-export function ForecastChart({ dies }: { dies: DiaForecast[] }) {
+type TextosForecast = {
+  reservesNoves: string;
+  novesCurt: string;
+  sessionsCurt: string;
+  sessionsDelDia: string;
+  ocupacioEstimada: string;
+};
+
+export function ForecastChart({ dies, textos }: { dies: DiaForecast[]; textos: TextosForecast }) {
   const maxVal = Math.max(1, ...dies.map((d) => Math.max(d.comencen, d.sessions)));
   const [animat, setAnimat] = useState(false);
 
@@ -23,11 +31,11 @@ export function ForecastChart({ dies }: { dies: DiaForecast[] }) {
       <div className="mb-4 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-2.5 rounded-sm bg-sky-600" aria-hidden />
-          Reserves noves
+          {textos.reservesNoves}
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-2.5 w-2.5 rounded-sm bg-sky-200 dark:bg-sky-900" aria-hidden />
-          Sessions del dia
+          {textos.sessionsDelDia}
         </span>
       </div>
 
@@ -44,7 +52,7 @@ export function ForecastChart({ dies }: { dies: DiaForecast[] }) {
                 }}
               >
                 <span className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-900 px-1.5 py-0.5 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover/bar:opacity-100 dark:bg-zinc-100 dark:text-zinc-900">
-                  {d.comencen} noves
+                  {d.comencen} {textos.novesCurt}
                 </span>
               </div>
               <div
@@ -56,7 +64,7 @@ export function ForecastChart({ dies }: { dies: DiaForecast[] }) {
                 }}
               >
                 <span className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-900 px-1.5 py-0.5 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover/bar:opacity-100 dark:bg-zinc-100 dark:text-zinc-900">
-                  {d.sessions} sessions
+                  {d.sessions} {textos.sessionsCurt}
                 </span>
               </div>
             </div>
@@ -68,7 +76,7 @@ export function ForecastChart({ dies }: { dies: DiaForecast[] }) {
         ))}
       </div>
       <p className="mt-1 text-center text-[11px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-        % ocupació estimada
+        {textos.ocupacioEstimada}
       </p>
     </div>
   );

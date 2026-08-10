@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { InvitaForm } from "./InvitaForm";
 import { PermisosEditor } from "./PermisosEditor";
 
@@ -11,14 +12,14 @@ type Membre = {
   permisos: string[] | null;
 };
 
-const ROL_LABEL: Record<string, string> = {
-  tecnic: "Tècnic",
-  tenant_admin: "Administrador",
-  user: "Empleat",
-};
-
 export default async function EquipPage() {
   const supabase = await createClient();
+  const t = await getDict();
+  const ROL_LABEL: Record<string, string> = {
+    tecnic: t.equip.rolTecnic,
+    tenant_admin: t.equip.rolAdmin,
+    user: t.equip.rolEmpleat,
+  };
 
   const {
     data: { user },
@@ -42,33 +43,29 @@ export default async function EquipPage() {
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-          ← Dashboard
+          ← {t.comu.dashboard}
         </Link>
-        <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Equip</h1>
+        <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.equip.titol}</h1>
       </header>
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
         {!potGestionar ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            No tens permisos per gestionar l&apos;equip.
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.equip.sensePermisos}</p>
         ) : (
           <>
             <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
               <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-                Convida algú nou
+                {t.equip.convidaAlguNou}
               </h2>
-              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                Rebrà un email amb un enllaç per establir la seva contrasenya.
-              </p>
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.equip.rebraEmail}</p>
               <div className="mt-4">
-                <InvitaForm />
+                <InvitaForm textos={t.equip} />
               </div>
             </section>
 
             <section className="mt-6">
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Membres de l&apos;equip
+                {t.equip.membresDeLEquip}
               </h2>
               <ul className="flex flex-col gap-3">
                 {(membres ?? []).map((m) => (
@@ -77,14 +74,18 @@ export default async function EquipPage() {
                     className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
                   >
                     <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                      {m.nom ?? m.email ?? "Sense nom"}
+                      {m.nom ?? m.email ?? t.equip.senseNom}
                       <span className="ml-2 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-normal text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                         {ROL_LABEL[m.rol] ?? m.rol}
                       </span>
                     </p>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">{m.email}</p>
                     {m.rol === "user" && (
-                      <PermisosEditor profileId={m.id} permisosInicials={m.permisos ?? []} />
+                      <PermisosEditor
+                        profileId={m.id}
+                        permisosInicials={m.permisos ?? []}
+                        textos={t.equip}
+                      />
                     )}
                   </li>
                 ))}

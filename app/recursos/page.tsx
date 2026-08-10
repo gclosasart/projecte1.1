@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { RecursRowActions } from "./RecursRowActions";
 
 type Recurs = {
@@ -15,6 +16,7 @@ type Recurs = {
 
 export default async function RecursosPage() {
   const supabase = await createClient();
+  const t = await getDict();
 
   const { data: recursos } = await supabase
     .from("recursos")
@@ -29,21 +31,19 @@ export default async function RecursosPage() {
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
             ← Dashboard
           </Link>
-          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Recursos</h1>
+          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.recursos.titol}</h1>
         </div>
         <Link
           href="/recursos/nou"
           className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
-          Nou recurs
+          {t.recursos.nouRecurs}
         </Link>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
         {!recursos || recursos.length === 0 ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Encara no hi ha cap recurs donat d&apos;alta.
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.recursos.capRecurs}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {recursos.map((r) => (
@@ -56,22 +56,34 @@ export default async function RecursosPage() {
                     {r.nom}
                     {!r.actiu && (
                       <span className="ml-2 rounded-full bg-zinc-200 px-2 py-0.5 text-xs font-normal text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                        Baixa
+                        {t.recursos.baixa}
                       </span>
                     )}
                     {r.bloquejat && (
                       <span className="ml-2 rounded-full bg-amber-200 px-2 py-0.5 text-xs font-normal text-amber-800 dark:bg-amber-900 dark:text-amber-300">
-                        Bloquejat
+                        {t.recursos.bloquejatBadge}
                       </span>
                     )}
                   </p>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {r.capacitat != null ? `${r.capacitat} persones — ` : ""}
-                    {r.preu} €/{r.unitat_preu === "hora" ? "h" : "dia"}
-                    {r.quantitat > 1 ? ` — ${r.quantitat} unitats disponibles` : ""}
+                    {r.capacitat != null ? `${t.recursos.persones(r.capacitat)} — ` : ""}
+                    {r.preu} {r.unitat_preu === "hora" ? t.recursos.perHora : t.recursos.perDia}
+                    {r.quantitat > 1 ? ` — ${t.recursos.unitatsDisponibles(r.quantitat)}` : ""}
                   </p>
                 </div>
-                <RecursRowActions id={r.id} bloquejat={r.bloquejat} />
+                <RecursRowActions
+                  id={r.id}
+                  bloquejat={r.bloquejat}
+                  textos={{
+                    edita: t.comu.edita,
+                    bloqueja: t.recursos.bloqueja,
+                    desbloqueja: t.recursos.desbloqueja,
+                    elimina: t.comu.elimina,
+                    confirma: t.comu.confirma,
+                    cancela: t.comu.cancela,
+                    escriuElimina: t.recursos.escriuElimina,
+                  }}
+                />
               </li>
             ))}
           </ul>

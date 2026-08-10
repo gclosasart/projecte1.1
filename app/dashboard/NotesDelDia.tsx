@@ -11,11 +11,19 @@ type Nota = {
   autorNom: string | null;
 };
 
+type TextosNotes = {
+  capNota: string;
+  placeholder: string;
+  afegeix: string;
+  elimina: string;
+  eliminaNota: string;
+};
+
 function inicialAutor(nom: string | null): string {
   return nom?.trim().charAt(0).toUpperCase() || "?";
 }
 
-export function NotesDelDia({ notes }: { notes: Nota[] }) {
+export function NotesDelDia({ notes, textos }: { notes: Nota[]; textos: TextosNotes }) {
   const [pending, startTransition] = useTransition();
   const [text, setText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -34,7 +42,7 @@ export function NotesDelDia({ notes }: { notes: Nota[] }) {
   return (
     <div className="flex flex-col gap-3">
       {notes.length === 0 ? (
-        <p className="text-base text-zinc-500 dark:text-zinc-400">Cap nota per avui.</p>
+        <p className="text-base text-zinc-500 dark:text-zinc-400">{textos.capNota}</p>
       ) : (
         <ul className="flex max-h-[7.5rem] flex-col gap-1.5 overflow-y-auto pr-1">
           {notes.map((n) => (
@@ -63,9 +71,9 @@ export function NotesDelDia({ notes }: { notes: Nota[] }) {
                 type="button"
                 onClick={() => startTransition(() => eliminarNota(n.id))}
                 className="shrink-0 text-xs text-zinc-400 opacity-0 hover:text-red-600 group-hover:opacity-100 dark:text-zinc-600 dark:hover:text-red-400"
-                aria-label="Elimina la nota"
+                aria-label={textos.eliminaNota}
               >
-                Elimina
+                {textos.elimina}
               </button>
             </li>
           ))}
@@ -78,7 +86,7 @@ export function NotesDelDia({ notes }: { notes: Nota[] }) {
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Afegeix una nota..."
+          placeholder={textos.placeholder}
           className="flex-1 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
         <button
@@ -86,7 +94,7 @@ export function NotesDelDia({ notes }: { notes: Nota[] }) {
           disabled={pending || !text.trim()}
           className="shrink-0 rounded-lg bg-sky-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-40"
         >
-          Afegeix
+          {textos.afegeix}
         </button>
       </form>
     </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import { ClientForm } from "../ClientForm";
 import { DeleteClientForm } from "../DeleteClientForm";
 import { actualitzarClient, eliminarClient } from "../actions";
@@ -12,6 +13,7 @@ export default async function EditarClientPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
+  const t = await getDict();
 
   const { data: client } = await supabase
     .from("clients")
@@ -27,21 +29,37 @@ export default async function EditarClientPage({
     <div className="flex flex-1 flex-col items-center bg-sky-50 py-10 dark:bg-black">
       <div className="w-full max-w-sm rounded-xl border border-black/10 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-950">
         <Link href="/clients" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-          ← Clients
+          ← {t.clients.titol}
         </Link>
         <h1 className="mt-2 text-xl font-semibold text-zinc-950 dark:text-zinc-50">
-          Edita el client
+          {t.clients.editaElClient}
         </h1>
 
         <div className="mt-6">
           <ClientForm
             action={actualitzarClient.bind(null, id)}
             valorsInicials={client}
-            textBoto="Desa els canvis"
+            textBoto={t.clients.desaCanvis}
+            textos={{
+              nom: t.clients.nom,
+              nif: t.clients.nif,
+              email: t.clients.email,
+              adreca: t.clients.adreca,
+              desant: t.clients.desant,
+            }}
           />
         </div>
 
-        <DeleteClientForm action={eliminarClient.bind(null, id)} />
+        <DeleteClientForm
+          action={eliminarClient.bind(null, id)}
+          textos={{
+            zonaPerillosa: t.clients.zonaPerillosa,
+            avisEliminarPermanent: t.clients.avisEliminarPermanent,
+            confirma: t.comu.confirma,
+            cancela: t.comu.cancela,
+            escriuElimina: t.recursos.escriuElimina,
+          }}
+        />
       </div>
     </div>
   );

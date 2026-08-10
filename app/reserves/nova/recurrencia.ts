@@ -1,13 +1,3 @@
-export const DIES_SETMANA = [
-  { num: 1, label: "Dilluns" },
-  { num: 2, label: "Dimarts" },
-  { num: 3, label: "Dimecres" },
-  { num: 4, label: "Dijous" },
-  { num: 5, label: "Divendres" },
-  { num: 6, label: "Dissabte" },
-  { num: 0, label: "Diumenge" },
-] as const;
-
 const MAX_OCURRENCIES = 52;
 const MAX_DIES_ESCANEJATS = 730;
 
@@ -60,21 +50,29 @@ export function calcularHores(horaInici: string, horaFi: string): number {
   return (hf * 60 + mf - (hi * 60 + mi)) / 60;
 }
 
-export function textFrequencia(diesNum: number[]): string {
-  const labels = DIES_SETMANA.filter((d) => diesNum.includes(d.num)).map((d) => d.label.toLowerCase());
+export function textFrequencia(
+  diesNum: number[],
+  diesSetmana: { num: number; label: string }[],
+  connectors: { cada: (llista: string) => string; i: string },
+): string {
+  const labels = diesSetmana.filter((d) => diesNum.includes(d.num)).map((d) => d.label.toLowerCase());
   if (labels.length === 0) return "";
-  if (labels.length === 1) return `cada ${labels[0]}`;
-  return `cada ${labels.slice(0, -1).join(", ")} i ${labels[labels.length - 1]}`;
+  const llista =
+    labels.length === 1
+      ? labels[0]
+      : `${labels.slice(0, -1).join(", ")} ${connectors.i} ${labels[labels.length - 1]}`;
+  return connectors.cada(llista);
 }
 
 export function textCondicioFinal(
   tipus: CondicioTipus,
+  textos: { finsAl: (data: string) => string; sessionsText: (n: number) => string; finsCancelacio: string },
   dataFi?: string,
   numSessions?: number,
 ): string {
-  if (tipus === "data" && dataFi) return `fins al ${dataFi}`;
-  if (tipus === "sessions" && numSessions) return `${numSessions} sessions`;
-  return "fins a cancel·lació";
+  if (tipus === "data" && dataFi) return textos.finsAl(dataFi);
+  if (tipus === "sessions" && numSessions) return textos.sessionsText(numSessions);
+  return textos.finsCancelacio;
 }
 
 export function calcularPreusBase(params: {

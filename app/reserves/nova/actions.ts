@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
 import {
   calcularPreusBase,
   generarDates,
@@ -22,6 +23,7 @@ export async function crearReserva(
   _prevState: NovaReservaState,
   formData: FormData,
 ): Promise<NovaReservaState> {
+  const t = await getDict();
   const supabase = await createClient();
   const {
     data: { user },
@@ -35,12 +37,12 @@ export async function crearReserva(
 
   const tenant_id = profile?.tenant_id as string | null | undefined;
   if (!tenant_id) {
-    return { ...ESTAT_INICIAL, error: "El teu usuari no té cap tenant assignat." };
+    return { ...ESTAT_INICIAL, error: t.recursos.errorSenseTenant };
   }
 
   const recurs_ids = formData.getAll("recurs_ids").filter((v): v is string => typeof v === "string" && v !== "");
   if (recurs_ids.length === 0) {
-    return { ...ESTAT_INICIAL, error: "Selecciona almenys un recurs." };
+    return { ...ESTAT_INICIAL, error: t.reservaNova.errorSeleccionaRecurs };
   }
 
   const { data: recursos } = await supabase
@@ -49,7 +51,7 @@ export async function crearReserva(
     .in("id", recurs_ids);
 
   if (!recursos || recursos.length !== recurs_ids.length) {
-    return { ...ESTAT_INICIAL, error: "Algun recurs seleccionat no s'ha trobat." };
+    return { ...ESTAT_INICIAL, error: t.reservaNova.errorRecursTrobat };
   }
 
   let client_id: string;
@@ -58,7 +60,7 @@ export async function crearReserva(
   if (clientMode === "nou") {
     const nom = formData.get("client_nom");
     if (typeof nom !== "string" || !nom.trim()) {
-      return { ...ESTAT_INICIAL, error: "El nom del client és obligatori." };
+      return { ...ESTAT_INICIAL, error: t.reservaNova.errorNomClientObligatori };
     }
     const nif = formData.get("client_nif");
     const email = formData.get("client_email");
@@ -77,20 +79,20 @@ export async function crearReserva(
       .single();
 
     if (errClient || !novClient) {
-      return { ...ESTAT_INICIAL, error: "No s'ha pogut crear el client." };
+      return { ...ESTAT_INICIAL, error: t.reservaNova.errorCrearClient };
     }
     client_id = novClient.id;
   } else {
     const existentId = formData.get("client_id");
     if (typeof existentId !== "string" || !existentId) {
-      return { ...ESTAT_INICIAL, error: "Selecciona un client." };
+      return { ...ESTAT_INICIAL, error: t.reservaNova.errorSeleccionaClient };
     }
     client_id = existentId;
   }
 
   const tipus = formData.get("tipus");
   if (tipus !== "puntual" && tipus !== "recurrent") {
-    return { ...ESTAT_INICIAL, error: "Tipus de reserva no vàlid." };
+    return { ...ESTAT_INICIAL, error: t.reservaNova.errorTipusInvalid };
   }
 
   const data_inici = formData.get("data_inici");
@@ -98,7 +100,7 @@ export async function crearReserva(
   const hora_fi = formData.get("hora_fi");
 
   if (typeof data_inici !== "string" || !data_inici) {
-    return { ...ESTAT_INICIAL, error: "Falta la data." };
+    return { ...ESTAT_INICIAL, error: t.reservaNova.errorFaltaData };
   }
   if (
     typeof hora_inici !== "string" ||
@@ -107,7 +109,7 @@ export async function crearReserva(
     !hora_fi ||
     hora_inici >= hora_fi
   ) {
-    return { ...ESTAT_INICIAL, error: "La franja horària no és vàlida." };
+    return { ...ESTAT_INICIAL, error: t.reservaNova.errorFranjaHoraria };
   }
 
   let dates: string[];
@@ -122,12 +124,12 @@ export async function crearReserva(
     const diesRaw = formData.getAll("dies").filter((d): d is string => typeof d === "string");
     const diesNum = diesRaw.map(Number).filter((n) => !Number.isNaN(n));
     if (diesNum.length === 0) {
-      return { ...ESTAT_INICIAL, error: "Selecciona almenys un dia de la setmana." };
+      return { ...ESTAT_INICIAL, error: t.reservaNova.errorSeleccionaDia };
     }
 
     const condicioTipus = formData.get("condicio_tipus");
     if (condicioTipus !== "data" && condicioTipus !== "sessions" && condicioTipus !== "obert") {
-      return { ...ESTAT_INICIAL, error: "Selecciona la condició de final." };
+      return { ...ESTAT_INICIAL, error: t.reservaNova.errorSeleccionaCondicio };
     }
     const condicioData = formData.get("condicio_data");
     const condicioSessions = formData.get("condicio_sessions");
@@ -143,12 +145,20 @@ export async function crearReserva(
     });
 
     if (dates.length === 0) {
-      return { ...ESTAT_INICIAL, error: "No s'ha generat cap ocurrència amb aquests paràmetres." };
+      return { ...ESTAT_INICIAL, error: t.reservaNova.errorCapOcurrencia };
     }
 
-    frequenciaText = textFrequencia(diesNum);
+    frequenciaText = textFrequencia(diesNum, t.reservaNova.diesSetmana, {
+      cada: t.reservaNova.connectorCada,
+      i: t.reservaNova.connectorI,
+    });
     condicioFinalText = textCondicioFinal(
       condicioTipus as CondicioTipus,
+      {
+        finsAl: t.reservaNova.finsAl,
+        sessionsText: t.reservaNova.sessionsText,
+        finsCancelacio: t.reservaNova.finsCancelacio,
+      },
       typeof condicioData === "string" ? condicioData : undefined,
       numSessions,
     );
@@ -159,7 +169,7 @@ export async function crearReserva(
       const preuAbonamentRaw = formData.get("preu_abonament");
       preuAbonament = typeof preuAbonamentRaw === "string" ? Number(preuAbonamentRaw) : NaN;
       if (Number.isNaN(preuAbonament) || preuAbonament <= 0) {
-        return { ...ESTAT_INICIAL, error: "Introdueix el preu de l'abonament mensual." };
+        return { ...ESTAT_INICIAL, error: t.reservaNova.errorPreuAbonament };
       }
     }
   }
@@ -190,7 +200,7 @@ export async function crearReserva(
   });
 
   if (rpcError) {
-    return { ...ESTAT_INICIAL, error: "No s'ha pogut crear la reserva." };
+    return { ...ESTAT_INICIAL, error: t.reservaNova.errorCrearReserva };
   }
 
   const resposta = resultat as { ok: boolean; conflictes?: string[]; num_ocurrencies?: number };

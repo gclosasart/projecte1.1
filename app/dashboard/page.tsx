@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getDict, getIdioma } from "@/lib/i18n";
+import { SelectorIdioma } from "../SelectorIdioma";
 import { signOut } from "./actions";
 import { NotesDelDia } from "./NotesDelDia";
 import { ForecastChart } from "./ForecastChart";
@@ -29,12 +31,12 @@ function nomsRecursosOcurrencia(oc: OcurrenciaAvui): string {
 }
 
 const SECUNDARIS = [
-  { label: "Gestiona reserves", href: "/reserves/gestio", modul: "reserves" },
-  { label: "Calendari", href: "/calendari", modul: "reserves" },
-  { label: "Recursos", href: "/recursos", modul: "recursos" },
-  { label: "Clients", href: "/clients", modul: "clients" },
-  { label: "Factures", href: "/factures", modul: "factures" },
-];
+  { navKey: "gestionaReserves", href: "/reserves/gestio", modul: "reserves" },
+  { navKey: "calendari", href: "/calendari", modul: "reserves" },
+  { navKey: "recursos", href: "/recursos", modul: "recursos" },
+  { navKey: "clients", href: "/clients", modul: "clients" },
+  { navKey: "factures", href: "/factures", modul: "factures" },
+] as const;
 
 const DIES_CURTS = ["dg", "dl", "dt", "dc", "dj", "dv", "ds"];
 
@@ -95,6 +97,8 @@ function StatLinkTile({ href, etiqueta }: { href: string; etiqueta: string }) {
 
 export default async function DashboardPage() {
   const supabase = await createClient();
+  const t = await getDict();
+  const idioma = await getIdioma();
 
   const {
     data: { user },
@@ -235,7 +239,7 @@ export default async function DashboardPage() {
       <header className="flex items-center justify-between border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <div>
           <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-            {tenantNom ?? "Plataforma"}
+            {tenantNom ?? t.comu.plataforma}
           </p>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
             {profile?.nom ?? user?.email} · {rol}
@@ -247,7 +251,7 @@ export default async function DashboardPage() {
               href="/tecnic"
               className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
             >
-              Panell de tècnic
+              {t.nav.panellTecnic}
             </Link>
           )}
           {(rol === "tenant_admin" || rol === "tecnic") && (
@@ -256,22 +260,23 @@ export default async function DashboardPage() {
                 href="/configuracio"
                 className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
               >
-                Empresa
+                {t.nav.empresa}
               </Link>
               <Link
                 href="/equip"
                 className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
               >
-                Equip
+                {t.nav.equip}
               </Link>
             </>
           )}
+          <SelectorIdioma actual={idioma} textos={t.comu.idiomes} />
           <form action={signOut}>
             <button
               type="submit"
               className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
             >
-              Tanca sessió
+              {t.comu.surt}
             </button>
           </form>
         </div>
@@ -282,10 +287,10 @@ export default async function DashboardPage() {
         <section className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
-              Bon dia{profile?.nom ? `, ${profile.nom}` : ""}
+              {t.dashboard.bonDia(profile?.nom)}
             </h1>
             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Aquesta és la situació d&apos;avui al teu coworking.
+              {t.dashboard.situacioAvui}
             </p>
           </div>
           {potNovaReserva && (
@@ -293,7 +298,7 @@ export default async function DashboardPage() {
               href="/reserves/nova"
               className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
             >
-              + Nova reserva
+              {t.dashboard.novaReserva}
             </Link>
           )}
         </section>
@@ -305,7 +310,7 @@ export default async function DashboardPage() {
               href={e.href}
               className="rounded-full border border-black/10 px-3.5 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-sky-600 hover:text-sky-700 dark:border-white/10 dark:text-zinc-400 dark:hover:border-sky-500 dark:hover:text-sky-400"
             >
-              {e.label}
+              {t.nav[e.navKey]}
             </Link>
           ))}
         </nav>
@@ -313,14 +318,14 @@ export default async function DashboardPage() {
         {/* Bloc 1: situació d'avui */}
         <section>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Situació d&apos;avui
+            {t.dashboard.situacioDelDia}
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <StatTile valor={comencenAvui} etiqueta="Reserves que comencen" />
-            <StatTile valor={recursosReservatsAvui} etiqueta="Recursos reservats avui" />
-            <StatTile valor={ocupatsAraMateix} etiqueta="Ocupats ara mateix" />
+            <StatTile valor={comencenAvui} etiqueta={t.dashboard.comencenReserves} />
+            <StatTile valor={recursosReservatsAvui} etiqueta={t.dashboard.recursosReservats} />
+            <StatTile valor={ocupatsAraMateix} etiqueta={t.dashboard.ocupatsAraMateix} />
             {potAccedir(rol, permisos, "reserves") && (
-              <StatLinkTile href="/disponibilitat" etiqueta="Disponibilitat" />
+              <StatLinkTile href="/disponibilitat" etiqueta={t.dashboard.disponibilitat} />
             )}
           </div>
         </section>
@@ -330,22 +335,22 @@ export default async function DashboardPage() {
             {/* Bloc 2: taula de reserves d'avui */}
             <section>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Reserves d&apos;avui
+                {t.dashboard.reservesAvui}
               </h2>
               {!ocurrenciesAvui || ocurrenciesAvui.length === 0 ? (
                 <div className="rounded-xl border border-black/10 bg-white p-8 text-center dark:border-white/10 dark:bg-zinc-950">
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Cap reserva per avui.</p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.dashboard.capReservaAvui}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-zinc-950">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-black/10 text-left text-xs uppercase tracking-wide text-zinc-500 dark:border-white/10 dark:text-zinc-400">
-                        <th className="px-4 py-3 font-medium">Client</th>
-                        <th className="px-4 py-3 font-medium">Recurs</th>
-                        <th className="px-4 py-3 font-medium">Hora</th>
-                        <th className="px-4 py-3 font-medium">Estat</th>
-                        <th className="px-4 py-3 font-medium">Factura</th>
+                        <th className="px-4 py-3 font-medium">{t.dashboard.client}</th>
+                        <th className="px-4 py-3 font-medium">{t.dashboard.recurs}</th>
+                        <th className="px-4 py-3 font-medium">{t.dashboard.hora}</th>
+                        <th className="px-4 py-3 font-medium">{t.dashboard.estat}</th>
+                        <th className="px-4 py-3 font-medium">{t.dashboard.factura}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -369,7 +374,7 @@ export default async function DashboardPage() {
                               <span
                                 className={`rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[oc.estat] ?? ""}`}
                               >
-                                {oc.estat}
+                                {t.comu.estats[oc.estat] ?? oc.estat}
                               </span>
                             </td>
                             <td className="px-4 py-3">
@@ -396,10 +401,19 @@ export default async function DashboardPage() {
             {/* Bloc 4: previsió */}
             <section>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Previsió dels propers 7 dies
+                {t.dashboard.previsio7dies}
               </h2>
               <div className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950">
-                <ForecastChart dies={diesForecast} />
+                <ForecastChart
+                  dies={diesForecast}
+                  textos={{
+                    reservesNoves: t.dashboard.reservesNoves,
+                    novesCurt: t.dashboard.novesCurt,
+                    sessionsCurt: t.dashboard.sessionsCurt,
+                    sessionsDelDia: t.dashboard.sessionsDelDia,
+                    ocupacioEstimada: t.dashboard.ocupacioEstimada,
+                  }}
+                />
               </div>
             </section>
           </div>
@@ -407,10 +421,10 @@ export default async function DashboardPage() {
           {/* Bloc 3: notes del dia */}
           <section>
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-              Notes del dia
+              {t.dashboard.notesDelDia}
             </h2>
             <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-              <NotesDelDia notes={notes} />
+              <NotesDelDia notes={notes} textos={{ ...t.notesDia, elimina: t.comu.elimina }} />
             </div>
           </section>
         </div>

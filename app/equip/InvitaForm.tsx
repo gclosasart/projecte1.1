@@ -1,18 +1,14 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import type { Dict } from "@/lib/i18n";
 import { convidarStaff, type ConvidaState } from "./actions";
 
-const MODULS = [
-  { key: "reserves", label: "Reserves i Calendari" },
-  { key: "recursos", label: "Recursos" },
-  { key: "clients", label: "Clients" },
-  { key: "factures", label: "Factures" },
-];
+const MODUL_KEYS = ["reserves", "recursos", "clients", "factures"] as const;
 
 const ESTAT_INICIAL: ConvidaState = { error: null, success: false };
 
-export function InvitaForm() {
+export function InvitaForm({ textos: t }: { textos: Dict["equip"] }) {
   const [state, formAction, pending] = useActionState<ConvidaState, FormData>(
     convidarStaff,
     ESTAT_INICIAL,
@@ -23,7 +19,7 @@ export function InvitaForm() {
     <form action={formAction} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <label htmlFor="email" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Email
+          {t.email}
         </label>
         <input
           id="email"
@@ -36,7 +32,7 @@ export function InvitaForm() {
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="nom" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Nom
+          {t.nom}
         </label>
         <input
           id="nom"
@@ -48,7 +44,7 @@ export function InvitaForm() {
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="rol" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          Rol
+          {t.rol}
         </label>
         <select
           id="rol"
@@ -57,22 +53,22 @@ export function InvitaForm() {
           onChange={(e) => setRol(e.target.value as "tenant_admin" | "user")}
           className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         >
-          <option value="user">Empleat (només mòduls concedits)</option>
-          <option value="tenant_admin">Administrador (accés total)</option>
+          <option value="user">{t.empleatNomesModuls}</option>
+          <option value="tenant_admin">{t.administradorAccesTotal}</option>
         </select>
       </div>
 
       {rol === "user" && (
         <div>
-          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Mòduls concedits</p>
+          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.modulsConcedits}</p>
           <div className="mt-2 flex flex-wrap gap-3">
-            {MODULS.map((m) => (
+            {MODUL_KEYS.map((key) => (
               <label
-                key={m.key}
+                key={key}
                 className="flex items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300"
               >
-                <input type="checkbox" name="permisos" value={m.key} />
-                {m.label}
+                <input type="checkbox" name="permisos" value={key} />
+                {t.moduls[key]}
               </label>
             ))}
           </div>
@@ -81,9 +77,7 @@ export function InvitaForm() {
 
       {state.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
       {state.success && (
-        <p className="text-sm text-emerald-700 dark:text-emerald-400">
-          Invitació enviada per email.
-        </p>
+        <p className="text-sm text-emerald-700 dark:text-emerald-400">{t.invitacioEnviada}</p>
       )}
 
       <button
@@ -91,7 +85,7 @@ export function InvitaForm() {
         disabled={pending}
         className="self-start rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
       >
-        {pending ? "Enviant..." : "Convida"}
+        {pending ? t.enviant : t.convida}
       </button>
     </form>
   );

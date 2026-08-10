@@ -1,21 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-
-const DIES = ["Dilluns", "Dimarts", "Dimecres", "Dijous", "Divendres", "Dissabte", "Diumenge"];
-const MESOS = [
-  "Gener",
-  "Febrer",
-  "Març",
-  "Abril",
-  "Maig",
-  "Juny",
-  "Juliol",
-  "Agost",
-  "Setembre",
-  "Octubre",
-  "Novembre",
-  "Desembre",
-];
+import { getDict } from "@/lib/i18n";
 
 const MAX_VISIBLES_PER_DIA = 3;
 
@@ -55,6 +40,7 @@ export default async function CalendariPage({
   searchParams: Promise<{ mes?: string }>;
 }) {
   const { mes } = await searchParams;
+  const t = await getDict();
   const avui = new Date();
   avui.setHours(0, 0, 0, 0);
 
@@ -105,9 +91,9 @@ export default async function CalendariPage({
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <div className="flex items-center gap-4">
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-            ← Dashboard
+            ← {t.comu.dashboard}
           </Link>
-          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Calendari</h1>
+          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.calendari.titol}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <form method="get" className="flex items-center gap-1.5">
@@ -121,38 +107,38 @@ export default async function CalendariPage({
               type="submit"
               className="rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-black/5 dark:border-white/10 dark:text-zinc-300 dark:hover:bg-white/5"
             >
-              Vés-hi
+              {t.calendari.vesHi}
             </button>
           </form>
           <Link
             href={`/calendari?mes=${paramMesAnterior}`}
             className="rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-black/5 dark:border-white/10 dark:text-zinc-300 dark:hover:bg-white/5"
           >
-            ← Mes anterior
+            {t.calendari.mesAnterior}
           </Link>
           <Link
             href={`/calendari?mes=${paramMesActual}`}
             className="rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-black/5 dark:border-white/10 dark:text-zinc-300 dark:hover:bg-white/5"
           >
-            Avui
+            {t.calendari.avui}
           </Link>
           <Link
             href={`/calendari?mes=${paramMesSeguent}`}
             className="rounded-full border border-black/10 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-black/5 dark:border-white/10 dark:text-zinc-300 dark:hover:bg-white/5"
           >
-            Mes següent →
+            {t.calendari.mesSeguent}
           </Link>
         </div>
       </header>
 
       <main className="flex-1 px-6 py-8">
         <h2 className="mb-4 text-center text-2xl font-bold text-zinc-950 dark:text-zinc-50">
-          {MESOS[mesIdx]} {any}
+          {t.calendari.mesos[mesIdx]} {any}
         </h2>
 
         <div className="overflow-x-auto">
           <div className="grid min-w-[840px] grid-cols-7 overflow-hidden rounded-xl border border-black/10 dark:border-white/10">
-            {DIES.map((nom) => (
+            {t.calendari.dies.map((nom) => (
               <div
                 key={nom}
                 className="border-b border-black/10 bg-sky-600 px-2 py-2 text-center text-xs font-semibold text-white dark:border-white/10 dark:bg-indigo-500 dark:text-white"
@@ -199,7 +185,9 @@ export default async function CalendariPage({
                       </li>
                     ))}
                     {restants > 0 && (
-                      <li className="text-[11px] text-zinc-500 dark:text-zinc-400">+{restants} més</li>
+                      <li className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                        {t.calendari.mesMes(restants)}
+                      </li>
                     )}
                   </ul>
                 </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getIdioma } from "@/lib/i18n";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,14 +18,16 @@ export const metadata: Metadata = {
   description: "Gestió de reserves per a coworkings",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const idioma = await getIdioma();
+
   return (
     <html
-      lang="en"
+      lang={idioma}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
