@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 type DiaForecast = {
   label: string;
   comencen: number;
@@ -7,6 +11,12 @@ type DiaForecast = {
 
 export function ForecastChart({ dies }: { dies: DiaForecast[] }) {
   const maxVal = Math.max(1, ...dies.map((d) => Math.max(d.comencen, d.sessions)));
+  const [animat, setAnimat] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setAnimat(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   return (
     <div>
@@ -22,20 +32,28 @@ export function ForecastChart({ dies }: { dies: DiaForecast[] }) {
       </div>
 
       <div className="flex items-end justify-between gap-2 border-b border-zinc-300 pb-0 dark:border-zinc-700">
-        {dies.map((d) => (
+        {dies.map((d, i) => (
           <div key={d.label} className="flex flex-1 flex-col items-center gap-1.5">
             <div className="flex h-32 items-end gap-1">
               <div
-                className="group/bar relative w-3.5 rounded-t bg-sky-600"
-                style={{ height: `${(d.comencen / maxVal) * 100}%`, minHeight: d.comencen > 0 ? "4px" : "0" }}
+                className="group/bar relative w-3.5 rounded-t bg-sky-600 transition-[height] duration-700 ease-out"
+                style={{
+                  height: animat ? `${(d.comencen / maxVal) * 100}%` : "0%",
+                  minHeight: animat && d.comencen > 0 ? "4px" : "0",
+                  transitionDelay: `${i * 60}ms`,
+                }}
               >
                 <span className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-900 px-1.5 py-0.5 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover/bar:opacity-100 dark:bg-zinc-100 dark:text-zinc-900">
                   {d.comencen} noves
                 </span>
               </div>
               <div
-                className="group/bar relative w-3.5 rounded-t bg-sky-200 dark:bg-sky-900"
-                style={{ height: `${(d.sessions / maxVal) * 100}%`, minHeight: d.sessions > 0 ? "4px" : "0" }}
+                className="group/bar relative w-3.5 rounded-t bg-sky-200 dark:bg-sky-900 transition-[height] duration-700 ease-out"
+                style={{
+                  height: animat ? `${(d.sessions / maxVal) * 100}%` : "0%",
+                  minHeight: animat && d.sessions > 0 ? "4px" : "0",
+                  transitionDelay: `${i * 60 + 30}ms`,
+                }}
               >
                 <span className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-zinc-900 px-1.5 py-0.5 text-[11px] font-medium text-white opacity-0 transition-opacity group-hover/bar:opacity-100 dark:bg-zinc-100 dark:text-zinc-900">
                   {d.sessions} sessions

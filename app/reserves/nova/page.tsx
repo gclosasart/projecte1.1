@@ -17,8 +17,8 @@ export default async function NovaReservaPage() {
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
-        <Link href="/reserves" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-          ← Reserves
+        <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
+          ← Dashboard
         </Link>
         <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Nova reserva</h1>
       </header>
