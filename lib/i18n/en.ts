@@ -249,7 +249,8 @@ const en: Dict = {
     errorCrear: "Couldn't create the client.",
     errorDesar: "Couldn't save the client.",
     errorConfirmacio: 'You must type "ELIMINA" to confirm.',
-    errorReservesAssociades: "Can't delete: this client has associated bookings.",
+    errorReservesArxivades: "Can't delete: this client has archived bookings.",
+    errorFacturesPagades: "Can't delete: this client has paid invoices.",
     errorEliminar: "Couldn't delete the client.",
   },
   factures: {

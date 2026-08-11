@@ -247,7 +247,8 @@ const ca = {
     errorCrear: "No s'ha pogut crear el client.",
     errorDesar: "No s'ha pogut desar el client.",
     errorConfirmacio: 'Has d\'escriure "ELIMINA" per confirmar.',
-    errorReservesAssociades: "No es pot eliminar: aquest client té reserves associades.",
+    errorReservesArxivades: "No es pot eliminar: aquest client té reserves arxivades.",
+    errorFacturesPagades: "No es pot eliminar: aquest client té factures pagades.",
     errorEliminar: "No s'ha pogut eliminar el client.",
   },
   factures: {

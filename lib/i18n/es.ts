@@ -249,7 +249,8 @@ const es: Dict = {
     errorCrear: "No se ha podido crear el cliente.",
     errorDesar: "No se ha podido guardar el cliente.",
     errorConfirmacio: 'Debes escribir "ELIMINA" para confirmar.',
-    errorReservesAssociades: "No se puede eliminar: este cliente tiene reservas asociadas.",
+    errorReservesArxivades: "No se puede eliminar: este cliente tiene reservas archivadas.",
+    errorFacturesPagades: "No se puede eliminar: este cliente tiene facturas pagadas.",
     errorEliminar: "No se ha podido eliminar el cliente.",
   },
   factures: {

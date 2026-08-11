@@ -91,11 +91,19 @@ export async function eliminarClient(
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.from("clients").delete().eq("id", id);
+  const { data, error } = await supabase.rpc("eliminar_client_segur", { p_client_id: id });
 
   if (error) {
-    if (error.code === "23503") {
-      return { error: t.clients.errorReservesAssociades };
+    return { error: t.clients.errorEliminar };
+  }
+
+  const resposta = data as { ok: boolean; error?: string };
+  if (!resposta.ok) {
+    if (resposta.error === "arxivades") {
+      return { error: t.clients.errorReservesArxivades };
+    }
+    if (resposta.error === "pagades") {
+      return { error: t.clients.errorFacturesPagades };
     }
     return { error: t.clients.errorEliminar };
   }
