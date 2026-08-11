@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getDict } from "@/lib/i18n";
+import { getDict, getIdioma } from "@/lib/i18n";
 import { CancelOcurrenciaButton } from "../CancelOcurrenciaButton";
 import { EditaRecursosReserva } from "../EditaRecursosReserva";
+import { EstatReservaSelector } from "../EstatReservaSelector";
 
 type Ocurrencia = {
   id: string;
@@ -43,6 +44,7 @@ export default async function DetallReservaPage({
   const { id } = await params;
   const supabase = await createClient();
   const t = await getDict();
+  const idioma = await getIdioma();
 
   const { data: reserva } = await supabase
     .from("reserves")
@@ -108,13 +110,9 @@ export default async function DetallReservaPage({
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-          <p className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
+          <p className="flex flex-wrap items-center gap-2 text-base font-semibold text-zinc-950 dark:text-zinc-50">
             {nomsRecursos} — {client?.nom ?? t.reservaGestio.clientDesconegut}
-            <span
-              className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_RESERVA_ESTIL[reserva.estat] ?? ""}`}
-            >
-              {t.comu.estats[reserva.estat] ?? reserva.estat}
-            </span>
+            <EstatReservaSelector reservaId={reserva.id} estatActual={reserva.estat} idioma={idioma} />
           </p>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             {esRecurrent ? t.reservaGestio.recurrent : t.reservaGestio.puntual} ·{" "}
@@ -148,13 +146,7 @@ export default async function DetallReservaPage({
                 reservaId={reserva.id}
                 recursosDisponibles={totsRecursos ?? []}
                 recursIdsActuals={recursosSeleccionats.map((r) => r.id)}
-                textos={{
-                  capRecursDonatAlta: t.reservaGestio.detall.capRecursDonatAlta,
-                  noEsPotFerCanvi: t.reservaGestio.detall.noEsPotFerCanvi,
-                  recursosActualitzats: t.reservaGestio.detall.recursosActualitzats,
-                  actualitzant: t.reservaGestio.detall.actualitzant,
-                  actualitzaRecursos: t.reservaGestio.detall.actualitzaRecursos,
-                }}
+                idioma={idioma}
               />
             </div>
           </section>
@@ -202,7 +194,7 @@ export default async function DetallReservaPage({
                       ocurrenciaId={oc.id}
                       reservaId={reserva.id}
                       esRecurrent={esRecurrent}
-                      textos={t.reservaGestio.detall}
+                      idioma={idioma}
                     />
                   )}
                 </li>

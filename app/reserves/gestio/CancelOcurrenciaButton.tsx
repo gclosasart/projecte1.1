@@ -1,29 +1,21 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { cancelarOcurrencia, type CancelState } from "./actions";
-
-type Textos = {
-  cancella: string;
-  cancellant: string;
-  cancellada: string;
-  segurCancelar: string;
-  nomesAquesta: string;
-  aquestaIFutures: string;
-  enrere: string;
-};
 
 export function CancelOcurrenciaButton({
   ocurrenciaId,
   reservaId,
   esRecurrent,
-  textos,
+  idioma,
 }: {
   ocurrenciaId: string;
   reservaId: string;
   esRecurrent: boolean;
-  textos: Textos;
+  idioma: Idioma;
 }) {
+  const textos = dictDe(idioma).reservaGestio.detall;
   const [mode, setMode] = useState<"idle" | "triant">("idle");
   const [resultat, setResultat] = useState<CancelState | null>(null);
   const [pending, startTransition] = useTransition();

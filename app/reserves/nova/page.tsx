@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getDict } from "@/lib/i18n";
+import { getDict, getIdioma } from "@/lib/i18n";
 import { NovaReservaForm } from "./NovaReservaForm";
 
 export default async function NovaReservaPage() {
   const supabase = await createClient();
   const t = await getDict();
+  const idioma = await getIdioma();
 
   const [{ data: recursos }, { data: clients }] = await Promise.all([
     supabase
@@ -26,7 +27,7 @@ export default async function NovaReservaPage() {
       </header>
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
-        <NovaReservaForm recursos={recursos ?? []} clients={clients ?? []} textos={t.reservaNova} />
+        <NovaReservaForm recursos={recursos ?? []} clients={clients ?? []} idioma={idioma} />
       </main>
     </div>
   );

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getDict } from "@/lib/i18n";
+import { getDict, getIdioma } from "@/lib/i18n";
 import { InvitaForm } from "./InvitaForm";
 import { PermisosEditor } from "./PermisosEditor";
 
@@ -15,6 +15,7 @@ type Membre = {
 export default async function EquipPage() {
   const supabase = await createClient();
   const t = await getDict();
+  const idioma = await getIdioma();
   const ROL_LABEL: Record<string, string> = {
     tecnic: t.equip.rolTecnic,
     tenant_admin: t.equip.rolAdmin,
@@ -59,7 +60,7 @@ export default async function EquipPage() {
               </h2>
               <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{t.equip.rebraEmail}</p>
               <div className="mt-4">
-                <InvitaForm textos={t.equip} />
+                <InvitaForm idioma={idioma} />
               </div>
             </section>
 
@@ -84,7 +85,7 @@ export default async function EquipPage() {
                       <PermisosEditor
                         profileId={m.id}
                         permisosInicials={m.permisos ?? []}
-                        textos={t.equip}
+                        idioma={idioma}
                       />
                     )}
                   </li>

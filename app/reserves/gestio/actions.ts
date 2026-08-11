@@ -47,6 +47,15 @@ export async function arxivarReserva(id: string, arxivada: boolean) {
   revalidatePath("/reserves/gestio");
 }
 
+export async function canviarEstatReserva(id: string, nouEstat: "activa" | "cancel·lada") {
+  const supabase = await createClient();
+  await supabase.from("reserves").update({ estat: nouEstat }).eq("id", id);
+  revalidatePath("/reserves/gestio");
+  revalidatePath(`/reserves/gestio/${id}`);
+  revalidatePath("/calendari");
+  revalidatePath("/dashboard");
+}
+
 export type ModificarRecursosState = {
   error: string | null;
   conflictes: string[] | null;

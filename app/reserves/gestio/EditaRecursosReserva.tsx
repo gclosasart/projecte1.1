@@ -1,29 +1,23 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { actualitzarRecursosReserva, type ModificarRecursosState } from "./actions";
 
 const ESTAT_INICIAL: ModificarRecursosState = { error: null, conflictes: null, exit: false };
-
-type Textos = {
-  capRecursDonatAlta: string;
-  noEsPotFerCanvi: (dates: string) => string;
-  recursosActualitzats: string;
-  actualitzant: string;
-  actualitzaRecursos: string;
-};
 
 export function EditaRecursosReserva({
   reservaId,
   recursosDisponibles,
   recursIdsActuals,
-  textos,
+  idioma,
 }: {
   reservaId: string;
   recursosDisponibles: { id: string; nom: string }[];
   recursIdsActuals: string[];
-  textos: Textos;
+  idioma: Idioma;
 }) {
+  const textos = dictDe(idioma).reservaGestio.detall;
   const actualitzarAmbId = actualitzarRecursosReserva.bind(null, reservaId);
   const [state, formAction, pending] = useActionState<ModificarRecursosState, FormData>(
     actualitzarAmbId,

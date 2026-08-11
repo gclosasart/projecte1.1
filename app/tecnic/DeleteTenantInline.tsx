@@ -1,18 +1,19 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { eliminarTenant, type TecnicFormState } from "./actions";
 
 const ESTAT_INICIAL: TecnicFormState = { error: null, success: false };
 
 export function DeleteTenantInline({
   tenantId,
-  textos: t,
+  idioma,
 }: {
   tenantId: string;
-  textos: Dict["tecnic"];
+  idioma: Idioma;
 }) {
+  const t = dictDe(idioma).tecnic;
   const [confirmant, setConfirmant] = useState(false);
   const action = eliminarTenant.bind(null, tenantId);
   const [state, formAction, pending] = useActionState<TecnicFormState, FormData>(

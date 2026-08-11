@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getDict } from "@/lib/i18n";
+import { getDict, getIdioma } from "@/lib/i18n";
 import { ReservaCard } from "./ReservaCard";
 import { ArxivadesSection } from "./ArxivadesSection";
 import type { Reserva } from "./tipus";
@@ -8,6 +8,7 @@ import type { Reserva } from "./tipus";
 export default async function GestioReservesPage() {
   const supabase = await createClient();
   const t = await getDict();
+  const idioma = await getIdioma();
 
   const { data: reserves } = await supabase
     .from("reserves")
@@ -59,17 +60,6 @@ export default async function GestioReservesPage() {
     }
   }
 
-  const textosCard = {
-    clientDesconegut: t.reservaGestio.clientDesconegut,
-    recursDesconegut: t.reservaGestio.recursDesconegut,
-    puntual: t.reservaGestio.puntual,
-    recurrent: t.reservaGestio.recurrent,
-    desDel: t.reservaGestio.desDel,
-    arxiva: t.reservaGestio.arxiva,
-    desarxiva: t.reservaGestio.desarxiva,
-    estats: t.comu.estats,
-  };
-
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex items-center justify-between gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
@@ -101,7 +91,7 @@ export default async function GestioReservesPage() {
               ) : (
                 <ul className="flex flex-col gap-3">
                   {enCurs.map((r) => (
-                    <ReservaCard key={r.id} r={r} textos={textosCard} />
+                    <ReservaCard key={r.id} r={r} idioma={idioma} />
                   ))}
                 </ul>
               )}
@@ -117,7 +107,7 @@ export default async function GestioReservesPage() {
                 ) : (
                   <ul className="flex flex-col gap-3">
                     {pagades.map((r) => (
-                      <ReservaCard key={r.id} r={r} textos={textosCard} />
+                      <ReservaCard key={r.id} r={r} idioma={idioma} />
                     ))}
                   </ul>
                 )}
@@ -132,7 +122,7 @@ export default async function GestioReservesPage() {
                 ) : (
                   <ul className="flex flex-col gap-3">
                     {cancellades.map((r) => (
-                      <ReservaCard key={r.id} r={r} textos={textosCard} />
+                      <ReservaCard key={r.id} r={r} idioma={idioma} />
                     ))}
                   </ul>
                 )}
@@ -141,7 +131,7 @@ export default async function GestioReservesPage() {
           </div>
         )}
 
-        <ArxivadesSection reserves={arxivades} textos={{ ...textosCard, arxivades: t.reservaGestio.arxivades }} />
+        <ArxivadesSection reserves={arxivades} idioma={idioma} />
       </main>
     </div>
   );

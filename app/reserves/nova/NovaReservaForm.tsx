@@ -2,7 +2,7 @@
 
 import { useActionState, useMemo, useState } from "react";
 import Link from "next/link";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { crearReserva, type NovaReservaState } from "./actions";
 import { calcularPreusBase, generarDates, type CondicioTipus } from "./recurrencia";
 
@@ -27,12 +27,13 @@ const ESTAT_INICIAL: NovaReservaState = { error: null, conflictes: null, exit: n
 export function NovaReservaForm({
   recursos,
   clients,
-  textos: t,
+  idioma,
 }: {
   recursos: Recurs[];
   clients: Client[];
-  textos: Dict["reservaNova"];
+  idioma: Idioma;
 }) {
+  const t = dictDe(idioma).reservaNova;
   const [state, formAction, pending] = useActionState<NovaReservaState, FormData>(
     crearReserva,
     ESTAT_INICIAL,

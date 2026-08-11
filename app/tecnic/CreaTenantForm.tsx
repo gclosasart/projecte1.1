@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { crearTenant, type TecnicFormState } from "./actions";
 
 const ESTAT_INICIAL: TecnicFormState = { error: null, success: false };
 
-export function CreaTenantForm({ textos: t }: { textos: Dict["tecnic"] }) {
+export function CreaTenantForm({ idioma }: { idioma: Idioma }) {
+  const t = dictDe(idioma).tecnic;
   const [state, formAction, pending] = useActionState<TecnicFormState, FormData>(
     crearTenant,
     ESTAT_INICIAL,

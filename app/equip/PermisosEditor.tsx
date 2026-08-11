@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { actualitzarPermisos } from "./actions";
 
 const MODUL_KEYS = ["reserves", "recursos", "clients", "factures"] as const;
@@ -9,12 +9,13 @@ const MODUL_KEYS = ["reserves", "recursos", "clients", "factures"] as const;
 export function PermisosEditor({
   profileId,
   permisosInicials,
-  textos: t,
+  idioma,
 }: {
   profileId: string;
   permisosInicials: string[];
-  textos: Dict["equip"];
+  idioma: Idioma;
 }) {
+  const t = dictDe(idioma).equip;
   const [permisos, setPermisos] = useState<string[]>(permisosInicials);
   const [desat, setDesat] = useState(false);
   const [pending, startTransition] = useTransition();

@@ -1,14 +1,15 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { convidarStaff, type ConvidaState } from "./actions";
 
 const MODUL_KEYS = ["reserves", "recursos", "clients", "factures"] as const;
 
 const ESTAT_INICIAL: ConvidaState = { error: null, success: false };
 
-export function InvitaForm({ textos: t }: { textos: Dict["equip"] }) {
+export function InvitaForm({ idioma }: { idioma: Idioma }) {
+  const t = dictDe(idioma).equip;
   const [state, formAction, pending] = useActionState<ConvidaState, FormData>(
     convidarStaff,
     ESTAT_INICIAL,

@@ -97,7 +97,7 @@ export default async function TecnicPage() {
             {t.tecnic.creaTenantNou}
           </h2>
           <div className="mt-4">
-            <CreaTenantForm textos={t.tecnic} />
+            <CreaTenantForm idioma={idioma} />
           </div>
         </section>
 
@@ -131,8 +131,8 @@ export default async function TecnicPage() {
                       </p>
                     </Link>
                     <div className="flex items-center gap-3">
-                      <ConvidaAdminInline tenantId={tn.id} textos={t.tecnic} />
-                      <DeleteTenantInline tenantId={tn.id} textos={t.tecnic} />
+                      <ConvidaAdminInline tenantId={tn.id} idioma={idioma} />
+                      <DeleteTenantInline tenantId={tn.id} idioma={idioma} />
                     </div>
                   </div>
                 </li>

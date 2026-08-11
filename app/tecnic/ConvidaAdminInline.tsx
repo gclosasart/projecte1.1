@@ -1,18 +1,19 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { convidarAdminTenant, type TecnicFormState } from "./actions";
 
 const ESTAT_INICIAL: TecnicFormState = { error: null, success: false };
 
 export function ConvidaAdminInline({
   tenantId,
-  textos: t,
+  idioma,
 }: {
   tenantId: string;
-  textos: Dict["tecnic"];
+  idioma: Idioma;
 }) {
+  const t = dictDe(idioma).tecnic;
   const [obert, setObert] = useState(false);
   const action = convidarAdminTenant.bind(null, tenantId);
   const [state, formAction, pending] = useActionState<TecnicFormState, FormData>(
