@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getDict } from "@/lib/i18n";
-
-const MAX_VISIBLES_PER_DIA = 3;
+import { getDict, getIdioma } from "@/lib/i18n";
+import { CalendariGraella, type DiaGraella } from "./CalendariGraella";
 
 type Ocurrencia = {
   id: string;
   data: string;
   hora_inici: string;
   hora_fi: string;
+  estat: string;
+  no_show: boolean;
   reserves: {
+    id: string;
+    codi: string;
     reserva_recursos: { recursos: { nom: string } | null }[];
     clients: { nom: string } | null;
   } | null;
@@ -41,6 +44,7 @@ export default async function CalendariPage({
 }) {
   const { mes } = await searchParams;
   const t = await getDict();
+  const idioma = await getIdioma();
   const avui = new Date();
   avui.setHours(0, 0, 0, 0);
 
@@ -72,7 +76,9 @@ export default async function CalendariPage({
   const supabase = await createClient();
   const { data: ocurrencies } = await supabase
     .from("ocurrencies")
-    .select("id, data, hora_inici, hora_fi, reserves(reserva_recursos(recursos(nom)), clients(nom))")
+    .select(
+      "id, data, hora_inici, hora_fi, estat, no_show, reserves(id, codi, reserva_recursos(recursos(nom)), clients(nom))",
+    )
     .eq("estat", "activa")
     .gte("data", toISODate(graellaInici))
     .lte("data", toISODate(graellaFi))
@@ -85,6 +91,29 @@ export default async function CalendariPage({
     llista.push(oc);
     perDia.set(oc.data, llista);
   }
+
+  const diesGraella: DiaGraella[] = dies.map((d) => {
+    const dISO = toISODate(d);
+    return {
+      iso: dISO,
+      dia: d.getDate(),
+      dinsDelMes: d.getMonth() === mesIdx,
+      esAvui: dISO === toISODate(avui),
+      ocurrencies: (perDia.get(dISO) ?? [])
+        .filter((oc) => oc.reserves)
+        .map((oc) => ({
+          id: oc.id,
+          reservaId: oc.reserves!.id,
+          codi: oc.reserves!.codi,
+          horaInici: oc.hora_inici,
+          horaFi: oc.hora_fi,
+          estat: oc.estat,
+          noShow: oc.no_show,
+          clientNom: oc.reserves!.clients?.nom ?? null,
+          recursos: nomsRecursosOcurrencia(oc),
+        })),
+    };
+  });
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
@@ -136,65 +165,7 @@ export default async function CalendariPage({
           {t.calendari.mesos[mesIdx]} {any}
         </h2>
 
-        <div className="overflow-x-auto">
-          <div className="grid min-w-[840px] grid-cols-7 overflow-hidden rounded-xl border border-black/10 dark:border-white/10">
-            {t.calendari.dies.map((nom) => (
-              <div
-                key={nom}
-                className="border-b border-black/10 bg-sky-600 px-2 py-2 text-center text-xs font-semibold text-white dark:border-white/10 dark:bg-indigo-500 dark:text-white"
-              >
-                {nom}
-              </div>
-            ))}
-
-            {dies.map((d) => {
-              const dISO = toISODate(d);
-              const dinsDelMes = d.getMonth() === mesIdx;
-              const esAvui = dISO === toISODate(avui);
-              const ocsDelDia = perDia.get(dISO) ?? [];
-              const visibles = ocsDelDia.slice(0, MAX_VISIBLES_PER_DIA);
-              const restants = ocsDelDia.length - visibles.length;
-
-              return (
-                <div
-                  key={dISO}
-                  className={`min-h-28 border-b border-r border-black/10 p-1.5 last:border-r-0 dark:border-white/10 ${
-                    dinsDelMes ? "bg-white dark:bg-zinc-950" : "bg-sky-50 dark:bg-zinc-900/40"
-                  }`}
-                >
-                  <span
-                    className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-xs ${
-                      esAvui
-                        ? "bg-sky-600 font-semibold text-white dark:bg-indigo-500 dark:text-white"
-                        : dinsDelMes
-                          ? "text-zinc-700 dark:text-zinc-300"
-                          : "text-zinc-400 dark:text-zinc-600"
-                    }`}
-                  >
-                    {d.getDate()}
-                  </span>
-
-                  <ul className="mt-1 flex flex-col gap-0.5">
-                    {visibles.map((oc) => (
-                      <li
-                        key={oc.id}
-                        className="truncate rounded bg-zinc-100 px-1 py-0.5 text-[11px] leading-tight text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
-                        title={`${oc.hora_inici.slice(0, 5)}–${oc.hora_fi.slice(0, 5)} ${nomsRecursosOcurrencia(oc)} — ${oc.reserves?.clients?.nom ?? ""}`}
-                      >
-                        {oc.hora_inici.slice(0, 5)} {nomsRecursosOcurrencia(oc)}
-                      </li>
-                    ))}
-                    {restants > 0 && (
-                      <li className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                        {t.calendari.mesMes(restants)}
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <CalendariGraella dies={diesGraella} idioma={idioma} />
       </main>
     </div>
   );

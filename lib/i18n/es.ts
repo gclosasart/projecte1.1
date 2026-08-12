@@ -446,6 +446,9 @@ const es: Dict = {
     avui: "Hoy",
     mesSeguent: "Mes siguiente →",
     mesMes: (n) => `+${n} más`,
+    reservesDe: (data) => `Reservas del ${data}`,
+    tancar: "Cerrar",
+    capReservaDia: "Ninguna reserva ese día.",
   },
   planning: {
     titol: "Planning de reservas",

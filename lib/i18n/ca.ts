@@ -443,6 +443,9 @@ const ca = {
     avui: "Avui",
     mesSeguent: "Mes següent →",
     mesMes: (n: number) => `+${n} més`,
+    reservesDe: (data: string) => `Reserves del ${data}`,
+    tancar: "Tanca",
+    capReservaDia: "Cap reserva aquest dia.",
   },
   planning: {
     titol: "Planning de reserves",

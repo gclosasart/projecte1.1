@@ -211,22 +211,26 @@ export function NovaReservaForm({
               name="client_nom"
               placeholder={t.nomClientPlaceholder}
               required={clientMode === "nou"}
+              autoComplete="off"
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_nif"
               placeholder={t.nifPlaceholder}
+              autoComplete="off"
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_email"
               type="email"
               placeholder={t.emailPlaceholder}
+              autoComplete="off"
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_adreca"
               placeholder={t.adrecaPlaceholder}
+              autoComplete="off"
               className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
