@@ -5,6 +5,7 @@ import { getDict, getIdioma } from "@/lib/i18n";
 import { CancelOcurrenciaButton } from "../CancelOcurrenciaButton";
 import { EditaRecursosReserva } from "../EditaRecursosReserva";
 import { EstatReservaSelector } from "../EstatReservaSelector";
+import { NoShowButton } from "../NoShowButton";
 
 type Ocurrencia = {
   id: string;
@@ -13,6 +14,7 @@ type Ocurrencia = {
   hora_fi: string;
   estat: string;
   preu: number;
+  no_show: boolean;
 };
 
 type Factura = {
@@ -21,6 +23,7 @@ type Factura = {
   numero: number;
   estat: string;
   total: number;
+  no_show: boolean;
 };
 
 // Estat de la RESERVA/OCURRÈNCIA (activa/cancel·lada) — no confondre amb el pagament de la factura.
@@ -76,7 +79,7 @@ export default async function DetallReservaPage({
 
   const { data: ocurrencies } = await supabase
     .from("ocurrencies")
-    .select("id, data, hora_inici, hora_fi, estat, preu")
+    .select("id, data, hora_inici, hora_fi, estat, preu, no_show")
     .eq("reserva_id", id)
     .order("data")
     .returns<Ocurrencia[]>();
@@ -86,7 +89,7 @@ export default async function DetallReservaPage({
     ocIds.length > 0
       ? await supabase
           .from("factures")
-          .select("id, ocurrencia_id, numero, estat, total")
+          .select("id, ocurrencia_id, numero, estat, total, no_show")
           .in("ocurrencia_id", ocIds)
           .returns<Factura[]>()
       : { data: [] as Factura[] };
@@ -174,6 +177,11 @@ export default async function DetallReservaPage({
                         >
                           {t.comu.estats[oc.estat] ?? oc.estat}
                         </span>
+                        {oc.no_show && (
+                          <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-normal text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                            {t.reservaGestio.detall.noShowBadge}
+                          </span>
+                        )}
                       </p>
                       <p className="text-sm text-zinc-500 dark:text-zinc-400">
                         {oc.preu} €
@@ -186,19 +194,32 @@ export default async function DetallReservaPage({
                             >
                               {t.comu.estats[factura.estat] ?? factura.estat}
                             </span>
+                            {factura.no_show && (
+                              <span className="ml-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                                {t.factures.detall.noShowBadge}
+                              </span>
+                            )}
                           </>
                         )}
                       </p>
                     </div>
 
-                    {oc.estat === "activa" && (
-                      <CancelOcurrenciaButton
+                    <div className="flex items-center gap-3">
+                      <NoShowButton
                         ocurrenciaId={oc.id}
                         reservaId={reserva.id}
-                        esRecurrent={esRecurrent}
+                        noShow={oc.no_show}
                         idioma={idioma}
                       />
-                    )}
+                      {oc.estat === "activa" && (
+                        <CancelOcurrenciaButton
+                          ocurrenciaId={oc.id}
+                          reservaId={reserva.id}
+                          esRecurrent={esRecurrent}
+                          idioma={idioma}
+                        />
+                      )}
+                    </div>
                   </div>
 
                   {factura && (

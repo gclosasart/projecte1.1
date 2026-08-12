@@ -13,6 +13,7 @@ type Factura = {
   total: number;
   estat: string;
   metode_pagament: string | null;
+  no_show: boolean;
   tenants: {
     nom_comercial: string;
     rao_social: string | null;
@@ -49,7 +50,7 @@ export default async function FacturaDetallPage({
   const { data: factura } = await supabase
     .from("factures")
     .select(
-      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, tenants(nom_comercial, rao_social, nif, adreca_fiscal), ocurrencies(data, hora_inici, hora_fi, reserves(reserva_recursos(recursos(nom)), clients(nom, nif, email, adreca)))",
+      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, no_show, tenants(nom_comercial, rao_social, nif, adreca_fiscal), ocurrencies(data, hora_inici, hora_fi, reserves(reserva_recursos(recursos(nom)), clients(nom, nif, email, adreca)))",
     )
     .eq("id", id)
     .single<Factura>();
@@ -78,6 +79,11 @@ export default async function FacturaDetallPage({
         >
           {t.comu.estats[factura.estat] ?? factura.estat}
         </span>
+        {factura.no_show && (
+          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-normal text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+            {t.factures.detall.noShowBadge}
+          </span>
+        )}
       </header>
 
       <main className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-6 px-6 py-8">

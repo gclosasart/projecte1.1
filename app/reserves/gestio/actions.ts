@@ -56,6 +56,16 @@ export async function canviarEstatReserva(id: string, nouEstat: "activa" | "canc
   revalidatePath("/dashboard");
 }
 
+export async function canviarNoShow(ocurrenciaId: string, reservaId: string, marcar: boolean) {
+  const supabase = await createClient();
+  await supabase.from("ocurrencies").update({ no_show: marcar }).eq("id", ocurrenciaId);
+  await supabase.from("factures").update({ no_show: marcar }).eq("ocurrencia_id", ocurrenciaId);
+  revalidatePath("/reserves/gestio");
+  revalidatePath(`/reserves/gestio/${reservaId}`);
+  revalidatePath("/factures");
+  revalidatePath("/dashboard");
+}
+
 export type ModificarRecursosState = {
   error: string | null;
   conflictes: string[] | null;

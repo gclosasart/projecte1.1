@@ -33,6 +33,7 @@ function nomsRecursosOcurrencia(oc: OcurrenciaAvui): string {
 const SECUNDARIS = [
   { navKey: "gestionaReserves", href: "/reserves/gestio", modul: "reserves" },
   { navKey: "calendari", href: "/calendari", modul: "reserves" },
+  { navKey: "planning", href: "/planning", modul: "reserves" },
   { navKey: "recursos", href: "/recursos", modul: "recursos" },
   { navKey: "clients", href: "/clients", modul: "clients" },
   { navKey: "factures", href: "/factures", modul: "factures" },

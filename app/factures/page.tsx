@@ -12,6 +12,7 @@ type Factura = {
   total: number;
   estat: string;
   metode_pagament: string | null;
+  no_show: boolean;
   ocurrencies: {
     data: string;
     reserves: {
@@ -29,7 +30,7 @@ export default async function FacturesPage() {
   const { data: factures } = await supabase
     .from("factures")
     .select(
-      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
+      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, no_show, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
     )
     .order("numero", { ascending: false })
     .returns<Factura[]>();

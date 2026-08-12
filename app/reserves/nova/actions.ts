@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getDict } from "@/lib/i18n";
+import { hiHaClientDuplicat } from "@/app/clients/actions";
 import {
   calcularPreusBase,
   generarDates,
@@ -79,20 +80,28 @@ export async function crearReserva(
       }
     }
 
+    const campsNouClient = {
+      nom: nom.trim(),
+      nif: typeof nif === "string" && nif.trim() ? nif.trim() : null,
+      email: typeof email === "string" && email.trim() ? email.trim() : null,
+      adreca: typeof adreca === "string" && adreca.trim() ? adreca.trim() : null,
+    };
+
+    if (await hiHaClientDuplicat(supabase, tenant_id, campsNouClient)) {
+      return { ...ESTAT_INICIAL, error: t.clients.errorClientDuplicat };
+    }
+
     const { data: novClient, error: errClient } = await supabase
       .from("clients")
-      .insert({
-        tenant_id,
-        nom: nom.trim(),
-        nif: typeof nif === "string" && nif.trim() ? nif.trim() : null,
-        email: typeof email === "string" && email.trim() ? email.trim() : null,
-        adreca: typeof adreca === "string" && adreca.trim() ? adreca.trim() : null,
-      })
+      .insert({ tenant_id, ...campsNouClient })
       .select("id")
       .single();
 
     if (errClient || !novClient) {
-      return { ...ESTAT_INICIAL, error: t.reservaNova.errorCrearClient };
+      return {
+        ...ESTAT_INICIAL,
+        error: errClient?.code === "23505" ? t.clients.errorClientDuplicat : t.reservaNova.errorCrearClient,
+      };
     }
     client_id = novClient.id;
   } else {

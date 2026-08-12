@@ -14,6 +14,7 @@ type Factura = {
   total: number;
   estat: string;
   metode_pagament: string | null;
+  no_show: boolean;
   ocurrencies: {
     data: string;
     reserves: {
@@ -82,6 +83,11 @@ export function FacturesList({ factures, idioma }: { factures: Factura[]; idioma
                   >
                     {dict.comu.estats[f.estat] ?? f.estat}
                   </span>
+                  {f.no_show && (
+                    <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-normal text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                      {t.detall.noShowBadge}
+                    </span>
+                  )}
                 </p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
                   {f.ocurrencies?.reserves?.clients?.nom ?? t.clientDesconegut} ·{" "}

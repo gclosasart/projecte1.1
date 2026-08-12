@@ -16,6 +16,31 @@ type CampsClient = {
   adreca: string | null;
 };
 
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
+
+export async function hiHaClientDuplicat(
+  supabase: SupabaseServerClient,
+  tenant_id: string,
+  camps: Pick<CampsClient, "nom" | "nif" | "email">,
+  excludeId?: string,
+): Promise<boolean> {
+  let query = supabase.from("clients").select("id").eq("tenant_id", tenant_id);
+
+  if (camps.nif) {
+    query = query.ilike("nif", camps.nif);
+  } else {
+    query = query.ilike("nom", camps.nom);
+    query = camps.email ? query.ilike("email", camps.email) : query.is("email", null);
+  }
+
+  if (excludeId) {
+    query = query.neq("id", excludeId);
+  }
+
+  const { data } = await query.limit(1);
+  return Boolean(data && data.length > 0);
+}
+
 async function tenantIdActual() {
   const supabase = await createClient();
   const {
@@ -69,10 +94,15 @@ export async function crearClient(
   }
 
   const supabase = await createClient();
+
+  if (await hiHaClientDuplicat(supabase, tenant_id, resultat.camps)) {
+    return { error: t.clients.errorClientDuplicat };
+  }
+
   const { error } = await supabase.from("clients").insert({ ...resultat.camps, tenant_id });
 
   if (error) {
-    return { error: t.clients.errorCrear };
+    return { error: error.code === "23505" ? t.clients.errorClientDuplicat : t.clients.errorCrear };
   }
 
   revalidatePath("/clients");
@@ -121,11 +151,21 @@ export async function actualitzarClient(
   const resultat = await llegirCamps(formData);
   if (!resultat.ok) return { error: resultat.error };
 
+  const tenant_id = await tenantIdActual();
+  if (!tenant_id) {
+    return { error: t.clients.errorSenseTenant };
+  }
+
   const supabase = await createClient();
+
+  if (await hiHaClientDuplicat(supabase, tenant_id, resultat.camps, id)) {
+    return { error: t.clients.errorClientDuplicat };
+  }
+
   const { error } = await supabase.from("clients").update(resultat.camps).eq("id", id);
 
   if (error) {
-    return { error: t.clients.errorDesar };
+    return { error: error.code === "23505" ? t.clients.errorClientDuplicat : t.clients.errorDesar };
   }
 
   revalidatePath("/clients");
