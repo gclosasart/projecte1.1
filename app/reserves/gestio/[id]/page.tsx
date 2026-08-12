@@ -49,7 +49,7 @@ export default async function DetallReservaPage({
   const { data: reserva } = await supabase
     .from("reserves")
     .select(
-      "id, tipus, frequencia, data_inici, condicio_final, model_preu, preu_base_snapshot, estat, notes, reserva_recursos(recursos(id, nom)), clients(nom)",
+      "id, codi, tipus, frequencia, data_inici, condicio_final, model_preu, preu_base_snapshot, estat, notes, reserva_recursos(recursos(id, nom)), clients(nom)",
     )
     .eq("id", id)
     .single();
@@ -110,6 +110,7 @@ export default async function DetallReservaPage({
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+          <p className="font-mono text-xs text-zinc-400 dark:text-zinc-500">{reserva.codi}</p>
           <p className="flex flex-wrap items-center gap-2 text-base font-semibold text-zinc-950 dark:text-zinc-50">
             {nomsRecursos} — {client?.nom ?? t.reservaGestio.clientDesconegut}
             <EstatReservaSelector reservaId={reserva.id} estatActual={reserva.estat} idioma={idioma} />
@@ -162,40 +163,51 @@ export default async function DetallReservaPage({
               return (
                 <li
                   key={oc.id}
-                  className="flex items-center justify-between rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
+                  className="flex flex-col gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
                 >
-                  <div>
-                    <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                      {oc.data} · {oc.hora_inici.slice(0, 5)}–{oc.hora_fi.slice(0, 5)}
-                      <span
-                        className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_RESERVA_ESTIL[oc.estat] ?? ""}`}
-                      >
-                        {t.comu.estats[oc.estat] ?? oc.estat}
-                      </span>
-                    </p>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {oc.preu} €
-                      {factura && (
-                        <>
-                          {" "}
-                          · {t.reservaGestio.detall.factura(factura.numero)}{" "}
-                          <span
-                            className={`rounded-full px-2 py-0.5 text-xs ${ESTAT_FACTURA_ESTIL[factura.estat] ?? ""}`}
-                          >
-                            {t.comu.estats[factura.estat] ?? factura.estat}
-                          </span>
-                        </>
-                      )}
-                    </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
+                        {oc.data} · {oc.hora_inici.slice(0, 5)}–{oc.hora_fi.slice(0, 5)}
+                        <span
+                          className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_RESERVA_ESTIL[oc.estat] ?? ""}`}
+                        >
+                          {t.comu.estats[oc.estat] ?? oc.estat}
+                        </span>
+                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                        {oc.preu} €
+                        {factura && (
+                          <>
+                            {" "}
+                            · {t.reservaGestio.detall.factura(factura.numero)}{" "}
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-xs ${ESTAT_FACTURA_ESTIL[factura.estat] ?? ""}`}
+                            >
+                              {t.comu.estats[factura.estat] ?? factura.estat}
+                            </span>
+                          </>
+                        )}
+                      </p>
+                    </div>
+
+                    {oc.estat === "activa" && (
+                      <CancelOcurrenciaButton
+                        ocurrenciaId={oc.id}
+                        reservaId={reserva.id}
+                        esRecurrent={esRecurrent}
+                        idioma={idioma}
+                      />
+                    )}
                   </div>
 
-                  {oc.estat === "activa" && (
-                    <CancelOcurrenciaButton
-                      ocurrenciaId={oc.id}
-                      reservaId={reserva.id}
-                      esRecurrent={esRecurrent}
-                      idioma={idioma}
-                    />
+                  {factura && (
+                    <Link
+                      href={`/factures/${factura.id}`}
+                      className="rounded-full bg-sky-600 px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                    >
+                      {t.reservaGestio.detall.veureFactura}
+                    </Link>
                   )}
                 </li>
               );

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getDict } from "@/lib/i18n";
-import { marcarPagada } from "./actions";
+import { getDict, getIdioma } from "@/lib/i18n";
+import { FacturesList } from "./FacturesList";
 
 type Factura = {
   id: string;
@@ -11,6 +11,7 @@ type Factura = {
   iva_percent: number;
   total: number;
   estat: string;
+  metode_pagament: string | null;
   ocurrencies: {
     data: string;
     reserves: {
@@ -20,30 +21,15 @@ type Factura = {
   } | null;
 };
 
-function nomsRecursosFactura(f: Factura, recursDesconegut: string): string {
-  const noms = (f.ocurrencies?.reserves?.reserva_recursos ?? [])
-    .map((rr) => rr.recursos?.nom)
-    .filter((n): n is string => Boolean(n));
-  return noms.length > 0 ? noms.join(" + ") : recursDesconegut;
-}
-
-const ESTAT_ESTIL: Record<string, string> = {
-  pendent:
-    "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300",
-  pagada:
-    "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
-  "anul·lada":
-    "bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
-};
-
 export default async function FacturesPage() {
   const supabase = await createClient();
   const t = await getDict();
+  const idioma = await getIdioma();
 
   const { data: factures } = await supabase
     .from("factures")
     .select(
-      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
+      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
     )
     .order("numero", { ascending: false })
     .returns<Factura[]>();
@@ -61,45 +47,7 @@ export default async function FacturesPage() {
         {!factures || factures.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.factures.capFactura}</p>
         ) : (
-          <ul className="flex flex-col gap-3">
-            {factures.map((f) => (
-              <li
-                key={f.id}
-                className="flex items-center justify-between rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
-              >
-                <div>
-                  <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                    {t.factures.factura(f.numero)}
-                    <span
-                      className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[f.estat] ?? ""}`}
-                    >
-                      {t.comu.estats[f.estat] ?? f.estat}
-                    </span>
-                  </p>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {f.ocurrencies?.reserves?.clients?.nom ?? t.factures.clientDesconegut} ·{" "}
-                    {nomsRecursosFactura(f, t.factures.recursDesconegut)} ·{" "}
-                    {f.ocurrencies?.data ?? f.data_emissio}
-                  </p>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {t.factures.basePrefix(String(f.base_imposable), String(f.iva_percent))}
-                    <strong>{f.total} €</strong>
-                  </p>
-                </div>
-
-                {f.estat === "pendent" && (
-                  <form action={marcarPagada.bind(null, f.id)}>
-                    <button
-                      type="submit"
-                      className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
-                    >
-                      {t.factures.marcaPagada}
-                    </button>
-                  </form>
-                )}
-              </li>
-            ))}
-          </ul>
+          <FacturesList factures={factures} idioma={idioma} />
         )}
       </main>
     </div>

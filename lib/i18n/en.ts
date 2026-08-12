@@ -182,6 +182,10 @@ const en: Dict = {
     errorCapOcurrencia: "No occurrence was generated with these parameters.",
     errorPreuAbonament: "Enter the monthly fee price.",
     errorCrearReserva: "Couldn't create the booking.",
+    errorLlistaNegra: (motiu) =>
+      motiu
+        ? `This client is blacklisted (${motiu}) and the booking can't be made.`
+        : "This client is blacklisted and the booking can't be made.",
   },
   reservaGestio: {
     titol: "Manage bookings",
@@ -201,6 +205,8 @@ const en: Dict = {
     desDel: (data) => `since ${data}`,
     arxiva: "Archive",
     desarxiva: "Unarchive",
+    cercaPlaceholder: "Search by code, client or resource...",
+    capResultatCerca: "No booking found for this search.",
     detall: {
       titol: "Booking detail",
       preuBase: (preu) => `Base price: ${preu} €`,
@@ -214,6 +220,7 @@ const en: Dict = {
       noEsPotFerCanvi: (dates) => `Can't make the change: there's a schedule conflict on ${dates}.`,
       ocurrenciesIFactures: "Occurrences and invoices",
       factura: (num) => `Invoice #${num}`,
+      veureFactura: "View invoice",
       cancella: "Cancel",
       cancellant: "Cancelling...",
       cancellada: "Cancelled.",
@@ -251,6 +258,8 @@ const en: Dict = {
     errorConfirmacio: 'You must type "ELIMINA" to confirm.',
     errorReservesArxivades: "Can't delete: this client has archived bookings.",
     errorFacturesPagades: "Can't delete: this client has paid invoices.",
+    cercaPlaceholder: "Search by name, email or tax ID...",
+    capResultatCerca: "No client found for this search.",
     errorEliminar: "Couldn't delete the client.",
   },
   factures: {
@@ -261,6 +270,22 @@ const en: Dict = {
     recursDesconegut: "Unknown resource",
     basePrefix: (base, iva) => `Base ${base} € + VAT ${iva}% = `,
     marcaPagada: "Mark as paid",
+    cercaPlaceholder: "Search by client, resource or invoice number...",
+    capResultatCerca: "No invoice found for this search.",
+    metodes: {
+      efectiu: "Cash",
+      targeta: "Card",
+      transferencia: "Bank transfer",
+      altres: "Other",
+    },
+    pagadaAmb: (metode) => `Paid by ${metode}`,
+    detall: {
+      emissor: "Issuer",
+      baseImposable: "Taxable base",
+      iva: "VAT",
+      total: "Total",
+      metodePagament: "Payment method",
+    },
   },
   configuracio: {
     titol: "Coworking details",
@@ -436,6 +461,22 @@ const en: Dict = {
     errorCurta: "Password must be at least 8 characters.",
     errorNoCoincideixen: "Passwords don't match.",
     errorEstablir: "Couldn't set the password. Open the email link again.",
+  },
+  llistaNegra: {
+    titol: "Blacklist",
+    descripcio: "Clients with one of these tax IDs won't be able to make any new booking.",
+    nifPlaceholder: "Tax ID",
+    nomPlaceholder: "Name (optional)",
+    motiuPlaceholder: "Reason (optional)",
+    afegeix: "Add to blacklist",
+    afegint: "Adding...",
+    elimina: "Remove",
+    capEntrada: "No tax ID on the blacklist yet.",
+    afegitPer: (nom) => `— ${nom}`,
+    errorNifObligatori: "Tax ID is required.",
+    errorJaExisteix: "This tax ID is already on the blacklist.",
+    errorAfegir: "Couldn't add to the blacklist.",
+    errorSenseTenant: "Your user has no tenant assigned.",
   },
 };
 

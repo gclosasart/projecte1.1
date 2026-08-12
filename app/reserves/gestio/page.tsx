@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getDict, getIdioma } from "@/lib/i18n";
-import { ReservaCard } from "./ReservaCard";
+import { ReservesCercador } from "./ReservesCercador";
 import { ArxivadesSection } from "./ArxivadesSection";
 import type { Reserva } from "./tipus";
 
@@ -13,7 +13,7 @@ export default async function GestioReservesPage() {
   const { data: reserves } = await supabase
     .from("reserves")
     .select(
-      "id, tipus, frequencia, data_inici, condicio_final, model_preu, estat, arxivada, reserva_recursos(recursos(nom)), clients(nom)",
+      "id, codi, tipus, frequencia, data_inici, condicio_final, model_preu, estat, arxivada, reserva_recursos(recursos(nom)), clients(nom)",
     )
     .order("data_inici", { ascending: false })
     .returns<Reserva[]>();
@@ -81,54 +81,7 @@ export default async function GestioReservesPage() {
         {visibles.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capReservaCreada}</p>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2">
-            <section>
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                {t.reservaGestio.enCurs(enCurs.length)}
-              </h2>
-              {enCurs.length === 0 ? (
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capEnCurs}</p>
-              ) : (
-                <ul className="flex flex-col gap-3">
-                  {enCurs.map((r) => (
-                    <ReservaCard key={r.id} r={r} idioma={idioma} />
-                  ))}
-                </ul>
-              )}
-            </section>
-
-            <div className="flex flex-col gap-6">
-              <section>
-                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  {t.reservaGestio.pagades(pagades.length)}
-                </h2>
-                {pagades.length === 0 ? (
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capPagada}</p>
-                ) : (
-                  <ul className="flex flex-col gap-3">
-                    {pagades.map((r) => (
-                      <ReservaCard key={r.id} r={r} idioma={idioma} />
-                    ))}
-                  </ul>
-                )}
-              </section>
-
-              <section>
-                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  {t.reservaGestio.cancellades(cancellades.length)}
-                </h2>
-                {cancellades.length === 0 ? (
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capCancellada}</p>
-                ) : (
-                  <ul className="flex flex-col gap-3">
-                    {cancellades.map((r) => (
-                      <ReservaCard key={r.id} r={r} idioma={idioma} />
-                    ))}
-                  </ul>
-                )}
-              </section>
-            </div>
-          </div>
+          <ReservesCercador enCurs={enCurs} pagades={pagades} cancellades={cancellades} idioma={idioma} />
         )}
 
         <ArxivadesSection reserves={arxivades} idioma={idioma} />

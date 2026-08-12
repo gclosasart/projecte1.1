@@ -66,6 +66,19 @@ export async function crearReserva(
     const email = formData.get("client_email");
     const adreca = formData.get("client_adreca");
 
+    const nifNormalitzat = typeof nif === "string" && nif.trim() ? nif.trim().toUpperCase() : null;
+    if (nifNormalitzat) {
+      const { data: blacklisted } = await supabase
+        .from("llista_negra")
+        .select("motiu")
+        .eq("tenant_id", tenant_id)
+        .eq("nif", nifNormalitzat)
+        .maybeSingle();
+      if (blacklisted) {
+        return { ...ESTAT_INICIAL, error: t.reservaNova.errorLlistaNegra(blacklisted.motiu) };
+      }
+    }
+
     const { data: novClient, error: errClient } = await supabase
       .from("clients")
       .insert({
@@ -87,6 +100,25 @@ export async function crearReserva(
     if (typeof existentId !== "string" || !existentId) {
       return { ...ESTAT_INICIAL, error: t.reservaNova.errorSeleccionaClient };
     }
+
+    const { data: clientExistent } = await supabase
+      .from("clients")
+      .select("nif")
+      .eq("id", existentId)
+      .single();
+
+    if (clientExistent?.nif) {
+      const { data: blacklisted } = await supabase
+        .from("llista_negra")
+        .select("motiu")
+        .eq("tenant_id", tenant_id)
+        .eq("nif", clientExistent.nif.trim().toUpperCase())
+        .maybeSingle();
+      if (blacklisted) {
+        return { ...ESTAT_INICIAL, error: t.reservaNova.errorLlistaNegra(blacklisted.motiu) };
+      }
+    }
+
     client_id = existentId;
   }
 

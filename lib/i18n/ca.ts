@@ -180,6 +180,10 @@ const ca = {
     errorCapOcurrencia: "No s'ha generat cap ocurrència amb aquests paràmetres.",
     errorPreuAbonament: "Introdueix el preu de l'abonament mensual.",
     errorCrearReserva: "No s'ha pogut crear la reserva.",
+    errorLlistaNegra: (motiu: string | null) =>
+      motiu
+        ? `Aquest client està a la llista negra (${motiu}) i no es pot fer la reserva.`
+        : "Aquest client està a la llista negra i no es pot fer la reserva.",
   },
   reservaGestio: {
     titol: "Gestiona reserves",
@@ -199,6 +203,8 @@ const ca = {
     desDel: (data: string) => `des del ${data}`,
     arxiva: "Arxiva",
     desarxiva: "Desarxiva",
+    cercaPlaceholder: "Cerca per codi, client o recurs...",
+    capResultatCerca: "Cap reserva trobada amb aquesta cerca.",
     detall: {
       titol: "Detall de la reserva",
       preuBase: (preu: string) => `Preu base: ${preu} €`,
@@ -212,6 +218,7 @@ const ca = {
       noEsPotFerCanvi: (dates: string) => `No es pot fer el canvi: hi ha conflicte d'horari a ${dates}.`,
       ocurrenciesIFactures: "Ocurrències i factures",
       factura: (num: number) => `Factura #${num}`,
+      veureFactura: "Veure factura",
       cancella: "Cancel·la",
       cancellant: "Cancel·lant...",
       cancellada: "Cancel·lada.",
@@ -249,6 +256,8 @@ const ca = {
     errorConfirmacio: 'Has d\'escriure "ELIMINA" per confirmar.',
     errorReservesArxivades: "No es pot eliminar: aquest client té reserves arxivades.",
     errorFacturesPagades: "No es pot eliminar: aquest client té factures pagades.",
+    cercaPlaceholder: "Cerca per nom, email o NIF...",
+    capResultatCerca: "Cap client trobat amb aquesta cerca.",
     errorEliminar: "No s'ha pogut eliminar el client.",
   },
   factures: {
@@ -259,6 +268,22 @@ const ca = {
     recursDesconegut: "Recurs desconegut",
     basePrefix: (base: string, iva: string) => `Base ${base} € + IVA ${iva}% = `,
     marcaPagada: "Marca com a pagada",
+    cercaPlaceholder: "Cerca per client, recurs o número de factura...",
+    capResultatCerca: "Cap factura trobada amb aquesta cerca.",
+    metodes: {
+      efectiu: "Efectiu",
+      targeta: "Targeta",
+      transferencia: "Transferència",
+      altres: "Altres",
+    } as Record<string, string>,
+    pagadaAmb: (metode: string) => `Pagada amb ${metode}`,
+    detall: {
+      emissor: "Emissor",
+      baseImposable: "Base imposable",
+      iva: "IVA",
+      total: "Total",
+      metodePagament: "Mètode de pagament",
+    },
   },
   configuracio: {
     titol: "Dades del coworking",
@@ -434,6 +459,22 @@ const ca = {
     errorCurta: "La contrasenya ha de tenir almenys 8 caràcters.",
     errorNoCoincideixen: "Les contrasenyes no coincideixen.",
     errorEstablir: "No s'ha pogut establir la contrasenya. Torna a obrir l'enllaç de l'email.",
+  },
+  llistaNegra: {
+    titol: "Llista negra",
+    descripcio: "Els clients amb un d'aquests DNI/NIF no podran fer cap reserva nova.",
+    nifPlaceholder: "DNI/NIF",
+    nomPlaceholder: "Nom (opcional)",
+    motiuPlaceholder: "Motiu (opcional)",
+    afegeix: "Afegeix a la llista negra",
+    afegint: "Afegint...",
+    elimina: "Elimina",
+    capEntrada: "Encara no hi ha cap DNI a la llista negra.",
+    afegitPer: (nom: string) => `— ${nom}`,
+    errorNifObligatori: "El DNI/NIF és obligatori.",
+    errorJaExisteix: "Aquest DNI/NIF ja és a la llista negra.",
+    errorAfegir: "No s'ha pogut afegir a la llista negra.",
+    errorSenseTenant: "El teu usuari no té cap tenant assignat.",
   },
 };
 

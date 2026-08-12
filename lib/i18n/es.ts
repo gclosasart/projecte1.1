@@ -182,6 +182,10 @@ const es: Dict = {
     errorCapOcurrencia: "No se ha generado ninguna ocurrencia con estos parámetros.",
     errorPreuAbonament: "Introduce el precio del abono mensual.",
     errorCrearReserva: "No se ha podido crear la reserva.",
+    errorLlistaNegra: (motiu) =>
+      motiu
+        ? `Este cliente está en la lista negra (${motiu}) y no se puede hacer la reserva.`
+        : "Este cliente está en la lista negra y no se puede hacer la reserva.",
   },
   reservaGestio: {
     titol: "Gestionar reservas",
@@ -201,6 +205,8 @@ const es: Dict = {
     desDel: (data) => `desde el ${data}`,
     arxiva: "Archivar",
     desarxiva: "Desarchivar",
+    cercaPlaceholder: "Busca por código, cliente o recurso...",
+    capResultatCerca: "Ninguna reserva encontrada con esta búsqueda.",
     detall: {
       titol: "Detalle de la reserva",
       preuBase: (preu) => `Precio base: ${preu} €`,
@@ -214,6 +220,7 @@ const es: Dict = {
       noEsPotFerCanvi: (dates) => `No se puede hacer el cambio: hay conflicto de horario en ${dates}.`,
       ocurrenciesIFactures: "Ocurrencias y facturas",
       factura: (num) => `Factura #${num}`,
+      veureFactura: "Ver factura",
       cancella: "Cancelar",
       cancellant: "Cancelando...",
       cancellada: "Cancelada.",
@@ -251,6 +258,8 @@ const es: Dict = {
     errorConfirmacio: 'Debes escribir "ELIMINA" para confirmar.',
     errorReservesArxivades: "No se puede eliminar: este cliente tiene reservas archivadas.",
     errorFacturesPagades: "No se puede eliminar: este cliente tiene facturas pagadas.",
+    cercaPlaceholder: "Busca por nombre, email o NIF...",
+    capResultatCerca: "Ningún cliente encontrado con esta búsqueda.",
     errorEliminar: "No se ha podido eliminar el cliente.",
   },
   factures: {
@@ -261,6 +270,22 @@ const es: Dict = {
     recursDesconegut: "Recurso desconocido",
     basePrefix: (base, iva) => `Base ${base} € + IVA ${iva}% = `,
     marcaPagada: "Marcar como pagada",
+    cercaPlaceholder: "Busca por cliente, recurso o número de factura...",
+    capResultatCerca: "Ninguna factura encontrada con esta búsqueda.",
+    metodes: {
+      efectiu: "Efectivo",
+      targeta: "Tarjeta",
+      transferencia: "Transferencia",
+      altres: "Otros",
+    },
+    pagadaAmb: (metode) => `Pagada con ${metode}`,
+    detall: {
+      emissor: "Emisor",
+      baseImposable: "Base imponible",
+      iva: "IVA",
+      total: "Total",
+      metodePagament: "Método de pago",
+    },
   },
   configuracio: {
     titol: "Datos del coworking",
@@ -437,6 +462,22 @@ const es: Dict = {
     errorCurta: "La contraseña debe tener al menos 8 caracteres.",
     errorNoCoincideixen: "Las contraseñas no coinciden.",
     errorEstablir: "No se ha podido establecer la contraseña. Vuelve a abrir el enlace del email.",
+  },
+  llistaNegra: {
+    titol: "Lista negra",
+    descripcio: "Los clientes con uno de estos DNI/NIF no podrán hacer ninguna reserva nueva.",
+    nifPlaceholder: "DNI/NIF",
+    nomPlaceholder: "Nombre (opcional)",
+    motiuPlaceholder: "Motivo (opcional)",
+    afegeix: "Añadir a la lista negra",
+    afegint: "Añadiendo...",
+    elimina: "Eliminar",
+    capEntrada: "Todavía no hay ningún DNI en la lista negra.",
+    afegitPer: (nom) => `— ${nom}`,
+    errorNifObligatori: "El DNI/NIF es obligatorio.",
+    errorJaExisteix: "Este DNI/NIF ya está en la lista negra.",
+    errorAfegir: "No se ha podido añadir a la lista negra.",
+    errorSenseTenant: "Tu usuario no tiene ningún tenant asignado.",
   },
 };
 

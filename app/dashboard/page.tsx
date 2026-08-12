@@ -199,6 +199,12 @@ export default async function DashboardPage() {
     .select("id", { count: "exact", head: true })
     .eq("actiu", true);
 
+  // Bloc 5: llista negra (només lectura, per als qui tenen accés a Clients)
+  const potClients = potAccedir(rol, permisos, "clients");
+  const { data: llistaNegraRaw } = potClients
+    ? await supabase.from("llista_negra").select("id, nif, nom").order("nif")
+    : { data: [] as { id: string; nif: string; nom: string | null }[] };
+
   const novesPerDia = new Map<string, number>();
   for (const r of reservesNoves ?? []) {
     if (!r.data_inici) continue;
@@ -418,15 +424,45 @@ export default async function DashboardPage() {
             </section>
           </div>
 
-          {/* Bloc 3: notes del dia */}
-          <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-              {t.dashboard.notesDelDia}
-            </h2>
-            <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
-              <NotesDelDia notes={notes} textos={{ ...t.notesDia, elimina: t.comu.elimina }} />
-            </div>
-          </section>
+          <div className="flex flex-col gap-10">
+            {/* Bloc 3: notes del dia */}
+            <section>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                {t.dashboard.notesDelDia}
+              </h2>
+              <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+                <NotesDelDia notes={notes} textos={{ ...t.notesDia, elimina: t.comu.elimina }} />
+              </div>
+            </section>
+
+            {/* Bloc 5: llista negra */}
+            {potClients && (
+              <section>
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  {t.llistaNegra.titol}
+                </h2>
+                <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+                  {!llistaNegraRaw || llistaNegraRaw.length === 0 ? (
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.llistaNegra.capEntrada}</p>
+                  ) : (
+                    <ul className="flex max-h-64 flex-col gap-1.5 overflow-y-auto pr-1">
+                      {llistaNegraRaw.map((e) => (
+                        <li key={e.id} className="text-sm text-zinc-900 dark:text-zinc-100">
+                          {e.nif} {e.nom ? t.llistaNegra.afegitPer(e.nom) : ""}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <Link
+                    href="/clients/llista-negra"
+                    className="mt-3 inline-block text-sm font-medium text-sky-700 hover:underline dark:text-sky-400"
+                  >
+                    {t.llistaNegra.titol} →
+                  </Link>
+                </div>
+              </section>
+            )}
+          </div>
         </div>
       </main>
     </div>

@@ -1,5 +1,6 @@
 export type Reserva = {
   id: string;
+  codi: string;
   tipus: string;
   frequencia: string | null;
   data_inici: string;
@@ -17,6 +18,16 @@ export function nomsRecursos(
 ): string {
   const noms = r.reserva_recursos.map((rr) => rr.recursos?.nom).filter((n): n is string => Boolean(n));
   return noms.length > 0 ? noms.join(" + ") : recursDesconegut;
+}
+
+export function coincideixCerca(r: Reserva, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  return (
+    r.codi.includes(q) ||
+    (r.clients?.nom?.toLowerCase().includes(q) ?? false) ||
+    nomsRecursos(r, "").toLowerCase().includes(q)
+  );
 }
 
 // Estat de la RESERVA (activa/cancel·lada) — no confondre amb el pagament de la factura.
