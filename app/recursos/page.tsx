@@ -31,7 +31,7 @@ export default async function RecursosPage() {
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
             ← Dashboard
           </Link>
-          <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">{t.recursos.titol}</h1>
+          <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.recursos.titol}</h1>
         </div>
         <Link
           href="/recursos/nou"
