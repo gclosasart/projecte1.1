@@ -41,7 +41,7 @@ export default async function FacturesPage() {
         <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
           ← {t.comu.dashboard}
         </Link>
-        <h1 className="text-lg font-semibold text-sky-600 dark:text-indigo-400">{t.factures.titol}</h1>
+        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.factures.titol}</h1>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">

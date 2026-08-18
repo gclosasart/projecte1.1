@@ -33,7 +33,7 @@ export default async function ConfiguracioPage() {
         <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
           ← {t.comu.dashboard}
         </Link>
-        <h1 className="text-lg font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.configuracio.titol}
         </h1>
       </header>

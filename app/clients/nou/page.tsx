@@ -12,7 +12,7 @@ export default async function NouClientPage() {
         <Link href="/clients" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
           ← {t.clients.titol}
         </Link>
-        <h1 className="mt-2 text-xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="mt-2 text-2xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.clients.nouClient}
         </h1>
 
