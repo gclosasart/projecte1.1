@@ -10,6 +10,7 @@ const ca = {
     dashboard: "Dashboard",
     plataforma: "Plataforma",
     menu: "Menú",
+    compte: "Compte",
     estats: {
       activa: "activa",
       "cancel·lada": "cancel·lada",

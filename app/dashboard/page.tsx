@@ -265,7 +265,7 @@ export default async function DashboardPage() {
           idioma={idioma}
           textosIdiomes={t.comu.idiomes}
           tancaSessio={t.comu.surt}
-          menuLabel={t.comu.menu}
+          menuLabel={t.comu.compte}
         />
       </header>
 
