@@ -2,11 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getDict, getIdioma } from "@/lib/i18n";
-import { SelectorIdioma } from "../SelectorIdioma";
-import { signOut } from "./actions";
 import { NotesDelDia } from "./NotesDelDia";
 import { ForecastChart } from "./ForecastChart";
 import { NavSecundaria } from "./NavSecundaria";
+import { AccionsCapcalera } from "./AccionsCapcalera";
 
 type OcurrenciaAvui = {
   id: string;
@@ -244,50 +243,30 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
-        <div>
-          <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
+      <header className="flex items-center justify-between gap-3 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-zinc-950 dark:text-zinc-50">
             {tenantNom ?? t.comu.plataforma}
           </p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="truncate text-xs text-zinc-500 dark:text-zinc-400">
             {profile?.nom ?? user?.email} · {rol}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          {rol === "tecnic" && (
-            <Link
-              href="/tecnic"
-              className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
-            >
-              {t.nav.panellTecnic}
-            </Link>
-          )}
-          {(rol === "tenant_admin" || rol === "tecnic") && (
-            <>
-              <Link
-                href="/configuracio"
-                className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
-              >
-                {t.nav.empresa}
-              </Link>
-              <Link
-                href="/equip"
-                className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
-              >
-                {t.nav.equip}
-              </Link>
-            </>
-          )}
-          <SelectorIdioma actual={idioma} textos={t.comu.idiomes} />
-          <form action={signOut}>
-            <button
-              type="submit"
-              className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
-            >
-              {t.comu.surt}
-            </button>
-          </form>
-        </div>
+        <AccionsCapcalera
+          items={[
+            ...(rol === "tecnic" ? [{ href: "/tecnic", label: t.nav.panellTecnic }] : []),
+            ...(rol === "tenant_admin" || rol === "tecnic"
+              ? [
+                  { href: "/configuracio", label: t.nav.empresa },
+                  { href: "/equip", label: t.nav.equip },
+                ]
+              : []),
+          ]}
+          idioma={idioma}
+          textosIdiomes={t.comu.idiomes}
+          tancaSessio={t.comu.surt}
+          menuLabel={t.comu.menu}
+        />
       </header>
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10">
