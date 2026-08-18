@@ -280,7 +280,7 @@ export default async function DashboardPage() {
               {t.dashboard.situacioAvui}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-start">
             {potNovaReserva && (
               <Link
                 href="/reserves/nova"
