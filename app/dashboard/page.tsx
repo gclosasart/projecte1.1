@@ -6,6 +6,7 @@ import { SelectorIdioma } from "../SelectorIdioma";
 import { signOut } from "./actions";
 import { NotesDelDia } from "./NotesDelDia";
 import { ForecastChart } from "./ForecastChart";
+import { NavSecundaria } from "./NavSecundaria";
 
 type OcurrenciaAvui = {
   id: string;
@@ -243,7 +244,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex items-center justify-between border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <div>
           <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
             {tenantNom ?? t.comu.plataforma}
@@ -252,7 +253,7 @@ export default async function DashboardPage() {
             {profile?.nom ?? user?.email} · {rol}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {rol === "tecnic" && (
             <Link
               href="/tecnic"
@@ -310,17 +311,13 @@ export default async function DashboardPage() {
           )}
         </section>
 
-        <nav className="-mt-6 flex flex-wrap gap-2">
-          {SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => (
-            <Link
-              key={e.href}
-              href={e.href}
-              className="rounded-full border border-black/10 px-3.5 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-sky-600 hover:text-sky-700 dark:border-white/10 dark:text-zinc-400 dark:hover:border-sky-500 dark:hover:text-sky-400"
-            >
-              {t.nav[e.navKey]}
-            </Link>
-          ))}
-        </nav>
+        <NavSecundaria
+          items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
+            href: e.href,
+            label: t.nav[e.navKey],
+          }))}
+          menuLabel={t.comu.menu}
+        />
 
         {/* Bloc 1: situació d'avui */}
         <section>

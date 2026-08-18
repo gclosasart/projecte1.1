@@ -11,6 +11,7 @@ const en: Dict = {
     cancela: "Cancel",
     dashboard: "Dashboard",
     plataforma: "Platform",
+    menu: "Menu",
     estats: {
       activa: "active",
       "cancel·lada": "cancelled",

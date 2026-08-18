@@ -52,7 +52,7 @@ export function ClientsList({ clients, textos: t }: { clients: Client[]; textos:
           {filtrats.map((c) => (
             <li
               key={c.id}
-              className="flex items-center justify-between rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
             >
               <div>
                 <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">{c.nom}</p>

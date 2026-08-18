@@ -99,7 +99,7 @@ export default async function DetallReservaPage({
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
+      <header className="flex flex-wrap items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <Link
           href="/reserves/gestio"
           className="text-sm text-zinc-500 hover:underline dark:text-zinc-400"
@@ -168,7 +168,7 @@ export default async function DetallReservaPage({
                   key={oc.id}
                   className="flex flex-col gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
                         {oc.data} · {oc.hora_inici.slice(0, 5)}–{oc.hora_fi.slice(0, 5)}
