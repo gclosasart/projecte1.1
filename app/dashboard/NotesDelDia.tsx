@@ -40,13 +40,13 @@ export function NotesDelDia({ notes, textos }: { notes: Nota[]; textos: TextosNo
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="min-w-0 flex flex-col gap-3">
       {notes.length === 0 ? (
         <p className="text-base text-zinc-500 dark:text-zinc-400">{textos.capNota}</p>
       ) : (
-        <ul className="flex max-h-[7.5rem] flex-col gap-1.5 overflow-y-auto pr-1">
+        <ul className="flex min-w-0 max-h-[7.5rem] flex-col gap-1.5 overflow-y-auto pr-1">
           {notes.map((n) => (
-            <li key={n.id} className="group flex h-9 shrink-0 items-center gap-2.5">
+            <li key={n.id} className="group flex h-9 min-w-0 shrink-0 items-center gap-2.5">
               <input
                 type="checkbox"
                 checked={n.fet}
@@ -60,7 +60,7 @@ export function NotesDelDia({ notes, textos }: { notes: Nota[]; textos: TextosNo
                 {inicialAutor(n.autorNom)}
               </span>
               <span
-                className={`flex-1 truncate text-base ${n.fet ? "text-zinc-400 line-through dark:text-zinc-600" : "text-zinc-900 dark:text-zinc-100"}`}
+                className={`min-w-0 flex-1 truncate text-base ${n.fet ? "text-zinc-400 line-through dark:text-zinc-600" : "text-zinc-900 dark:text-zinc-100"}`}
               >
                 {n.contingut}
               </span>

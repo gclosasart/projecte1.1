@@ -321,8 +321,8 @@ export default async function DashboardPage() {
           </div>
         </section>
 
-        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr]">
-          <div className="flex flex-col gap-10">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-[1.3fr_1fr]">
+          <div className="min-w-0 flex flex-col gap-10">
             {/* Bloc 2: taula de reserves d'avui */}
             <section>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
@@ -410,7 +410,7 @@ export default async function DashboardPage() {
             </section>
           </div>
 
-          <div className="flex flex-col gap-10">
+          <div className="min-w-0 flex flex-col gap-10">
             {/* Bloc 3: notes del dia */}
             <section>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
