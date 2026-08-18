@@ -80,19 +80,19 @@ export function NotesDelDia({ notes, textos }: { notes: Nota[]; textos: TextosNo
         </ul>
       )}
 
-      <form onSubmit={handleSubmit} className="mt-1 flex gap-2">
+      <form onSubmit={handleSubmit} className="mt-1 flex h-9 gap-2">
         <input
           ref={inputRef}
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={textos.placeholder}
-          className="flex-1 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="h-9 min-w-0 flex-1 rounded-lg border border-black/10 bg-white px-3 text-sm leading-9 text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
         <button
           type="submit"
           disabled={pending || !text.trim()}
-          className="shrink-0 rounded-lg border border-sky-600 bg-sky-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:border-sky-700 hover:bg-sky-700 disabled:opacity-40"
+          className="h-9 shrink-0 rounded-lg bg-sky-600 px-3 text-sm font-medium leading-9 text-white transition-colors hover:bg-sky-700 disabled:opacity-40"
         >
           {textos.afegeix}
         </button>
