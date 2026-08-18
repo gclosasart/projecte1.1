@@ -36,8 +36,8 @@ export function ReservesCercador({
         className="mb-6 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
       />
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <section>
+      <div className="grid min-w-0 gap-6 md:grid-cols-2">
+        <section className="min-w-0">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             {t.enCurs(enCursFiltrat.length)}
           </h2>
@@ -46,7 +46,7 @@ export function ReservesCercador({
               {query ? t.capResultatCerca : t.capEnCurs}
             </p>
           ) : (
-            <ul className="flex flex-col gap-3">
+            <ul className="flex min-w-0 flex-col gap-3">
               {enCursFiltrat.map((r) => (
                 <ReservaCard key={r.id} r={r} idioma={idioma} />
               ))}
@@ -54,8 +54,8 @@ export function ReservesCercador({
           )}
         </section>
 
-        <div className="flex flex-col gap-6">
-          <section>
+        <div className="flex min-w-0 flex-col gap-6">
+          <section className="min-w-0">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               {t.pagades(pagadesFiltrat.length)}
             </h2>
@@ -64,7 +64,7 @@ export function ReservesCercador({
                 {query ? t.capResultatCerca : t.capPagada}
               </p>
             ) : (
-              <ul className="flex flex-col gap-3">
+              <ul className="flex min-w-0 flex-col gap-3">
                 {pagadesFiltrat.map((r) => (
                   <ReservaCard key={r.id} r={r} idioma={idioma} />
                 ))}
@@ -72,7 +72,7 @@ export function ReservesCercador({
             )}
           </section>
 
-          <section>
+          <section className="min-w-0">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               {t.cancellades(cancelladesFiltrat.length)}
             </h2>
@@ -81,7 +81,7 @@ export function ReservesCercador({
                 {query ? t.capResultatCerca : t.capCancellada}
               </p>
             ) : (
-              <ul className="flex flex-col gap-3">
+              <ul className="flex min-w-0 flex-col gap-3">
                 {cancelladesFiltrat.map((r) => (
                   <ReservaCard key={r.id} r={r} idioma={idioma} />
                 ))}
