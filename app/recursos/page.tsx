@@ -26,16 +26,16 @@ export default async function RecursosPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
+      <header className="flex flex-col gap-3 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <div className="flex flex-wrap items-center gap-4">
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
             ← Dashboard
           </Link>
-          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.recursos.titol}</h1>
+          <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">{t.recursos.titol}</h1>
         </div>
         <Link
           href="/recursos/nou"
-          className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+          className="self-start rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
           {t.recursos.nouRecurs}
         </Link>
