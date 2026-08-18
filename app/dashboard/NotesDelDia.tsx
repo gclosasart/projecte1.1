@@ -92,7 +92,7 @@ export function NotesDelDia({ notes, textos }: { notes: Nota[]; textos: TextosNo
         <button
           type="submit"
           disabled={pending || !text.trim()}
-          className="shrink-0 rounded-lg bg-sky-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-40"
+          className="shrink-0 rounded-lg border border-sky-600 bg-sky-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:border-sky-700 hover:bg-sky-700 disabled:opacity-40"
         >
           {textos.afegeix}
         </button>
