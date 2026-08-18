@@ -27,25 +27,24 @@ export default async function ClientsPage() {
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
             ← {t.comu.dashboard}
           </Link>
-          <h1 className="text-lg font-semibold text-sky-600 dark:text-indigo-400">{t.clients.titol}</h1>
+          <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.clients.titol}</h1>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Link
-            href="/clients/llista-negra"
-            className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
-          >
-            {t.llistaNegra.titol}
-          </Link>
-          <Link
-            href="/clients/nou"
-            className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
-          >
-            {t.clients.nouClient}
-          </Link>
-        </div>
+        <Link
+          href="/clients/llista-negra"
+          className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
+        >
+          {t.llistaNegra.titol}
+        </Link>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
+        <Link
+          href="/clients/nou"
+          className="mb-6 inline-block rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+        >
+          {t.clients.nouClient}
+        </Link>
+
         {!clients || clients.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.clients.capClient}</p>
         ) : (

@@ -62,22 +62,21 @@ export default async function GestioReservesPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
-        <div className="flex flex-wrap items-center gap-4">
-          <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
-            ← {t.comu.dashboard}
-          </Link>
-          <h1 className="text-lg font-semibold text-sky-600 dark:text-indigo-400">{t.reservaGestio.titol}</h1>
-        </div>
-        <Link
-          href="/reserves/nova"
-          className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
-        >
-          {t.reservaGestio.novaReserva}
+      <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
+        <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
+          ← {t.comu.dashboard}
         </Link>
+        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.reservaGestio.titol}</h1>
       </header>
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+        <Link
+          href="/reserves/nova"
+          className="mb-6 inline-block rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+        >
+          {t.reservaGestio.novaReserva}
+        </Link>
+
         {visibles.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capReservaCreada}</p>
         ) : (
