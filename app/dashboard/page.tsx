@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getDict, getIdioma } from "@/lib/i18n";
 import { NotesDelDia } from "./NotesDelDia";
 import { ForecastChart } from "./ForecastChart";
-import { NavSecundaria } from "./NavSecundaria";
+import { NavSecundariaPills, NavSecundariaMenu } from "./NavSecundaria";
 import { AccionsCapcalera } from "./AccionsCapcalera";
 
 type OcurrenciaAvui = {
@@ -280,22 +280,30 @@ export default async function DashboardPage() {
               {t.dashboard.situacioAvui}
             </p>
           </div>
-          {potNovaReserva && (
-            <Link
-              href="/reserves/nova"
-              className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
-            >
-              {t.dashboard.novaReserva}
-            </Link>
-          )}
+          <div className="flex items-center gap-3">
+            {potNovaReserva && (
+              <Link
+                href="/reserves/nova"
+                className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
+              >
+                {t.dashboard.novaReserva}
+              </Link>
+            )}
+            <NavSecundariaMenu
+              items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
+                href: e.href,
+                label: t.nav[e.navKey],
+              }))}
+              menuLabel={t.comu.menu}
+            />
+          </div>
         </section>
 
-        <NavSecundaria
+        <NavSecundariaPills
           items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
             href: e.href,
             label: t.nav[e.navKey],
           }))}
-          menuLabel={t.comu.menu}
         />
 
         {/* Bloc 1: situació d'avui */}
