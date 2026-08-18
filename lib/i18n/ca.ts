@@ -7,7 +7,7 @@ const ca = {
     desa: "Desa",
     confirma: "Confirma",
     cancela: "Cancel·la",
-    dashboard: "Dashboard",
+    dashboard: "DSB",
     plataforma: "Plataforma",
     menu: "Menú",
     compte: "Compte",
