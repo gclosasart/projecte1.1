@@ -12,7 +12,7 @@ export default async function NouRecursPage() {
         <Link href="/recursos" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
           ← {t.recursos.titol}
         </Link>
-        <h1 className="mt-2 text-xl font-semibold text-zinc-950 dark:text-zinc-50">
+        <h1 className="mt-2 text-xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.recursos.nouRecurs}
         </h1>
 

@@ -106,7 +106,7 @@ export default async function DetallReservaPage({
         >
           ← {t.reservaGestio.titol}
         </Link>
-        <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">
+        <h1 className="text-lg font-semibold text-sky-600 dark:text-indigo-400">
           {t.reservaGestio.detall.titol}
         </h1>
       </header>

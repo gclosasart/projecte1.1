@@ -86,7 +86,7 @@ export default async function DisponibilitatPage({
           <Link href="/dashboard" className="text-sm text-zinc-500 hover:underline dark:text-zinc-400">
             ← {t.comu.dashboard}
           </Link>
-          <h1 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">{t.disponibilitat.titol}</h1>
+          <h1 className="text-lg font-semibold text-sky-600 dark:text-indigo-400">{t.disponibilitat.titol}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <form method="get" className="flex items-center gap-1.5">
