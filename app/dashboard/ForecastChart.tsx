@@ -15,16 +15,22 @@ type TextosForecast = {
   sessionsCurt: string;
   sessionsDelDia: string;
   ocupacioEstimada: string;
+  capActivitat: string;
 };
 
 export function ForecastChart({ dies, textos }: { dies: DiaForecast[]; textos: TextosForecast }) {
   const maxVal = Math.max(1, ...dies.map((d) => Math.max(d.comencen, d.sessions)));
   const [animat, setAnimat] = useState(false);
+  const capActivitat = dies.every((d) => d.comencen === 0 && d.sessions === 0);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setAnimat(true));
     return () => cancelAnimationFrame(id);
   }, []);
+
+  if (capActivitat) {
+    return <p className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">{textos.capActivitat}</p>;
+  }
 
   return (
     <div>

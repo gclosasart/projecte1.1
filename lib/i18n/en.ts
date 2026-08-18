@@ -69,6 +69,7 @@ const en: Dict = {
     sessionsCurt: "sessions",
     sessionsDelDia: "Sessions that day",
     ocupacioEstimada: "% estimated occupancy",
+    capActivitatSetmana: "No bookings expected in the next 7 days yet.",
     notesDelDia: "Today's notes",
   },
   notesDia: {

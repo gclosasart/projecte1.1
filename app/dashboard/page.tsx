@@ -403,6 +403,7 @@ export default async function DashboardPage() {
                     sessionsCurt: t.dashboard.sessionsCurt,
                     sessionsDelDia: t.dashboard.sessionsDelDia,
                     ocupacioEstimada: t.dashboard.ocupacioEstimada,
+                    capActivitat: t.dashboard.capActivitatSetmana,
                   }}
                 />
               </div>

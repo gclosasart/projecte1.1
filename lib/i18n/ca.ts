@@ -67,6 +67,7 @@ const ca = {
     sessionsCurt: "sessions",
     sessionsDelDia: "Sessions del dia",
     ocupacioEstimada: "% ocupació estimada",
+    capActivitatSetmana: "Encara no hi ha cap reserva prevista aquests 7 dies.",
     notesDelDia: "Notes del dia",
   },
   notesDia: {
