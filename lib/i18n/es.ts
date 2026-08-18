@@ -9,7 +9,7 @@ const es: Dict = {
     desa: "Guardar",
     confirma: "Confirmar",
     cancela: "Cancelar",
-    dashboard: "DSB",
+    dashboard: "Dashboard",
     plataforma: "Plataforma",
     menu: "Menú",
     compte: "Cuenta",
