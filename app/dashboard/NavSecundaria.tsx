@@ -5,10 +5,10 @@ import Link from "next/link";
 
 export type ItemNav = { href: string; label: string };
 
-// Pantalles amples: fila de píndoles horitzontal (es fa servir tal qual, sota el bloc de capçalera).
+// Pantalles amples: fila de píndoles horitzontal, al costat del botó "+ Nova reserva".
 export function NavSecundariaPills({ items }: { items: ItemNav[] }) {
   return (
-    <nav className="hidden -mt-6 flex-wrap gap-2 sm:flex">
+    <nav className="flex flex-wrap gap-2">
       {items.map((it) => (
         <Link
           key={it.href}

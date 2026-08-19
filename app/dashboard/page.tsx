@@ -107,7 +107,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("nom, rol, permisos, tenant_id, tenants(nom_comercial)")
+    .select("nom, rol, permisos, tenant_id")
     .eq("id", user!.id)
     .single();
 
@@ -119,8 +119,6 @@ export default async function DashboardPage() {
   }
 
   const permisos = (profile?.permisos as string[] | null) ?? [];
-  const tenantNom = (profile?.tenants as unknown as { nom_comercial: string } | null)
-    ?.nom_comercial;
   const potNovaReserva = potAccedir(rol, permisos, "reserves");
 
   const ara = new Date();
@@ -243,34 +241,8 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex items-center justify-between gap-3 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-zinc-950 dark:text-zinc-50">
-            {tenantNom ?? t.comu.plataforma}
-          </p>
-          <p className="truncate text-xs text-zinc-500 dark:text-zinc-400">
-            {profile?.nom ?? user?.email} · {rol}
-          </p>
-        </div>
-        <AccionsCapcalera
-          items={[
-            ...(rol === "tecnic" ? [{ href: "/tecnic", label: t.nav.panellTecnic }] : []),
-            ...(rol === "tenant_admin" || rol === "tecnic"
-              ? [
-                  { href: "/configuracio", label: t.nav.empresa },
-                  { href: "/equip", label: t.nav.equip },
-                ]
-              : []),
-          ]}
-          idioma={idioma}
-          textosIdiomes={t.comu.idiomes}
-          tancaSessio={t.comu.surt}
-          menuLabel={t.comu.compte}
-        />
-      </header>
-
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10">
-        {/* Acció principal + navegació secundària */}
+        {/* Salutació + accions de compte */}
         <section className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
@@ -280,31 +252,59 @@ export default async function DashboardPage() {
               {t.dashboard.situacioAvui}
             </p>
           </div>
-          <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-start">
-            {potNovaReserva && (
-              <Link
-                href="/reserves/nova"
-                className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
-              >
-                {t.dashboard.novaReserva}
-              </Link>
-            )}
-            <NavSecundariaMenu
-              items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
-                href: e.href,
-                label: t.nav[e.navKey],
-              }))}
-              menuLabel={t.comu.menu}
-            />
-          </div>
+          <AccionsCapcalera
+            items={[
+              ...(rol === "tecnic" ? [{ href: "/tecnic", label: t.nav.panellTecnic }] : []),
+              ...(rol === "tenant_admin" || rol === "tecnic"
+                ? [
+                    { href: "/configuracio", label: t.nav.empresa },
+                    { href: "/equip", label: t.nav.equip },
+                  ]
+                : []),
+            ]}
+            idioma={idioma}
+            textosIdiomes={t.comu.idiomes}
+            tancaSessio={t.comu.surt}
+            menuLabel={t.comu.compte}
+          />
         </section>
 
-        <NavSecundariaPills
-          items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
-            href: e.href,
-            label: t.nav[e.navKey],
-          }))}
-        />
+        {/* Mòbil: Nova reserva + menú de seccions */}
+        <div className="flex w-full items-center justify-between gap-3 sm:hidden">
+          {potNovaReserva && (
+            <Link
+              href="/reserves/nova"
+              className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
+            >
+              {t.dashboard.novaReserva}
+            </Link>
+          )}
+          <NavSecundariaMenu
+            items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
+              href: e.href,
+              label: t.nav[e.navKey],
+            }))}
+            menuLabel={t.comu.menu}
+          />
+        </div>
+
+        {/* Escriptori: Nova reserva al costat de la navegació secundària */}
+        <div className="hidden items-center gap-4 sm:flex">
+          {potNovaReserva && (
+            <Link
+              href="/reserves/nova"
+              className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
+            >
+              {t.dashboard.novaReserva}
+            </Link>
+          )}
+          <NavSecundariaPills
+            items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
+              href: e.href,
+              label: t.nav[e.navKey],
+            }))}
+          />
+        </div>
 
         {/* Bloc 1: situació d'avui */}
         <section>
