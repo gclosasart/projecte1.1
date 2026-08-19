@@ -5,7 +5,7 @@ import { getDict, getIdioma } from "@/lib/i18n";
 import { NotesDelDia } from "./NotesDelDia";
 import { ForecastChart } from "./ForecastChart";
 import { NavSecundariaPills, NavSecundariaMenu } from "./NavSecundaria";
-import { AccionsCapcalera } from "./AccionsCapcalera";
+import { AccionsCapcaleraDesktop, AccionsCapcaleraMobil } from "./AccionsCapcalera";
 
 type OcurrenciaAvui = {
   id: string;
@@ -120,6 +120,15 @@ export default async function DashboardPage() {
 
   const permisos = (profile?.permisos as string[] | null) ?? [];
   const potNovaReserva = potAccedir(rol, permisos, "reserves");
+  const accionsCompte = [
+    ...(rol === "tecnic" ? [{ href: "/tecnic", label: t.nav.panellTecnic }] : []),
+    ...(rol === "tenant_admin" || rol === "tecnic"
+      ? [
+          { href: "/configuracio", label: t.nav.empresa },
+          { href: "/equip", label: t.nav.equip },
+        ]
+      : []),
+  ];
 
   const ara = new Date();
   const avui = new Date(ara);
@@ -242,7 +251,7 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10">
-        {/* Salutació + accions de compte */}
+        {/* Salutació + accions de compte (escriptori) */}
         <section className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
@@ -252,40 +261,42 @@ export default async function DashboardPage() {
               {t.dashboard.situacioAvui}
             </p>
           </div>
-          <AccionsCapcalera
-            items={[
-              ...(rol === "tecnic" ? [{ href: "/tecnic", label: t.nav.panellTecnic }] : []),
-              ...(rol === "tenant_admin" || rol === "tecnic"
-                ? [
-                    { href: "/configuracio", label: t.nav.empresa },
-                    { href: "/equip", label: t.nav.equip },
-                  ]
-                : []),
-            ]}
+          <AccionsCapcaleraDesktop
+            items={accionsCompte}
             idioma={idioma}
             textosIdiomes={t.comu.idiomes}
             tancaSessio={t.comu.surt}
-            menuLabel={t.comu.compte}
           />
         </section>
 
-        {/* Mòbil: Nova reserva + menú de seccions */}
-        <div className="flex w-full items-center justify-between gap-3 sm:hidden">
-          {potNovaReserva && (
-            <Link
-              href="/reserves/nova"
-              className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
-            >
-              {t.dashboard.novaReserva}
-            </Link>
-          )}
-          <NavSecundariaMenu
-            items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
-              href: e.href,
-              label: t.nav[e.navKey],
-            }))}
-            menuLabel={t.comu.menu}
-          />
+        {/* Mòbil: compte, després Nova reserva + menú de seccions */}
+        <div className="flex flex-col gap-3 sm:hidden">
+          <div className="flex justify-end">
+            <AccionsCapcaleraMobil
+              items={accionsCompte}
+              idioma={idioma}
+              textosIdiomes={t.comu.idiomes}
+              tancaSessio={t.comu.surt}
+              menuLabel={t.comu.compte}
+            />
+          </div>
+          <div className="flex w-full items-center justify-between gap-3">
+            {potNovaReserva && (
+              <Link
+                href="/reserves/nova"
+                className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
+              >
+                {t.dashboard.novaReserva}
+              </Link>
+            )}
+            <NavSecundariaMenu
+              items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
+                href: e.href,
+                label: t.nav[e.navKey],
+              }))}
+              menuLabel={t.comu.menu}
+            />
+          </div>
         </div>
 
         {/* Escriptori: Nova reserva al costat de la navegació secundària */}

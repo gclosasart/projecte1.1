@@ -8,7 +8,44 @@ import type { Idioma, Dict } from "@/lib/i18n";
 
 export type ItemAccio = { href: string; label: string };
 
-export function AccionsCapcalera({
+// Pantalles amples: fila horitzontal (usar tal qual on abans es feia servir AccionsCapcalera).
+export function AccionsCapcaleraDesktop({
+  items,
+  idioma,
+  textosIdiomes,
+  tancaSessio,
+}: {
+  items: ItemAccio[];
+  idioma: Idioma;
+  textosIdiomes: Dict["comu"]["idiomes"];
+  tancaSessio: string;
+}) {
+  return (
+    <div className="hidden shrink-0 items-center gap-3 sm:flex">
+      {items.map((it) => (
+        <Link
+          key={it.href}
+          href={it.href}
+          className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
+        >
+          {it.label}
+        </Link>
+      ))}
+      <SelectorIdioma actual={idioma} textos={textosIdiomes} />
+      <form action={signOut}>
+        <button
+          type="submit"
+          className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
+        >
+          {tancaSessio}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+// Mòbil: un sol botó compacte que ho desplega tot.
+export function AccionsCapcaleraMobil({
   items,
   idioma,
   textosIdiomes,
@@ -25,29 +62,6 @@ export function AccionsCapcalera({
 
   return (
     <div className="shrink-0">
-      {/* Pantalles amples: fila horitzontal */}
-      <div className="hidden items-center gap-3 sm:flex">
-        {items.map((it) => (
-          <Link
-            key={it.href}
-            href={it.href}
-            className="text-sm font-medium text-zinc-700 hover:underline dark:text-zinc-300"
-          >
-            {it.label}
-          </Link>
-        ))}
-        <SelectorIdioma actual={idioma} textos={textosIdiomes} />
-        <form action={signOut}>
-          <button
-            type="submit"
-            className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
-          >
-            {tancaSessio}
-          </button>
-        </form>
-      </div>
-
-      {/* Mòbil: un sol botó que ho desplega tot */}
       <div className="relative sm:hidden">
         <button
           type="button"
