@@ -38,7 +38,7 @@ export function ArxivadesSection({ reserves, idioma }: { reserves: Reserva[]; id
           {filtrades.length === 0 ? (
             <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.capResultatCerca}</p>
           ) : (
-            <ul className="flex flex-col gap-3">
+            <ul className="flex max-h-72 flex-col gap-3 overflow-y-auto pr-1">
               {filtrades.map((r) => (
                 <ReservaCard key={r.id} r={r} idioma={idioma} />
               ))}
