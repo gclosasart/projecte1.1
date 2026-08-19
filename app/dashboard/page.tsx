@@ -251,12 +251,21 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10">
-        {/* Salutació + accions de compte (escriptori) */}
+        {/* Salutació + accions de compte */}
         <section className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
-              {t.dashboard.bonDia(profile?.nom)}
-            </h1>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-3">
+              <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
+                {t.dashboard.bonDia(profile?.nom)}
+              </h1>
+              <AccionsCapcaleraMobil
+                items={accionsCompte}
+                idioma={idioma}
+                textosIdiomes={t.comu.idiomes}
+                tancaSessio={t.comu.surt}
+                menuLabel={t.comu.compte}
+              />
+            </div>
             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               {t.dashboard.situacioAvui}
             </p>
@@ -269,34 +278,23 @@ export default async function DashboardPage() {
           />
         </section>
 
-        {/* Mòbil: compte, després Nova reserva + menú de seccions */}
-        <div className="flex flex-col gap-3 sm:hidden">
-          <div className="flex justify-end">
-            <AccionsCapcaleraMobil
-              items={accionsCompte}
-              idioma={idioma}
-              textosIdiomes={t.comu.idiomes}
-              tancaSessio={t.comu.surt}
-              menuLabel={t.comu.compte}
-            />
-          </div>
-          <div className="flex w-full items-center justify-between gap-3">
-            {potNovaReserva && (
-              <Link
-                href="/reserves/nova"
-                className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
-              >
-                {t.dashboard.novaReserva}
-              </Link>
-            )}
-            <NavSecundariaMenu
-              items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
-                href: e.href,
-                label: t.nav[e.navKey],
-              }))}
-              menuLabel={t.comu.menu}
-            />
-          </div>
+        {/* Mòbil: Nova reserva + menú de seccions */}
+        <div className="flex w-full items-center justify-between gap-3 sm:hidden">
+          {potNovaReserva && (
+            <Link
+              href="/reserves/nova"
+              className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
+            >
+              {t.dashboard.novaReserva}
+            </Link>
+          )}
+          <NavSecundariaMenu
+            items={SECUNDARIS.filter((e) => potAccedir(rol, permisos, e.modul)).map((e) => ({
+              href: e.href,
+              label: t.nav[e.navKey],
+            }))}
+            menuLabel={t.comu.menu}
+          />
         </div>
 
         {/* Escriptori: Nova reserva al costat de la navegació secundària */}
