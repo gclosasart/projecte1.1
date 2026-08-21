@@ -67,7 +67,7 @@ export default async function DetallTenantPage({
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex flex-wrap items-center gap-4 bg-white px-6 py-5 dark:bg-zinc-950">
+      <header className="flex flex-wrap items-center gap-4 px-6 py-5">
         <Link
           href="/tecnic"
           className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-900 text-white transition-transform hover:scale-105 dark:bg-blue-800 dark:text-white"
@@ -86,7 +86,6 @@ export default async function DetallTenantPage({
           {tenant.nom_comercial}
         </h1>
       </header>
-      <div className="h-1.5 w-full bg-blue-900 dark:bg-blue-800" aria-hidden />
 
       <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-8 px-6 py-8">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.detall.vistaNomesGestio}</p>

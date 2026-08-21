@@ -29,7 +29,7 @@ export default async function ConfiguracioPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex flex-wrap items-center gap-4 bg-white px-6 py-5 dark:bg-zinc-950">
+      <header className="flex flex-wrap items-center gap-4 px-6 py-5">
         <Link
           href="/dashboard"
           className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-900 text-white transition-transform hover:scale-105 dark:bg-blue-800 dark:text-white"
@@ -48,7 +48,6 @@ export default async function ConfiguracioPage() {
           {t.configuracio.titol}
         </h1>
       </header>
-      <div className="h-1.5 w-full bg-blue-900 dark:bg-blue-800" aria-hidden />
 
       <main className="mx-auto w-full max-w-md flex-1 px-6 py-8">
         {!potEditar || !tenant ? (

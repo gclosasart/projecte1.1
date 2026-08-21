@@ -117,7 +117,7 @@ export default async function CalendariPage({
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex flex-wrap items-center justify-between gap-3 bg-white px-6 py-5 dark:bg-zinc-950">
+      <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-5">
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
@@ -172,7 +172,6 @@ export default async function CalendariPage({
           </Link>
         </div>
       </header>
-      <div className="h-1.5 w-full bg-blue-900 dark:bg-blue-800" aria-hidden />
 
       <main className="flex-1 px-6 py-8">
         <h2 className="mb-4 text-center text-2xl font-bold text-zinc-950 dark:text-zinc-50">

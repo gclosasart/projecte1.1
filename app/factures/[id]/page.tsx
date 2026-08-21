@@ -67,7 +67,7 @@ export default async function FacturaDetallPage({
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex flex-wrap items-center gap-4 bg-white px-6 py-5 dark:bg-zinc-950">
+      <header className="flex flex-wrap items-center gap-4 px-6 py-5">
         <Link
           href="/factures"
           className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-900 text-white transition-transform hover:scale-105 dark:bg-blue-800 dark:text-white"
@@ -96,7 +96,6 @@ export default async function FacturaDetallPage({
           </span>
         )}
       </header>
-      <div className="h-1.5 w-full bg-blue-900 dark:bg-blue-800" aria-hidden />
 
       <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-6 px-6 py-8">
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">

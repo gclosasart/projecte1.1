@@ -95,7 +95,7 @@ export default async function PlanningPage({
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex flex-wrap items-center justify-between gap-3 bg-white px-6 py-5 dark:bg-zinc-950">
+      <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-5">
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
@@ -150,7 +150,6 @@ export default async function PlanningPage({
           </Link>
         </div>
       </header>
-      <div className="h-1.5 w-full bg-blue-900 dark:bg-blue-800" aria-hidden />
 
       <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <PlanningGraella recursos={recursosAmbBlocs} idioma={idioma} />
