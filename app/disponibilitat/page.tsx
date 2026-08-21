@@ -86,7 +86,7 @@ export default async function DisponibilitatPage({
           <Link href="/dashboard" className="text-7xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300">
             ←
           </Link>
-          <h1 className="text-4xl font-semibold text-sky-600 dark:text-indigo-400">{t.disponibilitat.titol}</h1>
+          <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.disponibilitat.titol}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <form method="get" className="flex items-center gap-1.5">

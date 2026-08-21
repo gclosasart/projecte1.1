@@ -36,8 +36,7 @@ MCP per a les dues primeres):
   dins del component client
 - Disseny: un sol color d'accent (`sky-600` / `indigo-400` en fosc); vermell =
   pendent, verd = pagat, cap altre color decoratiu. Títols `h1` sempre
-  `text-4xl font-semibold text-sky-600 dark:text-indigo-400` (augmentat de
-  `text-2xl` per equilibrar amb les fletxes de tornar enrere, ara `text-7xl`)
+  `text-2xl font-semibold text-sky-600 dark:text-indigo-400`
 - Sempre `npx tsc --noEmit && npm run lint && npm run build` abans de fer commit
 - Commit i push automàtics: a partir del 2026-08-21 l'usuari ha autoritzat fer
   `commit` + `push` (a la branca de treball i fusió a `main`) sense demanar

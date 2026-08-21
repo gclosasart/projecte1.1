@@ -74,7 +74,7 @@ export default async function DetallTenantPage({
         >
           ←
         </Link>
-        <h1 className="text-4xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
           {tenant.nom_comercial}
         </h1>
       </header>
