@@ -34,7 +34,7 @@ export default async function LlistaNegraPage() {
         <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.llistaNegra.titol}</h1>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">{t.llistaNegra.descripcio}</p>
 
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">

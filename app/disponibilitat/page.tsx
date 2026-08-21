@@ -124,7 +124,7 @@ export default async function DisponibilitatPage({
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
           {t.disponibilitat.descripcio(dataSeleccionada)}
         </p>

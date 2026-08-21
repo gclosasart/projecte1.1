@@ -26,7 +26,7 @@ export default async function NovaReservaPage() {
         <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.reservaNova.titol}</h1>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <NovaReservaForm recursos={recursos ?? []} clients={clients ?? []} idioma={idioma} />
       </main>
     </div>

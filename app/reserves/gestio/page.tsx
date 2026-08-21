@@ -69,7 +69,7 @@ export default async function GestioReservesPage() {
         <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.reservaGestio.titol}</h1>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <Link
           href="/reserves/nova"
           className="mb-6 inline-block rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"

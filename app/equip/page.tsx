@@ -49,7 +49,7 @@ export default async function EquipPage() {
         <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.equip.titol}</h1>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         {!potGestionar ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.equip.sensePermisos}</p>
         ) : (

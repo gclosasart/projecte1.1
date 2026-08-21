@@ -249,7 +249,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-10">
+      <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-10 px-6 py-10">
         {/* Salutació + accions de compte */}
         <section className="flex flex-wrap items-center justify-between gap-4">
           <div className="min-w-0 flex-1">

@@ -138,7 +138,7 @@ export default async function PlanningPage({
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <PlanningGraella recursos={recursosAmbBlocs} idioma={idioma} />
       </main>
     </div>
