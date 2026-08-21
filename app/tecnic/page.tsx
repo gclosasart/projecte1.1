@@ -75,7 +75,7 @@ export default async function TecnicPage() {
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
       <header className="flex flex-wrap items-center justify-between gap-4 px-6 py-5">
-        <h1 className="text-3xl font-black tracking-tighter text-zinc-950 uppercase italic dark:text-zinc-50">
+        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.tecnic.titol}
         </h1>
         <div className="flex flex-wrap items-center gap-3">

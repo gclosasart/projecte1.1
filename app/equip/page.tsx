@@ -45,19 +45,11 @@ export default async function EquipPage() {
       <header className="flex flex-wrap items-center gap-4 px-6 py-5">
         <Link
           href="/dashboard"
-          className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-900 text-white transition-transform hover:scale-105 dark:bg-blue-800 dark:text-white"
+          className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
         >
-          <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" aria-hidden>
-            <path
-              d="M16 10H4m0 0 4.5-4.5M4 10l4.5 4.5"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          ←
         </Link>
-        <h1 className="text-3xl font-black tracking-tighter text-zinc-950 uppercase italic dark:text-zinc-50">
+        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.equip.titol}
         </h1>
       </header>
