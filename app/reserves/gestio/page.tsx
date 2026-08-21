@@ -62,10 +62,10 @@ export default async function GestioReservesPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex items-center gap-4 border-b border-black/10 bg-white px-6 py-5 shadow-sm dark:border-white/10 dark:bg-zinc-950">
+      <header className="flex items-center gap-4 border-b border-black/5 bg-white px-6 py-5 shadow-sm dark:border-white/10 dark:bg-zinc-950">
         <Link
           href="/dashboard"
-          className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky-600 text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+          className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky-600 text-white shadow-sm transition-all hover:bg-sky-700 hover:shadow-md dark:bg-indigo-500 dark:hover:bg-indigo-400"
         >
           <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" aria-hidden>
             <path
@@ -85,7 +85,7 @@ export default async function GestioReservesPage() {
       <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <Link
           href="/reserves/nova"
-          className="mb-6 inline-block rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+          className="mb-6 inline-block rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-sky-700 hover:shadow-md dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
           {t.reservaGestio.novaReserva}
         </Link>

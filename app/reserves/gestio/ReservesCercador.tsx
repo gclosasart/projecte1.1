@@ -33,7 +33,7 @@ export function ReservesCercador({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.cercaPlaceholder}
-        className="mb-6 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+        className="mb-6 w-full rounded-lg border border-black/5 bg-white px-3 py-2 text-sm text-zinc-950 shadow-sm outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
       />
 
       <div className="grid min-w-0 gap-6 md:grid-cols-2">
