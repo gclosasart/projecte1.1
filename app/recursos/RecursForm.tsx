@@ -56,7 +56,7 @@ export function RecursForm({
       </div>
 
       <div className="flex gap-4">
-        <div className="flex flex-1 flex-col gap-1.5">
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <label htmlFor="capacitat" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
             {textos.capacitatPersones}
           </label>
@@ -67,11 +67,11 @@ export function RecursForm({
             min={0}
             step={1}
             defaultValue={valorsInicials?.capacitat ?? undefined}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500 overflow-hidden"
+            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
           />
         </div>
 
-        <div className="flex flex-1 flex-col gap-1.5">
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <label htmlFor="quantitat" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
             {textos.unitatsDisponiblesLabel}
           </label>
@@ -83,13 +83,13 @@ export function RecursForm({
             step={1}
             required
             defaultValue={valorsInicials?.quantitat ?? 1}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500 overflow-hidden"
+            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
           />
         </div>
       </div>
 
       <div className="flex gap-4">
-        <div className="flex flex-1 flex-col gap-1.5">
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <label htmlFor="preu" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
             {textos.preu}
           </label>
@@ -101,11 +101,11 @@ export function RecursForm({
             step="0.01"
             required
             defaultValue={valorsInicials?.preu}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500 overflow-hidden"
+            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
           />
         </div>
 
-        <div className="flex flex-1 flex-col gap-1.5">
+        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <label htmlFor="unitat_preu" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
             {textos.unitat}
           </label>
@@ -113,7 +113,7 @@ export function RecursForm({
             id="unitat_preu"
             name="unitat_preu"
             defaultValue={valorsInicials?.unitat_preu ?? "hora"}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
           >
             <option value="hora">{textos.perHora}</option>
             <option value="dia">{textos.perDia}</option>
