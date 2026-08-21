@@ -330,6 +330,7 @@ const es: Dict = {
     empleatNomesModuls: "Empleado (solo módulos concedidos)",
     administradorAccesTotal: "Administrador (acceso total)",
     modulsConcedits: "Módulos concedidos",
+    tots: "Todos",
     moduls: {
       reserves: "Reservas y Calendario",
       recursos: "Recursos",

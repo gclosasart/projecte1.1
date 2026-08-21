@@ -15,6 +15,15 @@ export function InvitaForm({ idioma }: { idioma: Idioma }) {
     ESTAT_INICIAL,
   );
   const [rol, setRol] = useState<"tenant_admin" | "user">("user");
+  const [permisos, setPermisos] = useState<string[]>([]);
+
+  function toggle(modul: string) {
+    setPermisos((prev) => (prev.includes(modul) ? prev.filter((p) => p !== modul) : [...prev, modul]));
+  }
+
+  function toggleTots() {
+    setPermisos((prev) => (prev.length === MODUL_KEYS.length ? [] : [...MODUL_KEYS]));
+  }
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
@@ -63,12 +72,26 @@ export function InvitaForm({ idioma }: { idioma: Idioma }) {
         <div>
           <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.modulsConcedits}</p>
           <div className="mt-2 flex flex-wrap gap-3">
+            <label className="flex items-center gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              <input
+                type="checkbox"
+                checked={permisos.length === MODUL_KEYS.length}
+                onChange={toggleTots}
+              />
+              {t.tots}
+            </label>
             {MODUL_KEYS.map((key) => (
               <label
                 key={key}
                 className="flex items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300"
               >
-                <input type="checkbox" name="permisos" value={key} />
+                <input
+                  type="checkbox"
+                  name="permisos"
+                  value={key}
+                  checked={permisos.includes(key)}
+                  onChange={() => toggle(key)}
+                />
                 {t.moduls[key]}
               </label>
             ))}

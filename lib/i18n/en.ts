@@ -330,6 +330,7 @@ const en: Dict = {
     empleatNomesModuls: "Staff (only granted modules)",
     administradorAccesTotal: "Administrator (full access)",
     modulsConcedits: "Granted modules",
+    tots: "All",
     moduls: {
       reserves: "Bookings and Calendar",
       recursos: "Resources",

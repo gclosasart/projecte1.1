@@ -328,6 +328,7 @@ const ca = {
     empleatNomesModuls: "Empleat (només mòduls concedits)",
     administradorAccesTotal: "Administrador (accés total)",
     modulsConcedits: "Mòduls concedits",
+    tots: "Tots",
     moduls: {
       reserves: "Reserves i Calendari",
       recursos: "Recursos",

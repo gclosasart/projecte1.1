@@ -25,6 +25,11 @@ export function PermisosEditor({
     setPermisos((prev) => (prev.includes(modul) ? prev.filter((p) => p !== modul) : [...prev, modul]));
   }
 
+  function toggleTots() {
+    setDesat(false);
+    setPermisos((prev) => (prev.length === MODUL_KEYS.length ? [] : [...MODUL_KEYS]));
+  }
+
   function desar() {
     startTransition(async () => {
       await actualitzarPermisos(profileId, permisos);
@@ -34,6 +39,10 @@ export function PermisosEditor({
 
   return (
     <div className="mt-2 flex flex-wrap items-center gap-3">
+      <label className="flex items-center gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+        <input type="checkbox" checked={permisos.length === MODUL_KEYS.length} onChange={toggleTots} />
+        {t.tots}
+      </label>
       {MODUL_KEYS.map((key) => (
         <label key={key} className="flex items-center gap-1 text-xs text-zinc-600 dark:text-zinc-400">
           <input type="checkbox" checked={permisos.includes(key)} onChange={() => toggle(key)} />
