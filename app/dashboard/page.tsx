@@ -39,7 +39,6 @@ const SECUNDARIS = [
   { navKey: "factures", href: "/factures", modul: "factures" },
 ] as const;
 
-const DIES_CURTS = ["dg", "dl", "dt", "dc", "dj", "dv", "ds"];
 
 const ESTAT_ESTIL: Record<string, string> = {
   activa: "bg-sky-100 text-sky-800 dark:bg-sky-950/40 dark:text-sky-300",
@@ -235,7 +234,7 @@ export default async function DashboardPage() {
     const d = new Date(avui);
     d.setDate(avui.getDate() + i);
     const iso = toISODate(d);
-    const label = `${DIES_CURTS[d.getDay()]} ${d.getDate()}`;
+    const label = `${t.comu.diesCurts[d.getDay()]} ${d.getDate()}`;
     const ocupacioPercent =
       totalRecursosActius && totalRecursosActius > 0
         ? Math.round(((recursosPerDia.get(iso)?.size ?? 0) / totalRecursosActius) * 100)

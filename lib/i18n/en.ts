@@ -25,6 +25,7 @@ const en: Dict = {
       es: "Castellano",
       en: "English",
     },
+    diesCurts: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
   },
   nav: {
     gestionaReserves: "Manage bookings",

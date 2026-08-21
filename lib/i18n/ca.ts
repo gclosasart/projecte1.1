@@ -23,6 +23,7 @@ const ca = {
       es: "Castellano",
       en: "English",
     },
+    diesCurts: ["dg", "dl", "dt", "dc", "dj", "dv", "ds"],
   },
   nav: {
     gestionaReserves: "Gestiona reserves",
