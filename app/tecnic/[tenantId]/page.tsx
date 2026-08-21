@@ -35,7 +35,7 @@ export default async function DetallTenantPage({
   if (perfilActual?.rol !== "tecnic") {
     return (
       <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-        <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
+        <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.nomesPerTecnic}</p>
         </main>
       </div>
@@ -79,7 +79,7 @@ export default async function DetallTenantPage({
         </h1>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-8">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-8">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.detall.vistaNomesGestio}</p>
 
         <section>

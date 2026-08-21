@@ -38,7 +38,7 @@ export default async function ConfiguracioPage() {
         </h1>
       </header>
 
-      <main className="mx-auto w-full max-w-sm flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-md flex-1 px-6 py-8">
         {!potEditar || !tenant ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.configuracio.sensePermisos}</p>
         ) : (

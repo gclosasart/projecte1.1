@@ -44,7 +44,7 @@ export default async function FacturesPage() {
         <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.factures.titol}</h1>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
         {!factures || factures.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.factures.capFactura}</p>
         ) : (

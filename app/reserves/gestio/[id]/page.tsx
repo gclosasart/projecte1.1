@@ -111,7 +111,7 @@ export default async function DetallReservaPage({
         </h1>
       </header>
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
           <p className="font-mono text-xs text-zinc-400 dark:text-zinc-500">{reserva.codi}</p>
           <p className="flex flex-wrap items-center gap-2 text-base font-semibold text-zinc-950 dark:text-zinc-50">

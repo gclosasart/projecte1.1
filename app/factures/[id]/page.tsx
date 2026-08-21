@@ -89,7 +89,7 @@ export default async function FacturaDetallPage({
         )}
       </header>
 
-      <main className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-6 px-6 py-8">
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-8">
         <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             {t.factures.detall.emissor}
