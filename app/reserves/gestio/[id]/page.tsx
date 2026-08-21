@@ -102,9 +102,9 @@ export default async function DetallReservaPage({
       <header className="flex flex-wrap items-center gap-4 border-b border-black/10 bg-white px-6 py-4 dark:border-white/10 dark:bg-zinc-950">
         <Link
           href="/reserves/gestio"
-          className="text-sm text-zinc-500 hover:underline dark:text-zinc-400"
+          className="text-7xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
         >
-          ← {t.reservaGestio.titol}
+          ←
         </Link>
         <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.reservaGestio.detall.titol}
