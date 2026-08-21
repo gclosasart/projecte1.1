@@ -19,11 +19,11 @@ export function ArxivadesSection({ reserves, idioma }: { reserves: Reserva[]; id
       <button
         type="button"
         onClick={() => setObert((v) => !v)}
-        className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+        className="flex items-center gap-2 text-base font-semibold text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
       >
         <span aria-hidden>{obert ? "📂" : "📁"}</span>
         {t.arxivades(reserves.length)}
-        <span className="text-xs">{obert ? "▲" : "▼"}</span>
+        <span className="text-sm">{obert ? "▲" : "▼"}</span>
       </button>
 
       {obert && (
@@ -33,12 +33,12 @@ export function ArxivadesSection({ reserves, idioma }: { reserves: Reserva[]; id
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.cercaPlaceholder}
-            className="mb-3 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mb-3 w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-base text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
           />
           {filtrades.length === 0 ? (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.capResultatCerca}</p>
+            <p className="text-base text-zinc-500 dark:text-zinc-400">{t.capResultatCerca}</p>
           ) : (
-            <ul className="flex max-h-72 flex-col gap-3 overflow-y-auto pr-1">
+            <ul className="flex max-h-96 flex-col gap-4 overflow-y-auto pr-1">
               {filtrades.map((r) => (
                 <ReservaCard key={r.id} r={r} idioma={idioma} />
               ))}

@@ -69,16 +69,16 @@ export default async function GestioReservesPage() {
         <h1 className="text-4xl font-semibold text-sky-600 dark:text-indigo-400">{t.reservaGestio.titol}</h1>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-8 py-10">
         <Link
           href="/reserves/nova"
-          className="mb-6 inline-block rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+          className="mb-8 inline-block rounded-full bg-sky-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
         >
           {t.reservaGestio.novaReserva}
         </Link>
 
         {visibles.length === 0 ? (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capReservaCreada}</p>
+          <p className="text-base text-zinc-500 dark:text-zinc-400">{t.reservaGestio.capReservaCreada}</p>
         ) : (
           <ReservesCercador enCurs={enCurs} pagades={pagades} cancellades={cancellades} idioma={idioma} />
         )}

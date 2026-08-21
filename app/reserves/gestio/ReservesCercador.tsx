@@ -33,20 +33,20 @@ export function ReservesCercador({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.cercaPlaceholder}
-        className="mb-6 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+        className="mb-8 w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-base text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
       />
 
-      <div className="grid min-w-0 gap-6 md:grid-cols-2">
+      <div className="grid min-w-0 gap-8 md:grid-cols-2">
         <section className="min-w-0">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <h2 className="mb-3 text-base font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             {t.enCurs(enCursFiltrat.length)}
           </h2>
           {enCursFiltrat.length === 0 ? (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-base text-zinc-500 dark:text-zinc-400">
               {query ? t.capResultatCerca : t.capEnCurs}
             </p>
           ) : (
-            <ul className="flex max-h-72 min-w-0 flex-col gap-3 overflow-y-auto pr-1">
+            <ul className="flex max-h-96 min-w-0 flex-col gap-4 overflow-y-auto pr-1">
               {enCursFiltrat.map((r) => (
                 <ReservaCard key={r.id} r={r} idioma={idioma} />
               ))}
@@ -54,17 +54,17 @@ export function ReservesCercador({
           )}
         </section>
 
-        <div className="flex min-w-0 flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-8">
           <section className="min-w-0">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <h2 className="mb-3 text-base font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               {t.pagades(pagadesFiltrat.length)}
             </h2>
             {pagadesFiltrat.length === 0 ? (
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              <p className="text-base text-zinc-500 dark:text-zinc-400">
                 {query ? t.capResultatCerca : t.capPagada}
               </p>
             ) : (
-              <ul className="flex max-h-72 min-w-0 flex-col gap-3 overflow-y-auto pr-1">
+              <ul className="flex max-h-96 min-w-0 flex-col gap-4 overflow-y-auto pr-1">
                 {pagadesFiltrat.map((r) => (
                   <ReservaCard key={r.id} r={r} idioma={idioma} />
                 ))}
@@ -73,15 +73,15 @@ export function ReservesCercador({
           </section>
 
           <section className="min-w-0">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <h2 className="mb-3 text-base font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               {t.cancellades(cancelladesFiltrat.length)}
             </h2>
             {cancelladesFiltrat.length === 0 ? (
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              <p className="text-base text-zinc-500 dark:text-zinc-400">
                 {query ? t.capResultatCerca : t.capCancellada}
               </p>
             ) : (
-              <ul className="flex max-h-72 min-w-0 flex-col gap-3 overflow-y-auto pr-1">
+              <ul className="flex max-h-96 min-w-0 flex-col gap-4 overflow-y-auto pr-1">
                 {cancelladesFiltrat.map((r) => (
                   <ReservaCard key={r.id} r={r} idioma={idioma} />
                 ))}

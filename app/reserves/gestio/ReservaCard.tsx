@@ -8,14 +8,14 @@ export function ReservaCard({ r, idioma }: { r: Reserva; idioma: Idioma }) {
   const t = dict.reservaGestio;
 
   return (
-    <li className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950">
+    <li className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
       <div className="flex items-start justify-between gap-2">
         <Link href={`/reserves/gestio/${r.id}`} className="min-w-0 flex-1 hover:underline">
-          <p className="truncate font-mono text-xs text-zinc-400 dark:text-zinc-500">{r.codi}</p>
-          <p className="truncate text-sm font-medium text-zinc-950 dark:text-zinc-50">
+          <p className="truncate font-mono text-sm text-zinc-400 dark:text-zinc-500">{r.codi}</p>
+          <p className="truncate text-base font-medium text-zinc-950 dark:text-zinc-50">
             {nomsRecursos(r, t.recursDesconegut)} — {r.clients?.nom ?? t.clientDesconegut}
             <span
-              className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_RESERVA_ESTIL[r.estat] ?? ""}`}
+              className={`ml-2 rounded-full px-2 py-0.5 text-sm font-normal ${ESTAT_RESERVA_ESTIL[r.estat] ?? ""}`}
             >
               {dict.comu.estats[r.estat] ?? r.estat}
             </span>
