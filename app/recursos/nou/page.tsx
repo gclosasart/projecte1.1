@@ -11,7 +11,7 @@ export default async function NouRecursPage() {
       <header className="flex items-center gap-4 bg-white px-6 py-5 dark:bg-zinc-950">
         <Link
           href="/recursos"
-          className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-white transition-transform hover:scale-105 dark:bg-white dark:text-zinc-950"
+          className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-900 text-white transition-transform hover:scale-105 dark:bg-blue-800 dark:text-white"
         >
           <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" aria-hidden>
             <path
