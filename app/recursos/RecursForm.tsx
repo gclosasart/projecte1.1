@@ -67,7 +67,7 @@ export function RecursForm({
             min={0}
             step={1}
             defaultValue={valorsInicials?.capacitat ?? undefined}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500 overflow-hidden"
           />
         </div>
 
@@ -83,7 +83,7 @@ export function RecursForm({
             step={1}
             required
             defaultValue={valorsInicials?.quantitat ?? 1}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500 overflow-hidden"
           />
         </div>
       </div>
@@ -101,7 +101,7 @@ export function RecursForm({
             step="0.01"
             required
             defaultValue={valorsInicials?.preu}
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500"
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-indigo-500 overflow-hidden"
           />
         </div>
 
