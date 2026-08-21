@@ -38,7 +38,11 @@ MCP per a les dues primeres):
   pendent, verd = pagat, cap altre color decoratiu. Títols `h1` sempre
   `text-2xl font-semibold text-sky-600 dark:text-indigo-400`
 - Sempre `npx tsc --noEmit && npm run lint && npm run build` abans de fer commit
-- Mai `git push` sense confirmació explícita de l'usuari
+- Commit i push automàtics: a partir del 2026-08-21 l'usuari ha autoritzat fer
+  `commit` + `push` (a la branca de treball i fusió a `main`) sense demanar
+  confirmació cada vegada per a canvis normals de codi. Segueix demanant
+  confirmació per a accions destructives o irreversibles (force-push, reset
+  --hard, esborrar branques, etc.)
 - Taula nova a Supabase → cal fer `GRANT select,insert,update,delete TO
   authenticated` manualment sempre, no és automàtic
 - L'usuari (Guillem) sap de producte i dades però no és tècnic en eines de dev
