@@ -74,7 +74,7 @@ export default async function FacturaDetallPage({
         >
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-4xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.factures.factura(factura.numero)}
         </h1>
         <span

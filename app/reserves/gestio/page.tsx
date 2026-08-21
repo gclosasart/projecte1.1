@@ -66,7 +66,7 @@ export default async function GestioReservesPage() {
         <Link href="/dashboard" className="text-7xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300">
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">{t.reservaGestio.titol}</h1>
+        <h1 className="text-4xl font-semibold text-sky-600 dark:text-indigo-400">{t.reservaGestio.titol}</h1>
       </header>
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
