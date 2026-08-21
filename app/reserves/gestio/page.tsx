@@ -81,7 +81,7 @@ export default async function GestioReservesPage() {
           {t.reservaGestio.titol}
         </h1>
       </header>
-      <div className="h-1.5 w-full bg-sky-600 dark:bg-indigo-500" aria-hidden />
+      <div className="h-1.5 w-full bg-blue-900 dark:bg-blue-800" aria-hidden />
 
       <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <Link

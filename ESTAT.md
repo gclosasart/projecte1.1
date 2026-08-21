@@ -34,9 +34,16 @@ MCP per a les dues primeres):
   un `"use client"` — si conté funcions d'interpolació, Next.js peta en
   producció. Sempre passar `idioma: Idioma` (string) i cridar `dictDe(idioma)`
   dins del component client
-- Disseny: un sol color d'accent (`sky-600` / `indigo-400` en fosc); vermell =
-  pendent, verd = pagat, cap altre color decoratiu. Títols `h1` sempre
-  `text-2xl font-semibold text-sky-600 dark:text-indigo-400`
+- Disseny: vermell = pendent, verd = pagat, cap altre color decoratiu fora
+  d'aquesta regla. Capçalera de cada pàgina (inspirada en Nike/Puma, des del
+  2026-08-21): botó de tornar enrere circular negre amb icona SVG de fletxa
+  (`bg-zinc-950 dark:bg-white`, mai el caràcter "←" cru), títol `h1` en
+  majúscules, negreta (`font-black`), cursiva i molt condensat
+  (`text-3xl font-black tracking-tighter uppercase italic text-zinc-950
+  dark:text-zinc-50` — ja NO blau, era la convenció antiga), i una barra
+  d'accent blau marí fosc (`bg-blue-900 dark:bg-blue-800`, mai `sky-600`) just
+  sota la capçalera en lloc d'una vora fina. Login/invitat es queden amb el
+  disseny senzill anterior (pantalles pre-login, cas apart)
 - Sempre `npx tsc --noEmit && npm run lint && npm run build` abans de fer commit
 - Commit i push automàtics: a partir del 2026-08-21 l'usuari ha autoritzat fer
   `commit` + `push` (a la branca de treball i fusió a `main`) sense demanar
