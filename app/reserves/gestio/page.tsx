@@ -62,10 +62,10 @@ export default async function GestioReservesPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-      <header className="flex items-center gap-4 border-b border-black/5 bg-white px-6 py-5 shadow-sm dark:border-white/10 dark:bg-zinc-950">
+      <header className="flex items-center gap-4 bg-white px-6 py-5 dark:bg-zinc-950">
         <Link
           href="/dashboard"
-          className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky-600 text-white shadow-sm transition-all hover:bg-sky-700 hover:shadow-md dark:bg-indigo-500 dark:hover:bg-indigo-400"
+          className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-white transition-transform hover:scale-105 dark:bg-white dark:text-zinc-950"
         >
           <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" aria-hidden>
             <path
@@ -77,10 +77,11 @@ export default async function GestioReservesPage() {
             />
           </svg>
         </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-sky-600 dark:text-indigo-400">
+        <h1 className="text-3xl font-black tracking-tighter text-zinc-950 uppercase italic dark:text-zinc-50">
           {t.reservaGestio.titol}
         </h1>
       </header>
+      <div className="h-1.5 w-full bg-sky-600 dark:bg-indigo-500" aria-hidden />
 
       <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
         <Link
