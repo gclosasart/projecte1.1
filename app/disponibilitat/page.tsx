@@ -85,9 +85,9 @@ export default async function DisponibilitatPage({
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
-            className="group flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-white transition-transform hover:scale-105 dark:bg-white dark:text-zinc-950"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-white transition-transform hover:scale-105 dark:bg-white dark:text-zinc-950"
           >
-            <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" aria-hidden>
+            <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 transition-transform group-hover:-translate-x-0.5" aria-hidden>
               <path
                 d="M16 10H4m0 0 4.5-4.5M4 10l4.5 4.5"
                 stroke="currentColor"
