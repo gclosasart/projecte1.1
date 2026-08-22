@@ -52,6 +52,26 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: 0;
 }
 
+/* Duplica la mida de totes les mides de text (text-xs...text-9xl) de cop,
+   sobreescrivint els tokens de Tailwind — així no cal tocar cap className
+   individual i afecta tota l'app per igual. Els line-height es mantenen
+   proporcionals perquè Tailwind els defineix com a ràtio (no en rem). */
+:root {
+  --text-xs: 1.5rem;
+  --text-sm: 1.75rem;
+  --text-base: 2rem;
+  --text-lg: 2.25rem;
+  --text-xl: 2.5rem;
+  --text-2xl: 3rem;
+  --text-3xl: 3.75rem;
+  --text-4xl: 4.5rem;
+  --text-5xl: 6rem;
+  --text-6xl: 7.5rem;
+  --text-7xl: 9rem;
+  --text-8xl: 12rem;
+  --text-9xl: 16rem;
+}
+
 /* Substitueix la fletxa nativa dels <select> (que cada navegador/SO dibuixa
    de manera diferent i sovint desalineada) per una de pròpia, sempre
    centrada verticalment i amb el mateix marge respecte a la vora. */
