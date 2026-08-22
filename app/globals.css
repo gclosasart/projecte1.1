@@ -84,4 +84,8 @@ select {
   background-position: right 0.75rem center;
   background-size: 1rem;
   padding-right: 2.25rem;
+  /* Amb text-* ara duplicat, el line-height per defecte podia superar
+     l'alçada del quadre i deixava el text del <select> desplaçat cap
+     amunt en lloc de centrat verticalment. */
+  line-height: 1.2;
 }
