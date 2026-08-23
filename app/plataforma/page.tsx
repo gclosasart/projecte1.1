@@ -29,7 +29,7 @@ export default async function PlataformaPage() {
     : { data: null };
 
   return (
-    <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-marble dark:bg-black">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5">
         <BackButton href="/tecnic" />
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">

@@ -45,10 +45,12 @@ aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els
   això l'accent és `teal` (blau-verdós) i no `emerald`, per no confondre
   els dos significats. Vermell = pendent, blau (`sky-100`/`sky-800`)
   reservat per l'estat "activa" de reserves/ocurrències (no és l'accent,
-  és un estat), cap altre color decoratiu. **Fons de pàgina neutre**
-  (`bg-neutral-50 dark:bg-black`), no tenyit del color d'accent — es va
-  provar tenyit amb el color d'accent a tota la pàgina i quedava
-  "terriblement horrible" (massa saturat, sense contrast), es va
+  és un estat), cap altre color decoratiu. **Fons de pàgina**: efecte
+  "marbre fluix" (`bg-marble dark:bg-black`, classe CSS definida a
+  `globals.css` amb gradients suaus, sense cap imatge), no tenyit del
+  color d'accent — es va provar tenyit amb el color d'accent a tota la
+  pàgina i quedava "terriblement horrible" (massa saturat, sense
+  contrast), es va
   revertir el mateix dia. L'accent només s'usa a botons/enllaços/targetes
   seleccionades, mai com a fons de pàgina sencer. Títols `h1` de pàgina
   sempre `text-2xl font-bold tracking-tight text-zinc-900
