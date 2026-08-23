@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getDict } from "@/lib/i18n";
+import { getDict, getIdioma } from "@/lib/i18n";
 import { PlataformaForm } from "./PlataformaForm";
 
 export default async function PlataformaPage() {
   const supabase = await createClient();
   const t = await getDict();
+  const idioma = await getIdioma();
 
   const {
     data: { user },
@@ -50,7 +51,7 @@ export default async function PlataformaPage() {
             <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300">
               {t.plataforma.avisNoDonatAlta}
             </p>
-            <PlataformaForm valorsInicials={plataforma} textos={t.plataforma} />
+            <PlataformaForm valorsInicials={plataforma} idioma={idioma} />
           </div>
         )}
       </main>

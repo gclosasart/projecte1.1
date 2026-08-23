@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { anularFacturaPlataforma, confirmarFactura, marcarPagadaPlataforma } from "./actions";
 
 const METODES = ["efectiu", "targeta", "transferencia", "altres"] as const;
@@ -9,14 +9,15 @@ const METODES = ["efectiu", "targeta", "transferencia", "altres"] as const;
 export function AccionsFacturaPlataforma({
   id,
   estat,
-  textos: t,
-  metodesTextos,
+  idioma,
 }: {
   id: string;
   estat: string;
-  textos: Dict["tecnicFactures"];
-  metodesTextos: Dict["factures"]["metodes"];
+  idioma: Idioma;
 }) {
+  const dict = dictDe(idioma);
+  const t = dict.tecnicFactures;
+  const metodesTextos = dict.factures.metodes;
   const [pending, startTransition] = useTransition();
   const [obertMetode, setObertMetode] = useState(false);
   const [metode, setMetode] = useState<(typeof METODES)[number]>("efectiu");

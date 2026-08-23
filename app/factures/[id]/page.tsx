@@ -218,7 +218,7 @@ export default async function FacturaDetallPage({
 
         {potRectificar && !rectificativa && (
           <section className="print:hidden">
-            <CreaRectificativaButton facturaId={factura.id} textos={t.factures.detall} />
+            <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
           </section>
         )}
       </main>

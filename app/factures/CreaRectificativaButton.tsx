@@ -2,16 +2,17 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { crearRectificativa } from "./actions";
 
 export function CreaRectificativaButton({
   facturaId,
-  textos: t,
+  idioma,
 }: {
   facturaId: string;
-  textos: Dict["factures"]["detall"];
+  idioma: Idioma;
 }) {
+  const t = dictDe(idioma).factures.detall;
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [confirmant, setConfirmant] = useState(false);

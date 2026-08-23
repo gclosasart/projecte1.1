@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { generarEsborranys } from "./actions";
 
-export function GeneraEsborranysButton({ textos: t }: { textos: Dict["tecnicFactures"] }) {
+export function GeneraEsborranysButton({ idioma }: { idioma: Idioma }) {
+  const t = dictDe(idioma).tecnicFactures;
   const [pending, startTransition] = useTransition();
   const [missatge, setMissatge] = useState<string | null>(null);
 

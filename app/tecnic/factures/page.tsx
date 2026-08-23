@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getDict } from "@/lib/i18n";
+import { getDict, getIdioma } from "@/lib/i18n";
 import { GeneraEsborranysButton } from "./GeneraEsborranysButton";
 import { AccionsFacturaPlataforma } from "./AccionsFacturaPlataforma";
 
@@ -26,6 +26,7 @@ const ESTAT_ESTIL: Record<string, string> = {
 export default async function TecnicFacturesPage() {
   const supabase = await createClient();
   const t = await getDict();
+  const idioma = await getIdioma();
 
   const {
     data: { user },
@@ -70,7 +71,7 @@ export default async function TecnicFacturesPage() {
       </header>
 
       <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-6 px-6 py-8">
-        <GeneraEsborranysButton textos={t.tecnicFactures} />
+        <GeneraEsborranysButton idioma={idioma} />
 
         {!factures || factures.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnicFactures.capFactura}</p>
@@ -100,12 +101,7 @@ export default async function TecnicFacturesPage() {
                   </p>
                 </Link>
 
-                <AccionsFacturaPlataforma
-                  id={f.id}
-                  estat={f.estat}
-                  textos={t.tecnicFactures}
-                  metodesTextos={t.factures.metodes}
-                />
+                <AccionsFacturaPlataforma id={f.id} estat={f.estat} idioma={idioma} />
               </li>
             ))}
           </ul>

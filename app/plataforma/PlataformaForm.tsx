@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 import { actualitzarPlataforma, type PlataformaFormState } from "./actions";
 
 type ValorsPlataforma = {
@@ -16,11 +16,12 @@ const ESTAT_INICIAL: PlataformaFormState = { error: null, success: false };
 
 export function PlataformaForm({
   valorsInicials,
-  textos: t,
+  idioma,
 }: {
   valorsInicials: ValorsPlataforma;
-  textos: Dict["plataforma"];
+  idioma: Idioma;
 }) {
+  const t = dictDe(idioma).plataforma;
   const [state, formAction, pending] = useActionState<PlataformaFormState, FormData>(
     actualitzarPlataforma,
     ESTAT_INICIAL,
