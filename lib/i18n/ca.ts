@@ -30,7 +30,7 @@ const ca = {
   nav: {
     gestionaReserves: "Gestiona reserves",
     calendari: "Calendari",
-    planning: "Planning",
+    planning: "Pla diari",
     recursos: "Recursos",
     clients: "Clients",
     factures: "Factures",
@@ -518,7 +518,7 @@ const ca = {
     capReservaDia: "Cap reserva aquest dia.",
   },
   planning: {
-    titol: "Planning de reserves",
+    titol: "Pla diari de reserves",
     vesHi: "Vés-hi",
     diaAnterior: "← Dia anterior",
     avui: "Avui",

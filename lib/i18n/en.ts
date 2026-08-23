@@ -32,7 +32,7 @@ const en: Dict = {
   nav: {
     gestionaReserves: "Manage bookings",
     calendari: "Calendar",
-    planning: "Planning",
+    planning: "Daily plan",
     recursos: "Resources",
     clients: "Clients",
     factures: "Invoices",
@@ -520,7 +520,7 @@ const en: Dict = {
     capReservaDia: "No bookings that day.",
   },
   planning: {
-    titol: "Booking planning",
+    titol: "Daily booking plan",
     vesHi: "Go",
     diaAnterior: "← Previous day",
     avui: "Today",
