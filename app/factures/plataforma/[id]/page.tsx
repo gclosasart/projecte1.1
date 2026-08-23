@@ -81,11 +81,6 @@ export default async function FacturaPlataformaDetallPage({
         <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.factures.quotaPlataforma.periode(factura.periode_mes, factura.periode_any)}
         </h1>
-        <span
-          className={`rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[factura.estat] ?? ""}`}
-        >
-          {t.comu.estats[factura.estat] ?? factura.estat}
-        </span>
       </header>
 
       <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-6 px-6 py-8 print:max-w-none print:gap-4">
@@ -100,8 +95,15 @@ export default async function FacturaPlataformaDetallPage({
               <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 {t.factures.detall.emissor}
               </h2>
-              <div className="print:hidden">
-                <ImprimeixButton text={t.factures.detall.imprimeix} />
+              <div className="flex items-center gap-3">
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[factura.estat] ?? ""}`}
+                >
+                  {t.comu.estats[factura.estat] ?? factura.estat}
+                </span>
+                <div className="print:hidden">
+                  <ImprimeixButton text={t.factures.detall.imprimeix} />
+                </div>
               </div>
             </div>
             <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">

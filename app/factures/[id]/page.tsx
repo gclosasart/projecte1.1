@@ -98,11 +98,6 @@ export default async function FacturaDetallPage({
         <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
           {t.factures.facturaFormatada(formatNumeroFactura(factura.serie, factura.numero))}
         </h1>
-        <span
-          className={`rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[factura.estat] ?? ""}`}
-        >
-          {t.comu.estats[factura.estat] ?? factura.estat}
-        </span>
         {factura.no_show && (
           <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-normal text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
             {t.factures.detall.noShowBadge}
@@ -143,8 +138,15 @@ export default async function FacturaDetallPage({
               <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 {t.factures.detall.emissor}
               </h2>
-              <div className="print:hidden">
-                <ImprimeixButton text={t.factures.detall.imprimeix} />
+              <div className="flex items-center gap-3">
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[factura.estat] ?? ""}`}
+                >
+                  {t.comu.estats[factura.estat] ?? factura.estat}
+                </span>
+                <div className="print:hidden">
+                  <ImprimeixButton text={t.factures.detall.imprimeix} />
+                </div>
               </div>
             </div>
             <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">
