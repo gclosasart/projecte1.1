@@ -217,14 +217,14 @@ export default async function FacturaDetallPage({
                 <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
               </div>
             )}
+
+            {potRectificar && !rectificativa && (
+              <div className="mt-4 print:hidden">
+                <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
+              </div>
+            )}
           </div>
         </section>
-
-        {potRectificar && !rectificativa && (
-          <section className="print:hidden">
-            <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
-          </section>
-        )}
       </main>
     </div>
   );
