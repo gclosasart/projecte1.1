@@ -207,7 +207,7 @@ export default async function FacturaDetallPage({
             </dl>
 
             {(potRectificar && !rectificativa) || factura.estat === "pendent" ? (
-              <div className="mt-4 flex flex-wrap items-center justify-end gap-2 print:hidden">
+              <div className="mt-4 flex flex-wrap items-center gap-2 print:hidden">
                 {factura.estat === "pendent" && (
                   <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
                 )}
