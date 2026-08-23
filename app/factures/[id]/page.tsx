@@ -138,80 +138,82 @@ export default async function FacturaDetallPage({
           </p>
         )}
 
-        <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950 print:border-0 print:p-0">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            {t.factures.detall.emissor}
-          </h2>
-          <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">
-            {factura.tenants?.nom_comercial}
-          </p>
-          {factura.tenants?.rao_social && (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">{factura.tenants.rao_social}</p>
-          )}
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            {[factura.tenants?.nif, factura.tenants?.adreca_fiscal].filter(Boolean).join(" · ")}
-          </p>
-        </section>
-
-        <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950 print:border-0 print:p-0">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            {t.dashboard.client}
-          </h2>
-          <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">
-            {client?.nom ?? t.factures.clientDesconegut}
-          </p>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            {[client?.nif, client?.email, client?.adreca].filter(Boolean).join(" · ")}
-          </p>
-        </section>
-
-        <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950 print:border-0 print:p-0">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            {t.dashboard.recurs}
-          </h2>
-          <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">{recursText}</p>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            {factura.ocurrencies?.data ?? factura.data_emissio}
-            {factura.ocurrencies && (
-              <>
-                {" "}
-                · {factura.ocurrencies.hora_inici.slice(0, 5)}–{factura.ocurrencies.hora_fi.slice(0, 5)}
-              </>
+        <section className="flex flex-col gap-6 rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950 print:border-0 print:p-0">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              {t.factures.detall.emissor}
+            </h2>
+            <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">
+              {factura.tenants?.nom_comercial}
+            </p>
+            {factura.tenants?.rao_social && (
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">{factura.tenants.rao_social}</p>
             )}
-          </p>
-        </section>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              {[factura.tenants?.nif, factura.tenants?.adreca_fiscal].filter(Boolean).join(" · ")}
+            </p>
+          </div>
 
-        <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950 print:border-0 print:p-0">
-          <dl className="flex flex-col gap-2 text-sm">
-            <div className="flex justify-between">
-              <dt className="text-zinc-500 dark:text-zinc-400">{t.factures.detall.baseImposable}</dt>
-              <dd className="text-zinc-900 dark:text-zinc-100">{factura.base_imposable} €</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-zinc-500 dark:text-zinc-400">
-                {t.factures.detall.iva} ({factura.iva_percent}%)
-              </dt>
-              <dd className="text-zinc-900 dark:text-zinc-100">
-                {(factura.total - factura.base_imposable).toFixed(2)} €
-              </dd>
-            </div>
-            <div className="flex justify-between border-t border-black/10 pt-2 text-base font-semibold dark:border-white/10">
-              <dt className="text-zinc-950 dark:text-zinc-50">{t.factures.detall.total}</dt>
-              <dd className="text-zinc-950 dark:text-zinc-50">{factura.total} €</dd>
-            </div>
-            {factura.estat === "pagada" && factura.metode_pagament && (
+          <div className="border-t border-black/10 pt-6 dark:border-white/10">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              {t.dashboard.client}
+            </h2>
+            <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">
+              {client?.nom ?? t.factures.clientDesconegut}
+            </p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              {[client?.nif, client?.email, client?.adreca].filter(Boolean).join(" · ")}
+            </p>
+          </div>
+
+          <div className="border-t border-black/10 pt-6 dark:border-white/10">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              {t.dashboard.recurs}
+            </h2>
+            <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">{recursText}</p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              {factura.ocurrencies?.data ?? factura.data_emissio}
+              {factura.ocurrencies && (
+                <>
+                  {" "}
+                  · {factura.ocurrencies.hora_inici.slice(0, 5)}–{factura.ocurrencies.hora_fi.slice(0, 5)}
+                </>
+              )}
+            </p>
+          </div>
+
+          <div className="border-t border-black/10 pt-6 dark:border-white/10">
+            <dl className="flex flex-col gap-2 text-sm">
               <div className="flex justify-between">
-                <dt className="text-zinc-500 dark:text-zinc-400">{t.factures.detall.metodePagament}</dt>
-                <dd className="text-zinc-900 dark:text-zinc-100">{factura.metode_pagament}</dd>
+                <dt className="text-zinc-500 dark:text-zinc-400">{t.factures.detall.baseImposable}</dt>
+                <dd className="text-zinc-900 dark:text-zinc-100">{factura.base_imposable} €</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-zinc-500 dark:text-zinc-400">
+                  {t.factures.detall.iva} ({factura.iva_percent}%)
+                </dt>
+                <dd className="text-zinc-900 dark:text-zinc-100">
+                  {(factura.total - factura.base_imposable).toFixed(2)} €
+                </dd>
+              </div>
+              <div className="flex justify-between border-t border-black/10 pt-2 text-base font-semibold dark:border-white/10">
+                <dt className="text-zinc-950 dark:text-zinc-50">{t.factures.detall.total}</dt>
+                <dd className="text-zinc-950 dark:text-zinc-50">{factura.total} €</dd>
+              </div>
+              {factura.estat === "pagada" && factura.metode_pagament && (
+                <div className="flex justify-between">
+                  <dt className="text-zinc-500 dark:text-zinc-400">{t.factures.detall.metodePagament}</dt>
+                  <dd className="text-zinc-900 dark:text-zinc-100">{factura.metode_pagament}</dd>
+                </div>
+              )}
+            </dl>
+
+            {factura.estat === "pendent" && (
+              <div className="mt-4 print:hidden">
+                <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
               </div>
             )}
-          </dl>
-
-          {factura.estat === "pendent" && (
-            <div className="mt-4 print:hidden">
-              <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
-            </div>
-          )}
+          </div>
         </section>
 
         {potRectificar && !rectificativa && (
