@@ -120,3 +120,7 @@ factures de `/tecnic/factures` s'han de deixar com a esborrany.
   tipografia unificada en Nunito Sans, títols en color neutre en lloc de
   rosa, fletxa "enrere" com a botó circular amb icona (`BackButton`) en
   lloc d'un caràcter de text gegant
+- Canvi de color d'accent de rosa a teal, i del fons a un ambient
+  d'oficina super difuminada (`bg-office-blur`, gradients CSS)
+- Afegits el francès (`fr`) i l'italià (`it`) com a idiomes, amb
+  traducció completa dels 5 idiomes (`lib/i18n/*.ts`)

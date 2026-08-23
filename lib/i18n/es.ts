@@ -26,6 +26,8 @@ const es: Dict = {
       ca: "Català",
       es: "Castellano",
       en: "English",
+      fr: "Français",
+      it: "Italiano",
     },
     diesCurts: ["do", "lu", "ma", "mi", "ju", "vi", "sá"],
   },

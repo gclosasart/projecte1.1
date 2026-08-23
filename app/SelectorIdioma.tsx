@@ -18,6 +18,8 @@ export function SelectorIdioma({ actual, textos }: { actual: Idioma; textos: Dic
       <option value="ca">{textos.ca}</option>
       <option value="es">{textos.es}</option>
       <option value="en">{textos.en}</option>
+      <option value="fr">{textos.fr}</option>
+      <option value="it">{textos.it}</option>
     </select>
   );
 }

@@ -24,6 +24,8 @@ const ca = {
       ca: "Català",
       es: "Castellano",
       en: "English",
+      fr: "Français",
+      it: "Italiano",
     },
     diesCurts: ["dg", "dl", "dt", "dc", "dj", "dv", "ds"],
   },
