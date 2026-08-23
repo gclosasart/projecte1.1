@@ -222,7 +222,7 @@ export default async function FacturaDetallPage({
             )}
 
             {factura.estat === "pendent" && (
-              <div className="mt-4 print:hidden">
+              <div className="mt-4 flex justify-end print:hidden">
                 <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
               </div>
             )}
