@@ -81,12 +81,12 @@ input[type="number"]::-webkit-inner-spin-button {
 .bg-office-blur {
   background-color: #f6f4f0;
   background-image:
-    radial-gradient(ellipse 70% 60% at 85% 10%, rgba(255, 214, 153, 0.35), transparent 70%),
-    radial-gradient(ellipse 55% 50% at 8% 15%, rgba(148, 176, 168, 0.3), transparent 68%),
-    radial-gradient(ellipse 65% 55% at 12% 88%, rgba(150, 118, 82, 0.28), transparent 68%),
-    radial-gradient(ellipse 60% 50% at 90% 85%, rgba(120, 140, 120, 0.24), transparent 66%),
-    radial-gradient(ellipse 45% 40% at 55% 45%, rgba(160, 178, 190, 0.18), transparent 65%),
-    radial-gradient(ellipse 40% 35% at 35% 60%, rgba(90, 95, 100, 0.12), transparent 62%);
+    radial-gradient(ellipse 65% 55% at 85% 10%, rgba(255, 214, 153, 0.42), transparent 58%),
+    radial-gradient(ellipse 50% 45% at 8% 15%, rgba(148, 176, 168, 0.36), transparent 56%),
+    radial-gradient(ellipse 60% 50% at 12% 88%, rgba(150, 118, 82, 0.34), transparent 56%),
+    radial-gradient(ellipse 55% 45% at 90% 85%, rgba(120, 140, 120, 0.3), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 55% 45%, rgba(160, 178, 190, 0.22), transparent 54%),
+    radial-gradient(ellipse 36% 32% at 35% 60%, rgba(90, 95, 100, 0.16), transparent 52%);
 }
 
 /* Substitueix la fletxa nativa dels <select> (que cada navegador/SO dibuixa
