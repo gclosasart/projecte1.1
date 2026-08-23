@@ -6,6 +6,7 @@ import { FacturesList } from "./FacturesList";
 type Factura = {
   id: string;
   numero: number;
+  serie: string;
   data_emissio: string;
   base_imposable: number;
   iva_percent: number;
@@ -22,18 +23,48 @@ type Factura = {
   } | null;
 };
 
+type FacturaPlataformaResum = {
+  id: string;
+  numero: number | null;
+  periode_any: number;
+  periode_mes: number;
+  total: number;
+  estat: string;
+};
+
 export default async function FacturesPage() {
   const supabase = await createClient();
   const t = await getDict();
   const idioma = await getIdioma();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("rol")
+    .eq("id", user!.id)
+    .single();
+
   const { data: factures } = await supabase
     .from("factures")
     .select(
-      "id, numero, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, no_show, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
+      "id, numero, serie, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, no_show, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
     )
     .order("numero", { ascending: false })
     .returns<Factura[]>();
+
+  const { data: facturesPlataforma } =
+    profile?.rol === "tenant_admin"
+      ? await supabase
+          .from("factures_plataforma")
+          .select("id, numero, periode_any, periode_mes, total, estat")
+          .neq("estat", "esborrany")
+          .order("periode_any", { ascending: false })
+          .order("periode_mes", { ascending: false })
+          .returns<FacturaPlataformaResum[]>()
+      : { data: null };
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
@@ -54,6 +85,33 @@ export default async function FacturesPage() {
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.factures.capFactura}</p>
         ) : (
           <FacturesList factures={factures} idioma={idioma} />
+        )}
+
+        {facturesPlataforma && facturesPlataforma.length > 0 && (
+          <section className="mt-10">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              {t.factures.quotaPlataforma.titol}
+            </h2>
+            <ul className="flex flex-col gap-3">
+              {facturesPlataforma.map((f) => (
+                <li key={f.id}>
+                  <Link
+                    href={`/factures/plataforma/${f.id}`}
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-black/10 bg-white p-4 hover:underline dark:border-white/10 dark:bg-zinc-950"
+                  >
+                    <span className="text-sm text-zinc-900 dark:text-zinc-100">
+                      {t.factures.quotaPlataforma.periode(f.periode_mes, f.periode_any)}
+                      {f.numero != null && ` · ${t.factures.quotaPlataforma.numero(f.numero)}`}
+                      <span className="ml-2 text-zinc-500 dark:text-zinc-400">
+                        {t.comu.estats[f.estat] ?? f.estat}
+                      </span>
+                    </span>
+                    <strong className="text-sm text-zinc-950 dark:text-zinc-50">{f.total} €</strong>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
       </main>
     </div>

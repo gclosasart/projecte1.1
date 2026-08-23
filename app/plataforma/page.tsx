@@ -1,0 +1,59 @@
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { getDict } from "@/lib/i18n";
+import { PlataformaForm } from "./PlataformaForm";
+
+export default async function PlataformaPage() {
+  const supabase = await createClient();
+  const t = await getDict();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("rol")
+    .eq("id", user!.id)
+    .single();
+
+  const esTecnic = profile?.rol === "tecnic";
+
+  const { data: plataforma } = esTecnic
+    ? await supabase
+        .from("plataforma")
+        .select("nom_comercial, rao_social, nif, adreca_fiscal, iva_percent")
+        .limit(1)
+        .single()
+    : { data: null };
+
+  return (
+    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
+      <header className="flex flex-wrap items-center gap-4 px-6 py-5">
+        <Link
+          href="/tecnic"
+          className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+        >
+          ←
+        </Link>
+        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+          {t.plataforma.titol}
+        </h1>
+      </header>
+
+      <main className="mx-auto w-full max-w-md flex-1 px-6 py-8">
+        {!esTecnic || !plataforma ? (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.plataforma.sensePermisos}</p>
+        ) : (
+          <div className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950">
+            <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">{t.plataforma.avisEmissor}</p>
+            <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300">
+              {t.plataforma.avisNoDonatAlta}
+            </p>
+            <PlataformaForm valorsInicials={plataforma} textos={t.plataforma} />
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

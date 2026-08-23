@@ -26,6 +26,10 @@ MCP per a les dues primeres):
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY` (Supabase → NXing → Settings → API Keys → Secret keys)
 
+A Vercel (producció, no cal per local) també falta configurar `CRON_SECRET` — protegeix
+`/api/cron/factures-plataforma`, cridat pel cron mensual definit a `vercel.json`. Sense
+aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els esborranys.
+
 ## Convencions establertes — no trencar-les
 
 - Next.js 16 té diferències respecte al conegut habitualment: llegir
@@ -55,9 +59,11 @@ MCP per a les dues primeres):
 
 ## Estat actual
 
-Tot pujat i net. Últim commit `e75afe0` a `origin/main`, res pendent de fer.
-Sessió verificada amb accés complet a GitHub, Supabase (MCP) i servidor local
-(`.env.local` configurat, `tsc`/`lint`/`build` OK).
+S'ha afegit la facturació SaaS→Tenant (Plataforma) i les factures rectificatives
+Tenant→Client. Pendent: configurar `CRON_SECRET` a Vercel perquè el cron mensual
+funcioni en producció, i que en Guillem es doni d'alta com a autònom (o societat)
+abans de confirmar cap factura de plataforma de debò — mentre no ho estigui, les
+factures de `/tecnic/factures` s'han de deixar com a esborrany.
 
 ## Fet fins ara (de més antic a més recent)
 
@@ -75,3 +81,6 @@ Sessió verificada amb accés complet a GitHub, Supabase (MCP) i servidor local
 - Fletxa "tornar al dashboard" més gran i visible
 - Llistes amb barra desllizant a Gestiona reserves
 - Configuració d'`ESTAT.md` per facilitar continuar el projecte en converses noves
+- Facturació SaaS→Tenant (`plataforma`, `factures_plataforma`, `/plataforma`,
+  `/tecnic/factures`, cron mensual d'esborranys) i factures rectificatives
+  Tenant→Client (sèrie `R`, botó manual, vista imprimible/PDF a totes dues)

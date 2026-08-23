@@ -79,6 +79,18 @@ export default async function TecnicPage() {
           {t.tecnic.titol}
         </h1>
         <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/plataforma"
+            className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
+          >
+            {t.comu.plataforma}
+          </Link>
+          <Link
+            href="/tecnic/factures"
+            className="rounded-full border border-black/10 px-4 py-1.5 text-sm font-medium text-zinc-950 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-zinc-50 dark:hover:bg-white/5"
+          >
+            {t.nav.factures}
+          </Link>
           <SelectorIdioma actual={idioma} textos={t.comu.idiomes} />
           <form action={signOut}>
             <button
