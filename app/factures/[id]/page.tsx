@@ -108,9 +108,7 @@ export default async function FacturaDetallPage({
             {t.factures.detall.noShowBadge}
           </span>
         )}
-        <div className="ml-auto">
-          <ImprimeixButton text={t.factures.detall.imprimeix} />
-        </div>
+        <ImprimeixButton text={t.factures.detall.imprimeix} />
       </header>
 
       <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-6 px-6 py-8 print:max-w-none print:gap-4">
