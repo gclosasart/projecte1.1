@@ -204,23 +204,26 @@ export default async function FacturaDetallPage({
                 <dt className="text-zinc-950 dark:text-zinc-50">{t.factures.detall.total}</dt>
                 <dd className="text-zinc-950 dark:text-zinc-50">{factura.total} €</dd>
               </div>
-              {factura.estat === "pagada" && factura.metode_pagament && (
-                <div className="flex justify-between">
-                  <dt className="text-zinc-500 dark:text-zinc-400">{t.factures.detall.metodePagament}</dt>
-                  <dd className="text-zinc-900 dark:text-zinc-100">{factura.metode_pagament}</dd>
-                </div>
-              )}
             </dl>
-
-            {factura.estat === "pendent" && (
-              <div className="mt-4 print:hidden">
-                <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
-              </div>
-            )}
 
             {potRectificar && !rectificativa && (
               <div className="mt-4 print:hidden">
                 <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
+              </div>
+            )}
+
+            {factura.estat === "pagada" && factura.metode_pagament && (
+              <dl className="mt-4 flex flex-col gap-2 text-sm">
+                <div className="flex justify-between">
+                  <dt className="text-zinc-500 dark:text-zinc-400">{t.factures.detall.metodePagament}</dt>
+                  <dd className="text-zinc-900 dark:text-zinc-100">{factura.metode_pagament}</dd>
+                </div>
+              </dl>
+            )}
+
+            {factura.estat === "pendent" && (
+              <div className="mt-4 print:hidden">
+                <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
               </div>
             )}
           </div>
