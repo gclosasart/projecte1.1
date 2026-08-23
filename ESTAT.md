@@ -43,15 +43,18 @@ aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els
   l'usuari per donar-hi un aire més "Airbnb"); vermell = pendent, verd =
   pagat, blau (`sky-100`/`sky-800`) reservat per l'estat "activa" de
   reserves/ocurrències (no és l'accent, és un estat), cap altre color
-  decoratiu. Títols `h1` sempre `text-2xl font-semibold text-rose-600
-  dark:text-rose-400`. Targetes: `rounded-2xl border border-black/5
-  bg-white shadow-sm` (`dark:border-white/10 dark:bg-zinc-950
-  dark:shadow-none`) — abans `rounded-xl border border-black/10` sense
-  ombra. Es va provar un estil "Nike/Puma" (botó negre, títol en
-  majúscules/cursiva/negreta, barra d'accent) a totes les pàgines i es va
-  revertir el 2026-08-21 — no tornar-hi sense que l'usuari ho demani
-  explícitament. La capçalera no té fons blanc ni vora/línia inferior: es
-  fon amb el fons de la pàgina, com el dashboard
+  decoratiu. Títols `h1` de pàgina sempre `text-2xl font-bold tracking-tight
+  text-rose-600 dark:text-rose-400`. Targetes: `rounded-2xl border
+  border-black/5 bg-white shadow-sm` (`dark:border-white/10
+  dark:bg-zinc-950 dark:shadow-none`) — abans `rounded-xl border
+  border-black/10` sense ombra. Es va provar un estil "Nike/Puma" (botó
+  negre, títol en majúscules/cursiva/negreta, barra d'accent) a totes les
+  pàgines i es va revertir el 2026-08-21 — no tornar-hi sense que
+  l'usuari ho demani explícitament. La capçalera no té fons blanc ni
+  vora/línia inferior: es fon amb el fons de la pàgina, com el dashboard
+- Tipografia (des del 2026-08-23): una sola família, Nunito Sans, tant pel
+  cos com pels títols (abans Source Sans 3 + Hanken Grotesk) — arrodonida i
+  càlida, a l'estil Airbnb (Cereal és propietària, no es pot fer servir)
 - Sempre `npx tsc --noEmit && npm run lint && npm run build` abans de fer commit
 - Commit i push automàtics: a partir del 2026-08-21 l'usuari ha autoritzat fer
   `commit` + `push` (a la branca de treball i fusió a `main`) sense demanar

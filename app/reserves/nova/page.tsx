@@ -26,7 +26,7 @@ export default async function NovaReservaPage() {
         >
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
+        <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
           {t.reservaNova.titol}
         </h1>
       </header>

@@ -12,8 +12,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-source-sans);
-  --font-heading: var(--font-hanken-grotesk);
+  --font-sans: var(--font-nunito-sans);
+  --font-heading: var(--font-nunito-sans);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -25,6 +25,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading), Arial, Helvetica, sans-serif;
+  letter-spacing: -0.01em;
 }
 
 /* Treu el requadre blau natiu de Chrome al segment actiu (dia/mes/any/hora)

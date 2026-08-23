@@ -33,7 +33,7 @@ export default async function EditarRecursPage({
         >
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
+        <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
           {t.recursos.editaElRecurs}
         </h1>
       </header>

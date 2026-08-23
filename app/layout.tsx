@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { Source_Sans_3, Hanken_Grotesk, Geist_Mono } from "next/font/google";
+import { Nunito_Sans, Geist_Mono } from "next/font/google";
 import { getIdioma } from "@/lib/i18n";
 import "./globals.css";
 
-const sourceSans = Source_Sans_3({
-  variable: "--font-source-sans",
-  subsets: ["latin"],
-});
-
-const hankenGrotesk = Hanken_Grotesk({
-  variable: "--font-hanken-grotesk",
+// Tipografia única, arrodonida i càlida a l'estil Airbnb (Cereal és propietària;
+// Nunito Sans n'és l'alternativa lliure més propera), tant per al cos com per
+// als títols.
+const nunitoSans = Nunito_Sans({
+  variable: "--font-nunito-sans",
   subsets: ["latin"],
 });
 
@@ -33,7 +31,7 @@ export default async function RootLayout({
   return (
     <html
       lang={idioma}
-      className={`${sourceSans.variable} ${hankenGrotesk.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${nunitoSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

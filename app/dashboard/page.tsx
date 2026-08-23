@@ -254,7 +254,7 @@ export default async function DashboardPage() {
         <section className="flex flex-wrap items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-3">
-              <h1 className="text-2xl font-semibold text-zinc-950 dark:text-zinc-50">
+              <h1 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">
                 {t.dashboard.bonDia(profile?.nom)}
               </h1>
               <AccionsCapcaleraMobil
