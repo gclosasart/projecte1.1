@@ -41,7 +41,7 @@ export default async function ClientsPage() {
       <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
         <Link
           href="/clients/nou"
-          className="mb-6 inline-block rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rose-700 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
+          className="mb-6 inline-block rounded-full bg-teal-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-teal-700 dark:bg-teal-500 dark:text-white dark:hover:bg-teal-400"
         >
           {t.clients.nouClient}
         </Link>

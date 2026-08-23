@@ -38,15 +38,18 @@ aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els
   un `"use client"` — si conté funcions d'interpolació, Next.js peta en
   producció. Sempre passar `idioma: Idioma` (string) i cridar `dictDe(idioma)`
   dins del component client
-- Disseny: un sol color d'accent (`rose-600` / `rose-400` en fosc — abans
-  `sky-600`/`indigo-400`, canviat el 2026-08-23 a petició explícita de
-  l'usuari per donar-hi un aire més "Airbnb"); vermell = pendent, verd =
-  pagat, blau (`sky-100`/`sky-800`) reservat per l'estat "activa" de
-  reserves/ocurrències (no és l'accent, és un estat), cap altre color
-  decoratiu. **Fons de pàgina neutre** (`bg-neutral-50 dark:bg-black`), no
-  tenyit del color d'accent — es va provar `bg-rose-50` a tota la pàgina i
-  quedava "terriblement horrible" (massa saturat, sense contrast), es va
-  revertir el mateix dia. El rosa només s'usa a botons/enllaços/targetes
+- Disseny: un sol color d'accent (`teal-600` / `teal-400` en fosc — provat
+  abans `sky-600`/`indigo-400`, després `rose-600`/`rose-400`, i finalment
+  `teal` el 2026-08-23 a petició de l'usuari perquè no volia rosa). Verd
+  (`emerald`) queda reservat exclusivament per a l'estat "pagat" — per
+  això l'accent és `teal` (blau-verdós) i no `emerald`, per no confondre
+  els dos significats. Vermell = pendent, blau (`sky-100`/`sky-800`)
+  reservat per l'estat "activa" de reserves/ocurrències (no és l'accent,
+  és un estat), cap altre color decoratiu. **Fons de pàgina neutre**
+  (`bg-neutral-50 dark:bg-black`), no tenyit del color d'accent — es va
+  provar tenyit amb el color d'accent a tota la pàgina i quedava
+  "terriblement horrible" (massa saturat, sense contrast), es va
+  revertir el mateix dia. L'accent només s'usa a botons/enllaços/targetes
   seleccionades, mai com a fons de pàgina sencer. Títols `h1` de pàgina
   sempre `text-2xl font-bold tracking-tight text-zinc-900
   dark:text-zinc-50` (neutre, no rosa — provat en rosa i quedava massa

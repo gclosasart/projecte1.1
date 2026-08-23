@@ -66,7 +66,7 @@ export function FacturesList({ factures, idioma }: { factures: Factura[]; idioma
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.cercaPlaceholder}
-        className="mb-4 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+        className="mb-4 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-teal-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
       />
 
       {filtrades.length === 0 ? (

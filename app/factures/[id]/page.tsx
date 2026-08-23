@@ -109,7 +109,7 @@ export default async function FacturaDetallPage({
         {original && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             {t.factures.detall.rectificaA(formatNumeroFactura(original.serie, original.numero))}{" "}
-            <Link href={`/factures/${original.id}`} className="text-rose-600 hover:underline dark:text-rose-400">
+            <Link href={`/factures/${original.id}`} className="text-teal-600 hover:underline dark:text-teal-400">
               {t.factures.detall.veureFactura}
             </Link>
           </p>
@@ -121,7 +121,7 @@ export default async function FacturaDetallPage({
             )}{" "}
             <Link
               href={`/factures/${rectificativa.id}`}
-              className="text-rose-600 hover:underline dark:text-rose-400"
+              className="text-teal-600 hover:underline dark:text-teal-400"
             >
               {t.factures.detall.veureFactura}
             </Link>

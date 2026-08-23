@@ -77,9 +77,9 @@ function StatLinkTile({ href, etiqueta }: { href: string; etiqueta: string }) {
   return (
     <Link
       href={href}
-      className="group flex flex-col justify-between rounded-2xl border border-black/5 bg-white shadow-sm p-5 transition-colors hover:border-rose-600 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none dark:hover:border-rose-500"
+      className="group flex flex-col justify-between rounded-2xl border border-black/5 bg-white shadow-sm p-5 transition-colors hover:border-teal-600 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none dark:hover:border-teal-500"
     >
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-600 text-white transition-transform group-hover:translate-x-0.5 dark:bg-rose-500">
+      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-600 text-white transition-transform group-hover:translate-x-0.5 dark:bg-teal-500">
         <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden>
           <path
             d="M4 10h12m0 0-4.5-4.5M16 10l-4.5 4.5"
@@ -282,7 +282,7 @@ export default async function DashboardPage() {
           {potNovaReserva && (
             <Link
               href="/reserves/nova"
-              className="rounded-full bg-rose-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-rose-700"
+              className="rounded-full bg-teal-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-teal-700"
             >
               {t.dashboard.novaReserva}
             </Link>
@@ -301,7 +301,7 @@ export default async function DashboardPage() {
           {potNovaReserva && (
             <Link
               href="/reserves/nova"
-              className="rounded-full bg-rose-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-rose-700"
+              className="rounded-full bg-teal-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-teal-700"
             >
               {t.dashboard.novaReserva}
             </Link>
@@ -449,7 +449,7 @@ export default async function DashboardPage() {
                   )}
                   <Link
                     href="/clients/llista-negra"
-                    className="mt-3 inline-block text-sm font-medium text-rose-700 hover:underline dark:text-rose-400"
+                    className="mt-3 inline-block text-sm font-medium text-teal-700 hover:underline dark:text-teal-400"
                   >
                     {t.llistaNegra.titol} →
                   </Link>

@@ -36,11 +36,11 @@ export function ForecastChart({ dies, textos }: { dies: DiaForecast[]; textos: T
     <div>
       <div className="mb-4 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-rose-600" aria-hidden />
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-teal-600" aria-hidden />
           {textos.reservesNoves}
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-rose-200 dark:bg-rose-900" aria-hidden />
+          <span className="inline-block h-2.5 w-2.5 rounded-sm bg-teal-200 dark:bg-teal-900" aria-hidden />
           {textos.sessionsDelDia}
         </span>
       </div>
@@ -50,7 +50,7 @@ export function ForecastChart({ dies, textos }: { dies: DiaForecast[]; textos: T
           <div key={d.label} className="flex flex-1 flex-col items-center gap-1.5">
             <div className="flex h-32 items-end gap-1">
               <div
-                className="group/bar relative w-3.5 rounded-t bg-rose-600 transition-[height] duration-700 ease-out"
+                className="group/bar relative w-3.5 rounded-t bg-teal-600 transition-[height] duration-700 ease-out"
                 style={{
                   height: animat ? `${(d.comencen / maxVal) * 100}%` : "0%",
                   minHeight: animat && d.comencen > 0 ? "4px" : "0",
@@ -62,7 +62,7 @@ export function ForecastChart({ dies, textos }: { dies: DiaForecast[]; textos: T
                 </span>
               </div>
               <div
-                className="group/bar relative w-3.5 rounded-t bg-rose-200 dark:bg-rose-900 transition-[height] duration-700 ease-out"
+                className="group/bar relative w-3.5 rounded-t bg-teal-200 dark:bg-teal-900 transition-[height] duration-700 ease-out"
                 style={{
                   height: animat ? `${(d.sessions / maxVal) * 100}%` : "0%",
                   minHeight: animat && d.sessions > 0 ? "4px" : "0",

@@ -221,7 +221,7 @@ export default async function DetallReservaPage({
                   {factura && (
                     <Link
                       href={`/factures/${factura.id}`}
-                      className="rounded-full bg-rose-600 px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-rose-700 dark:bg-rose-500 dark:hover:bg-rose-400"
+                      className="rounded-full bg-teal-600 px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-400"
                     >
                       {t.reservaGestio.detall.veureFactura}
                     </Link>

@@ -13,7 +13,7 @@ export function NavSecundariaPills({ items }: { items: ItemNav[] }) {
         <Link
           key={it.href}
           href={it.href}
-          className="rounded-full border border-black/10 px-3.5 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-rose-600 hover:text-rose-700 dark:border-white/10 dark:text-zinc-400 dark:hover:border-rose-500 dark:hover:text-rose-400"
+          className="rounded-full border border-black/10 px-3.5 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-teal-600 hover:text-teal-700 dark:border-white/10 dark:text-zinc-400 dark:hover:border-teal-500 dark:hover:text-teal-400"
         >
           {it.label}
         </Link>

@@ -68,12 +68,12 @@ export function NotesTenant({
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={t.afegeixNotaPlaceholder}
-          className="flex-1 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="flex-1 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-sm text-zinc-950 outline-none focus:border-teal-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
         <button
           type="submit"
           disabled={pending || !text.trim()}
-          className="shrink-0 rounded-lg bg-rose-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-rose-700 disabled:opacity-40"
+          className="shrink-0 rounded-lg bg-teal-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-teal-700 disabled:opacity-40"
         >
           {t.afegeix}
         </button>
