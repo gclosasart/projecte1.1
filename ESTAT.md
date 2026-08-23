@@ -48,8 +48,14 @@ aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els
   quedava "terriblement horrible" (massa saturat, sense contrast), es va
   revertir el mateix dia. El rosa només s'usa a botons/enllaços/targetes
   seleccionades, mai com a fons de pàgina sencer. Títols `h1` de pàgina
-  sempre `text-2xl font-bold tracking-tight
-  text-rose-600 dark:text-rose-400`. Targetes: `rounded-2xl border
+  sempre `text-2xl font-bold tracking-tight text-zinc-900
+  dark:text-zinc-50` (neutre, no rosa — provat en rosa i quedava massa
+  cridaner per ser només un títol; el rosa es reserva als elements
+  interactius). Botó "tornar enrere": component compartit
+  `<BackButton href="..." />` (`app/BackButton.tsx`), un cercle amb icona
+  de fletxa SVG — abans un caràcter "←" de text pla en `text-5xl` rosa,
+  que junt amb el títol quedava "massa simple, massa lleig" segons
+  l'usuari. Targetes: `rounded-2xl border
   border-black/5 bg-white shadow-sm` (`dark:border-white/10
   dark:bg-zinc-950 dark:shadow-none`) — abans `rounded-xl border
   border-black/10` sense ombra. Es va provar un estil "Nike/Puma" (botó
@@ -102,3 +108,8 @@ factures de `/tecnic/factures` s'han de deixar com a esborrany.
 - Restyling inspirat en Airbnb a tota l'app: accent `sky`→`rose`, targetes
   més arrodonides (`rounded-2xl`) amb ombra suau, més espai vertical a les
   pàgines (`py-8`→`py-10`)
+- Ajustos del restyling després de feedback ("terriblement horrible" /
+  "massa simple, massa lleig"): fons de pàgina neutre en lloc de rosa,
+  tipografia unificada en Nunito Sans, títols en color neutre en lloc de
+  rosa, fletxa "enrere" com a botó circular amb icona (`BackButton`) en
+  lloc d'un caràcter de text gegant

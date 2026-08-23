@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getDict } from "@/lib/i18n";
 import { DetallsForm } from "./DetallsForm";
 import { NotesTenant } from "./NotesTenant";
 import { MembreActions } from "./MembreActions";
+import { BackButton } from "@/app/BackButton";
 
 type Membre = {
   id: string;
@@ -68,13 +68,8 @@ export default async function DetallTenantPage({
   return (
     <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5">
-        <Link
-          href="/tecnic"
-          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
-        >
-          ←
-        </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
+        <BackButton href="/tecnic" />
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
           {tenant.nom_comercial}
         </h1>
       </header>

@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getDict } from "@/lib/i18n";
 import { ImprimeixButton } from "@/app/ImprimeixButton";
+import { BackButton } from "@/app/BackButton";
 
 type FacturaPlataforma = {
   id: string;
@@ -72,13 +72,8 @@ export default async function FacturaPlataformaDetallPage({
   return (
     <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black print:bg-white">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5 print:hidden">
-        <Link
-          href={tornaHref}
-          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
-        >
-          ←
-        </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
+        <BackButton href={tornaHref} />
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
           {t.factures.quotaPlataforma.periode(factura.periode_mes, factura.periode_any)}
         </h1>
       </header>

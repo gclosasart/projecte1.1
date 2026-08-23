@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getDict } from "@/lib/i18n";
 import { ClientsList } from "./ClientsList";
+import { BackButton } from "@/app/BackButton";
 
 type Client = {
   id: string;
@@ -24,13 +25,8 @@ export default async function ClientsPage() {
     <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black">
       <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-5">
         <div className="flex flex-wrap items-center gap-4">
-          <Link
-            href="/dashboard"
-            className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
-          >
-            ←
-          </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
+          <BackButton href="/dashboard" />
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             {t.clients.titol}
           </h1>
         </div>

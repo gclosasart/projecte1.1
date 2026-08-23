@@ -6,6 +6,7 @@ import { CancelOcurrenciaButton } from "../CancelOcurrenciaButton";
 import { EditaRecursosReserva } from "../EditaRecursosReserva";
 import { EstatReservaSelector } from "../EstatReservaSelector";
 import { NoShowButton } from "../NoShowButton";
+import { BackButton } from "@/app/BackButton";
 
 type Ocurrencia = {
   id: string;
@@ -100,13 +101,8 @@ export default async function DetallReservaPage({
   return (
     <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5">
-        <Link
-          href="/reserves/gestio"
-          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
-        >
-          ←
-        </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
+        <BackButton href="/reserves/gestio" />
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
           {t.reservaGestio.detall.titol}
         </h1>
       </header>

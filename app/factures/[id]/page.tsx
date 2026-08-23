@@ -6,6 +6,7 @@ import { formatNumeroFactura } from "@/lib/factures";
 import { MarcaPagadaForm } from "../MarcaPagadaForm";
 import { CreaRectificativaButton } from "../CreaRectificativaButton";
 import { ImprimeixButton } from "@/app/ImprimeixButton";
+import { BackButton } from "@/app/BackButton";
 
 type Factura = {
   id: string;
@@ -89,13 +90,8 @@ export default async function FacturaDetallPage({
   return (
     <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black print:bg-white">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5 print:hidden">
-        <Link
-          href="/factures"
-          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
-        >
-          ←
-        </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
+        <BackButton href="/factures" />
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
           {t.factures.facturaFormatada(formatNumeroFactura(factura.serie, factura.numero))}
         </h1>
         {factura.no_show && (

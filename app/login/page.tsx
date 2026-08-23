@@ -10,7 +10,7 @@ export default async function LoginPage() {
     <div className="flex flex-1 items-center justify-center bg-neutral-50 dark:bg-black">
       <div className="w-full max-w-sm rounded-2xl border border-black/5 bg-white shadow-sm p-8 shadow-sm dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
         <div className="flex items-start justify-between gap-3">
-          <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             {t.login.titol}
           </h1>
           <SelectorIdioma actual={idioma} textos={t.comu.idiomes} />

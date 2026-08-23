@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { ClientForm } from "../ClientForm";
 import { crearClient } from "../actions";
 import { getDict } from "@/lib/i18n";
+import { BackButton } from "@/app/BackButton";
 
 export default async function NouClientPage() {
   const t = await getDict();
@@ -9,13 +9,8 @@ export default async function NouClientPage() {
   return (
     <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black">
       <header className="flex items-center gap-4 px-6 py-5">
-        <Link
-          href="/clients"
-          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
-        >
-          ←
-        </Link>
-        <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">
+        <BackButton href="/clients" />
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
           {t.clients.nouClient}
         </h1>
       </header>
