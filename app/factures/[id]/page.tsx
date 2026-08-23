@@ -207,7 +207,7 @@ export default async function FacturaDetallPage({
             </dl>
 
             {potRectificar && !rectificativa && (
-              <div className="mt-4 print:hidden">
+              <div className="mt-4 flex justify-end print:hidden">
                 <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
               </div>
             )}
