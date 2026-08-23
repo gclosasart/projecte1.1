@@ -71,24 +71,21 @@ export default async function FacturaPlataformaDetallPage({
 
   return (
     <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black print:bg-white">
-      <header className="flex flex-wrap items-center justify-between gap-4 px-6 py-5 print:hidden">
-        <div className="flex flex-wrap items-center gap-4">
-          <Link
-            href={tornaHref}
-            className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
-          >
-            ←
-          </Link>
-          <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
-            {t.factures.quotaPlataforma.periode(factura.periode_mes, factura.periode_any)}
-          </h1>
-          <span
-            className={`rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[factura.estat] ?? ""}`}
-          >
-            {t.comu.estats[factura.estat] ?? factura.estat}
-          </span>
-        </div>
-        <ImprimeixButton text={t.factures.detall.imprimeix} />
+      <header className="flex flex-wrap items-center gap-4 px-6 py-5 print:hidden">
+        <Link
+          href={tornaHref}
+          className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+        >
+          ←
+        </Link>
+        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+          {t.factures.quotaPlataforma.periode(factura.periode_mes, factura.periode_any)}
+        </h1>
+        <span
+          className={`rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[factura.estat] ?? ""}`}
+        >
+          {t.comu.estats[factura.estat] ?? factura.estat}
+        </span>
       </header>
 
       <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-6 px-6 py-8 print:max-w-none print:gap-4">
@@ -99,9 +96,14 @@ export default async function FacturaPlataformaDetallPage({
 
         <section className="flex flex-col gap-6 rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950 print:border-0 print:p-0">
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-              {t.factures.detall.emissor}
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                {t.factures.detall.emissor}
+              </h2>
+              <div className="print:hidden">
+                <ImprimeixButton text={t.factures.detall.imprimeix} />
+              </div>
+            </div>
             <p className="mt-2 text-sm text-zinc-900 dark:text-zinc-100">
               {plataforma?.nom_comercial}
             </p>
