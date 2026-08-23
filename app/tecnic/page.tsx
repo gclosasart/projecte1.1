@@ -33,7 +33,7 @@ export default async function TecnicPage() {
 
   if (profile?.rol !== "tecnic") {
     return (
-      <div className="flex flex-1 flex-col bg-marble dark:bg-black">
+      <div className="flex flex-1 flex-col bg-office-blur dark:bg-black">
         <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.nomesPerTecnic}</p>
         </main>
@@ -73,7 +73,7 @@ export default async function TecnicPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-marble dark:bg-black">
+    <div className="flex flex-1 flex-col bg-office-blur dark:bg-black">
       <header className="flex flex-wrap items-center justify-between gap-4 px-6 py-5">
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
           {t.tecnic.titol}

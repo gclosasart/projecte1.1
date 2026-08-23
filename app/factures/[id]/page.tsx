@@ -88,7 +88,7 @@ export default async function FacturaDetallPage({
   const potRectificar = factura.estat === "pendent" || factura.estat === "pagada";
 
   return (
-    <div className="flex flex-1 flex-col bg-marble dark:bg-black print:bg-white">
+    <div className="flex flex-1 flex-col bg-office-blur dark:bg-black print:bg-white">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5 print:hidden">
         <BackButton href="/factures" />
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
