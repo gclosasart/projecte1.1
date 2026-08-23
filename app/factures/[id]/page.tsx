@@ -206,11 +206,16 @@ export default async function FacturaDetallPage({
               </div>
             </dl>
 
-            {potRectificar && !rectificativa && (
-              <div className="mt-4 flex justify-end print:hidden">
-                <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
+            {(potRectificar && !rectificativa) || factura.estat === "pendent" ? (
+              <div className="mt-4 flex flex-wrap items-center justify-end gap-2 print:hidden">
+                {factura.estat === "pendent" && (
+                  <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
+                )}
+                {potRectificar && !rectificativa && (
+                  <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
+                )}
               </div>
-            )}
+            ) : null}
 
             {factura.estat === "pagada" && factura.metode_pagament && (
               <dl className="mt-4 flex flex-col gap-2 text-sm">
@@ -219,12 +224,6 @@ export default async function FacturaDetallPage({
                   <dd className="text-zinc-900 dark:text-zinc-100">{factura.metode_pagament}</dd>
                 </div>
               </dl>
-            )}
-
-            {factura.estat === "pendent" && (
-              <div className="mt-4 flex justify-end print:hidden">
-                <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
-              </div>
             )}
           </div>
         </section>
