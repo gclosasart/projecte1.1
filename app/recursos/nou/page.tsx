@@ -7,7 +7,7 @@ export default async function NouRecursPage() {
   const t = await getDict();
 
   return (
-    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black">
       <header className="flex items-center gap-4 px-6 py-5">
         <Link
           href="/recursos"

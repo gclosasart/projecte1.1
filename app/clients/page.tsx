@@ -21,7 +21,7 @@ export default async function ClientsPage() {
     .returns<Client[]>();
 
   return (
-    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black">
       <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-5">
         <div className="flex flex-wrap items-center gap-4">
           <Link

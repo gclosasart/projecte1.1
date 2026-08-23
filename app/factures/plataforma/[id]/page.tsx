@@ -70,7 +70,7 @@ export default async function FacturaPlataformaDetallPage({
   const tornaHref = profile?.rol === "tecnic" ? "/tecnic/factures" : "/factures";
 
   return (
-    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black print:bg-white">
+    <div className="flex flex-1 flex-col bg-neutral-50 dark:bg-black print:bg-white">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5 print:hidden">
         <Link
           href={tornaHref}

@@ -43,7 +43,12 @@ aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els
   l'usuari per donar-hi un aire més "Airbnb"); vermell = pendent, verd =
   pagat, blau (`sky-100`/`sky-800`) reservat per l'estat "activa" de
   reserves/ocurrències (no és l'accent, és un estat), cap altre color
-  decoratiu. Títols `h1` de pàgina sempre `text-2xl font-bold tracking-tight
+  decoratiu. **Fons de pàgina neutre** (`bg-neutral-50 dark:bg-black`), no
+  tenyit del color d'accent — es va provar `bg-rose-50` a tota la pàgina i
+  quedava "terriblement horrible" (massa saturat, sense contrast), es va
+  revertir el mateix dia. El rosa només s'usa a botons/enllaços/targetes
+  seleccionades, mai com a fons de pàgina sencer. Títols `h1` de pàgina
+  sempre `text-2xl font-bold tracking-tight
   text-rose-600 dark:text-rose-400`. Targetes: `rounded-2xl border
   border-black/5 bg-white shadow-sm` (`dark:border-white/10
   dark:bg-zinc-950 dark:shadow-none`) — abans `rounded-xl border
