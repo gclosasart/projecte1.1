@@ -212,7 +212,9 @@ export default async function FacturaDetallPage({
                   <MarcaPagadaForm facturaId={factura.id} idioma={idioma} />
                 )}
                 {potRectificar && !rectificativa && (
-                  <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
+                  <div className="ml-auto">
+                    <CreaRectificativaButton facturaId={factura.id} idioma={idioma} />
+                  </div>
                 )}
               </div>
             ) : null}
