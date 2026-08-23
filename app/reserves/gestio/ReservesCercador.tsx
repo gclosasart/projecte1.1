@@ -46,7 +46,7 @@ export function ReservesCercador({
               {query ? t.capResultatCerca : t.capEnCurs}
             </p>
           ) : (
-            <ul className="flex max-h-72 min-w-0 flex-col gap-3 overflow-y-auto pr-1">
+            <ul className="flex max-h-[calc(100vh-16rem)] min-w-0 flex-col gap-3 overflow-y-auto pr-1">
               {enCursFiltrat.map((r) => (
                 <ReservaCard key={r.id} r={r} idioma={idioma} />
               ))}
@@ -64,7 +64,7 @@ export function ReservesCercador({
                 {query ? t.capResultatCerca : t.capPagada}
               </p>
             ) : (
-              <ul className="flex max-h-72 min-w-0 flex-col gap-3 overflow-y-auto pr-1">
+              <ul className="flex max-h-[calc(100vh-16rem)] min-w-0 flex-col gap-3 overflow-y-auto pr-1">
                 {pagadesFiltrat.map((r) => (
                   <ReservaCard key={r.id} r={r} idioma={idioma} />
                 ))}
@@ -81,7 +81,7 @@ export function ReservesCercador({
                 {query ? t.capResultatCerca : t.capCancellada}
               </p>
             ) : (
-              <ul className="flex max-h-72 min-w-0 flex-col gap-3 overflow-y-auto pr-1">
+              <ul className="flex max-h-[calc(100vh-16rem)] min-w-0 flex-col gap-3 overflow-y-auto pr-1">
                 {cancelladesFiltrat.map((r) => (
                   <ReservaCard key={r.id} r={r} idioma={idioma} />
                 ))}
