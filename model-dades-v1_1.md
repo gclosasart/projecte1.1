@@ -93,19 +93,65 @@ Cada data/hora concreta generada per una Reserva. És el que realment ocupa el c
 | preu | decimal | Import concret d'aquesta ocurrència (ja calculat segons el model de preu) |
 
 ## Factura
-Una per Ocurrència. Relació 1:1.
+Una per Ocurrència (relació 1:1), **o** una factura rectificativa que en referencia una altra.
 
 | Camp | Tipus | Notes |
 |---|---|---|
 | id | UUID | |
 | tenant_id | FK → Tenant | |
-| ocurrència_id | FK → Ocurrència | 1:1 |
-| número | enter | Correlatiu per tenant (ve del comptador del Tenant) |
+| ocurrència_id | FK → Ocurrència, NULLABLE | 1:1 amb l'ocurrència; NULL a les rectificatives |
+| número | enter | Correlatiu per tenant i sèrie (ve del comptador corresponent del Tenant) |
+| sèrie | text | `F` (normal) o `R` (rectificativa) — comptadors independents |
+| factura_rectificada_id | FK → Factura, NULLABLE | Només a les rectificatives: apunta a la factura original |
 | data_emissió | data | |
-| base_imposable | decimal | |
+| base_imposable | decimal | Negatiu a les rectificatives |
 | iva_percent | decimal | Configurable, per defecte 21% |
+| total | decimal | Negatiu a les rectificatives |
+| estat | enum | pendent / pagada / anul·lada / rectificativa |
+
+Una factura rectificativa s'emet manualment (botó "Crea factura rectificativa" al detall) quan
+cal anul·lar una factura `pendent` o `pagada`: es crea una nova factura de sèrie `R` amb els
+imports en negatiu que referencia l'original via `factura_rectificada_id`, i l'original passa a
+`estat = anul·lada`. Mai s'esborra una factura ja emesa.
+
+## Plataforma
+El propi SaaS (tu, com a emissor de les factures cap a cada tenant). Taula singleton (una sola
+fila).
+
+| Camp | Tipus | Notes |
+|---|---|---|
+| id | UUID | |
+| nom_comercial | text | |
+| raó_social | text | |
+| nif | text | |
+| adreça_fiscal | text | |
+| iva_percent | decimal | Per defecte 21% |
+| següent_num_factura | enter | Comptador correlatiu de les factures de plataforma |
+
+**Important**: mentre no estiguis donat d'alta com a autònom (o societat) davant Hisenda,
+aquestes factures no tenen validesa fiscal — es generen com a esborrany i cal confirmar-les
+explícitament per emetre-les de debò.
+
+## FacturaPlataforma
+Una factura mensual que la Plataforma emet a cada Tenant, basada en el seu `quota_mensual`.
+
+| Camp | Tipus | Notes |
+|---|---|---|
+| id | UUID | |
+| tenant_id | FK → Tenant | |
+| període_any / període_mes | enter | Mes que es factura; únic per tenant+període |
+| número | enter, NULLABLE | Null mentre és esborrany; assignat en confirmar-la |
+| data_emissió | data, NULLABLE | Null mentre és esborrany |
+| base_imposable | decimal | Snapshot del `quota_mensual` del tenant en el moment de generar-la |
+| iva_percent | decimal | |
 | total | decimal | |
-| estat | enum | pendent / pagada / anul·lada |
+| estat | enum | esborrany / pendent / pagada / anul·lada |
+
+Es generen esborranys automàticament el dia 1 de cada mes (cron de Vercel) per a tots els
+tenants amb `quota_mensual` definida. El tècnic les confirma manualment des de
+`/tecnic/factures` (moment en què s'assigna el número correlatiu i queden "emeses"). El
+tenant_admin només pot veure (no editar) les seves pròpies factures, i només un cop deixen de
+ser esborrany.
 
 ---
 

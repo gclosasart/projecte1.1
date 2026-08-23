@@ -3,11 +3,13 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { dictDe, type Idioma } from "@/lib/i18n/client";
+import { formatNumeroFactura } from "@/lib/factures";
 import { MarcaPagadaForm } from "./MarcaPagadaForm";
 
 type Factura = {
   id: string;
   numero: number;
+  serie: string;
   data_emissio: string;
   base_imposable: number;
   iva_percent: number;
@@ -35,6 +37,7 @@ const ESTAT_ESTIL: Record<string, string> = {
   pendent: "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300",
   pagada: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
   "anul·lada": "bg-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+  rectificativa: "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
 };
 
 export function FacturesList({ factures, idioma }: { factures: Factura[]; idioma: Idioma }) {
@@ -77,7 +80,7 @@ export function FacturesList({ factures, idioma }: { factures: Factura[]; idioma
             >
               <Link href={`/factures/${f.id}`} className="min-w-0 flex-1 hover:underline">
                 <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
-                  {t.factura(f.numero)}
+                  {t.facturaFormatada(formatNumeroFactura(f.serie, f.numero))}
                   <span
                     className={`ml-2 rounded-full px-2 py-0.5 text-xs font-normal ${ESTAT_ESTIL[f.estat] ?? ""}`}
                   >
