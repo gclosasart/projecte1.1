@@ -83,7 +83,7 @@ export function PlanningGraella({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950">
+      <div className="rounded-2xl border border-black/5 bg-white shadow-sm p-4 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
           {t.filtres}
         </h2>
@@ -95,7 +95,7 @@ export function PlanningGraella({
               min={0}
               value={capacitatMin}
               onChange={(e) => setCapacitatMin(e.target.value)}
-              className="w-32 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="w-32 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
@@ -106,7 +106,7 @@ export function PlanningGraella({
               step="0.01"
               value={preuMax}
               onChange={(e) => setPreuMax(e.target.value)}
-              className="w-32 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="w-32 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </label>
         </div>
@@ -118,14 +118,14 @@ export function PlanningGraella({
               <button
                 type="button"
                 onClick={() => setSeleccionats(new Set(recursos.map((r) => r.id)))}
-                className="text-xs font-medium text-sky-700 hover:underline dark:text-sky-400"
+                className="text-xs font-medium text-rose-700 hover:underline dark:text-rose-400"
               >
                 {t.seleccionaTots}
               </button>
               <button
                 type="button"
                 onClick={() => setSeleccionats(new Set())}
-                className="text-xs font-medium text-sky-700 hover:underline dark:text-sky-400"
+                className="text-xs font-medium text-rose-700 hover:underline dark:text-rose-400"
               >
                 {t.desmarcaTots}
               </button>
@@ -139,7 +139,7 @@ export function PlanningGraella({
                 onClick={() => toggleRecurs(r.id)}
                 className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                   seleccionats.has(r.id)
-                    ? "border-sky-600 bg-sky-50 text-sky-700 dark:border-indigo-500 dark:bg-indigo-950/40 dark:text-indigo-300"
+                    ? "border-rose-600 bg-rose-50 text-rose-700 dark:border-rose-500 dark:bg-rose-950/40 dark:text-rose-300"
                     : "border-black/10 text-zinc-500 dark:border-white/10 dark:text-zinc-400"
                 }`}
               >
@@ -153,7 +153,7 @@ export function PlanningGraella({
       {filtrats.length === 0 ? (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.capRecursFiltrat}</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-zinc-950">
+        <div className="overflow-x-auto rounded-2xl border border-black/5 bg-white shadow-sm dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
           <div className="min-w-[960px]">
             <div className="flex border-b border-black/10 dark:border-white/10">
               <div className="w-48 shrink-0 border-r border-black/10 dark:border-white/10" />
@@ -200,7 +200,7 @@ export function PlanningGraella({
                           title={`${b.codi} · ${b.horaInici.slice(0, 5)}–${b.horaFi.slice(0, 5)} · ${b.clientNom ?? ""}`}
                           style={{ left: `${left}%`, width: `${width}%` }}
                           className={`absolute top-0 h-8 overflow-hidden rounded-md px-2 py-1 text-[11px] font-medium leading-tight text-white transition-opacity hover:opacity-80 ${
-                            b.noShow ? "bg-amber-500 dark:bg-amber-600" : "bg-sky-600 dark:bg-indigo-500"
+                            b.noShow ? "bg-amber-500 dark:bg-amber-600" : "bg-rose-600 dark:bg-rose-500"
                           }`}
                         >
                           <span className="truncate">{b.clientNom ?? b.codi}</span>

@@ -51,11 +51,11 @@ export function NotesDelDia({ notes, textos }: { notes: Nota[]; textos: TextosNo
                 type="checkbox"
                 checked={n.fet}
                 onChange={(e) => startTransition(() => marcarNota(n.id, e.target.checked))}
-                className="h-4 w-4 shrink-0 accent-sky-600"
+                className="h-4 w-4 shrink-0 accent-rose-600"
               />
               <span
                 title={n.autorNom ?? undefined}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky-600 text-xs font-semibold text-white dark:bg-indigo-500"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rose-600 text-xs font-semibold text-white dark:bg-rose-500"
               >
                 {inicialAutor(n.autorNom)}
               </span>
@@ -87,12 +87,12 @@ export function NotesDelDia({ notes, textos }: { notes: Nota[]; textos: TextosNo
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={textos.placeholder}
-          className="h-9 min-w-0 flex-1 rounded-lg border border-black/10 bg-white px-3 text-sm leading-9 text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="h-9 min-w-0 flex-1 rounded-lg border border-black/10 bg-white px-3 text-sm leading-9 text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
         <button
           type="submit"
           disabled={pending || !text.trim()}
-          className="h-9 shrink-0 rounded-lg bg-sky-600 px-3 text-sm font-medium leading-9 text-white transition-colors hover:bg-sky-700 disabled:opacity-40"
+          className="h-9 shrink-0 rounded-lg bg-rose-600 px-3 text-sm font-medium leading-9 text-white transition-colors hover:bg-rose-700 disabled:opacity-40"
         >
           {textos.afegeix}
         </button>

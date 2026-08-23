@@ -42,7 +42,7 @@ export function ClientsList({ clients, textos: t }: { clients: Client[]; textos:
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={t.cercaPlaceholder}
-        className="mb-4 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+        className="mb-4 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
       />
 
       {filtrats.length === 0 ? (
@@ -52,7 +52,7 @@ export function ClientsList({ clients, textos: t }: { clients: Client[]; textos:
           {filtrats.map((c) => (
             <li
               key={c.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/5 bg-white shadow-sm p-4 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none"
             >
               <div>
                 <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">{c.nom}</p>

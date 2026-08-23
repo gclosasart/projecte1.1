@@ -110,7 +110,7 @@ export function NovaReservaForm({
         </p>
         <Link
           href="/reserves/gestio"
-          className="mt-4 inline-block rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+          className="mt-4 inline-block rounded-full bg-rose-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rose-700 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
         >
           {t.veuReserves}
         </Link>
@@ -121,7 +121,7 @@ export function NovaReservaForm({
   return (
     <form action={formAction} className="flex flex-col gap-8">
       {/* Recurs */}
-      <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+      <section className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
         <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{t.pas1Recursos}</h2>
         {recursos.length === 0 ? (
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
@@ -136,7 +136,7 @@ export function NovaReservaForm({
             {recursos.map((r) => (
               <label
                 key={r.id}
-                className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm ${recursIds.includes(r.id) ? "border-sky-600 bg-sky-50 dark:border-indigo-500 dark:bg-indigo-950/20" : "border-black/10 dark:border-white/10"}`}
+                className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm ${recursIds.includes(r.id) ? "border-rose-600 bg-rose-50 dark:border-rose-500 dark:bg-rose-950/20" : "border-black/10 dark:border-white/10"}`}
               >
                 <input
                   type="checkbox"
@@ -157,20 +157,20 @@ export function NovaReservaForm({
       </section>
 
       {/* Client */}
-      <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+      <section className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
         <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{t.pas2Client}</h2>
         <div className="mt-3 flex gap-2">
           <button
             type="button"
             onClick={() => setClientMode("existent")}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "existent" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "existent" ? "bg-rose-600 text-white dark:bg-rose-500 dark:text-white" : "bg-rose-100 text-rose-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
             {t.clientExistent}
           </button>
           <button
             type="button"
             onClick={() => setClientMode("nou")}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "nou" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${clientMode === "nou" ? "bg-rose-600 text-white dark:bg-rose-500 dark:text-white" : "bg-rose-100 text-rose-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
             {t.creaClientNou}
           </button>
@@ -185,7 +185,7 @@ export function NovaReservaForm({
               placeholder={t.cercaClient}
               value={clientQuery}
               onChange={(e) => setClientQuery(e.target.value)}
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <div className="max-h-40 overflow-y-auto rounded-lg border border-black/10 dark:border-white/10">
               {clientsFiltrats.length === 0 ? (
@@ -196,7 +196,7 @@ export function NovaReservaForm({
                     key={c.id}
                     type="button"
                     onClick={() => setClientId(c.id)}
-                    className={`block w-full px-3 py-2 text-left text-sm ${clientId === c.id ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "hover:bg-sky-50 dark:hover:bg-zinc-900"}`}
+                    className={`block w-full px-3 py-2 text-left text-sm ${clientId === c.id ? "bg-rose-600 text-white dark:bg-rose-500 dark:text-white" : "hover:bg-rose-50 dark:hover:bg-zinc-900"}`}
                   >
                     {c.nom} {c.nif ? `· ${c.nif}` : ""} {c.email ? `· ${c.email}` : ""}
                   </button>
@@ -212,47 +212,47 @@ export function NovaReservaForm({
               placeholder={t.nomClientPlaceholder}
               required={clientMode === "nou"}
               autoComplete="off"
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_nif"
               placeholder={t.nifPlaceholder}
               autoComplete="off"
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_email"
               type="email"
               placeholder={t.emailPlaceholder}
               autoComplete="off"
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <input
               name="client_adreca"
               placeholder={t.adrecaPlaceholder}
               autoComplete="off"
-              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         )}
       </section>
 
       {/* Puntual / Recurrent */}
-      <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+      <section className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
         <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{t.pas3Quan}</h2>
 
         <div className="mt-3 flex gap-2">
           <button
             type="button"
             onClick={() => setTipus("puntual")}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "puntual" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "puntual" ? "bg-rose-600 text-white dark:bg-rose-500 dark:text-white" : "bg-rose-100 text-rose-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
             {t.puntual}
           </button>
           <button
             type="button"
             onClick={() => setTipus("recurrent")}
-            className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "recurrent" ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${tipus === "recurrent" ? "bg-rose-600 text-white dark:bg-rose-500 dark:text-white" : "bg-rose-100 text-rose-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
           >
             {t.recurrent}
           </button>
@@ -271,7 +271,7 @@ export function NovaReservaForm({
               onChange={(e) => setDataInici(e.target.value)}
               onClick={(e) => e.currentTarget.showPicker?.()}
               required
-              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -283,7 +283,7 @@ export function NovaReservaForm({
               onChange={(e) => setHoraInici(e.target.value)}
               onClick={(e) => e.currentTarget.showPicker?.()}
               required
-              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
           <div className="flex flex-col gap-1.5">
@@ -295,7 +295,7 @@ export function NovaReservaForm({
               onChange={(e) => setHoraFi(e.target.value)}
               onClick={(e) => e.currentTarget.showPicker?.()}
               required
-              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         </div>
@@ -308,7 +308,7 @@ export function NovaReservaForm({
                 {t.diesSetmana.map((d) => (
                   <label
                     key={d.num}
-                    className={`cursor-pointer rounded-full px-3 py-1 text-sm ${diesSetmana.includes(d.num) ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+                    className={`cursor-pointer rounded-full px-3 py-1 text-sm ${diesSetmana.includes(d.num) ? "bg-rose-600 text-white dark:bg-rose-500 dark:text-white" : "bg-rose-100 text-rose-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
                   >
                     <input
                       type="checkbox"
@@ -422,7 +422,7 @@ export function NovaReservaForm({
       </section>
 
       {/* Previsualització */}
-      <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+      <section className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
         <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">{t.pas4Previsualitzacio}</h2>
         {datesPrevistes.length === 0 ? (
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">{t.ompleData}</p>
@@ -453,7 +453,7 @@ export function NovaReservaForm({
         <button
           type="submit"
           disabled={pending || recursos.length === 0}
-          className="mt-4 rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+          className="mt-4 rounded-full bg-rose-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
         >
           {pending ? t.creant : t.confirmaReserva}
         </button>

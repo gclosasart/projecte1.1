@@ -33,7 +33,7 @@ export function ArxivadesSection({ reserves, idioma }: { reserves: Reserva[]; id
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.cercaPlaceholder}
-            className="mb-3 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mb-3 w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
           />
           {filtrades.length === 0 ? (
             <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.capResultatCerca}</p>

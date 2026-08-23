@@ -98,21 +98,21 @@ export default async function DetallReservaPage({
   const esRecurrent = reserva.tipus === "recurrent";
 
   return (
-    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5">
         <Link
           href="/reserves/gestio"
-          className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
         >
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
           {t.reservaGestio.detall.titol}
         </h1>
       </header>
 
-      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
-        <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
+        <section className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
           <p className="font-mono text-xs text-zinc-400 dark:text-zinc-500">{reserva.codi}</p>
           <p className="flex flex-wrap items-center gap-2 text-base font-semibold text-zinc-950 dark:text-zinc-50">
             {nomsRecursos} — {client?.nom ?? t.reservaGestio.clientDesconegut}
@@ -141,7 +141,7 @@ export default async function DetallReservaPage({
         </section>
 
         {reserva.estat === "activa" && (
-          <section className="mt-6 rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+          <section className="mt-6 rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
             <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
               {t.reservaGestio.detall.recursos}
             </h2>
@@ -166,7 +166,7 @@ export default async function DetallReservaPage({
               return (
                 <li
                   key={oc.id}
-                  className="flex flex-col gap-3 rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
+                  className="flex flex-col gap-3 rounded-2xl border border-black/5 bg-white shadow-sm p-4 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
@@ -225,7 +225,7 @@ export default async function DetallReservaPage({
                   {factura && (
                     <Link
                       href={`/factures/${factura.id}`}
-                      className="rounded-full bg-sky-600 px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                      className="rounded-full bg-rose-600 px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-rose-700 dark:bg-rose-500 dark:hover:bg-rose-400"
                     >
                       {t.reservaGestio.detall.veureFactura}
                     </Link>

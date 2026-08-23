@@ -94,16 +94,16 @@ export default async function PlanningPage({
   dSeguent.setDate(dSeguent.getDate() + 1);
 
   return (
-    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
       <header className="flex flex-wrap items-center justify-between gap-3 px-6 py-5">
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
-            className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+            className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
           >
             ←
           </Link>
-          <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+          <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
             {t.planning.titol}
           </h1>
         </div>
@@ -113,7 +113,7 @@ export default async function PlanningPage({
               type="date"
               name="data"
               defaultValue={dataSeleccionada}
-              className="rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+              className="rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <button
               type="submit"
@@ -143,7 +143,7 @@ export default async function PlanningPage({
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
         <PlanningGraella recursos={recursosAmbBlocs} idioma={idioma} />
       </main>
     </div>

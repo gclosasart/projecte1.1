@@ -24,7 +24,7 @@ export function CreaTenantForm({ idioma }: { idioma: Idioma }) {
           name="nom_comercial"
           type="text"
           required
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
@@ -36,7 +36,7 @@ export function CreaTenantForm({ idioma }: { idioma: Idioma }) {
           id="rao_social"
           name="rao_social"
           type="text"
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
@@ -49,7 +49,7 @@ export function CreaTenantForm({ idioma }: { idioma: Idioma }) {
             id="nif"
             name="nif"
             type="text"
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
         <div className="flex flex-1 flex-col gap-1.5">
@@ -60,7 +60,7 @@ export function CreaTenantForm({ idioma }: { idioma: Idioma }) {
             id="adreca_fiscal"
             name="adreca_fiscal"
             type="text"
-            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+            className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
       </div>
@@ -73,7 +73,7 @@ export function CreaTenantForm({ idioma }: { idioma: Idioma }) {
       <button
         type="submit"
         disabled={pending}
-        className="self-start rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50"
+        className="self-start rounded-full bg-rose-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rose-700 disabled:opacity-50"
       >
         {pending ? t.creant : t.creaElTenant}
       </button>

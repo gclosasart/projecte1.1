@@ -38,13 +38,20 @@ aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els
   un `"use client"` — si conté funcions d'interpolació, Next.js peta en
   producció. Sempre passar `idioma: Idioma` (string) i cridar `dictDe(idioma)`
   dins del component client
-- Disseny: un sol color d'accent (`sky-600` / `indigo-400` en fosc); vermell =
-  pendent, verd = pagat, cap altre color decoratiu. Títols `h1` sempre
-  `text-2xl font-semibold text-sky-600 dark:text-indigo-400`. Es va provar un
-  estil "Nike/Puma" (botó negre, títol en majúscules/cursiva/negreta, barra
-  d'accent) a totes les pàgines i es va revertir el 2026-08-21 — no tornar-hi
-  sense que l'usuari ho demani explícitament. La capçalera no té fons blanc
-  ni vora/línia inferior: es fon amb el fons de la pàgina, com el dashboard
+- Disseny: un sol color d'accent (`rose-600` / `rose-400` en fosc — abans
+  `sky-600`/`indigo-400`, canviat el 2026-08-23 a petició explícita de
+  l'usuari per donar-hi un aire més "Airbnb"); vermell = pendent, verd =
+  pagat, blau (`sky-100`/`sky-800`) reservat per l'estat "activa" de
+  reserves/ocurrències (no és l'accent, és un estat), cap altre color
+  decoratiu. Títols `h1` sempre `text-2xl font-semibold text-rose-600
+  dark:text-rose-400`. Targetes: `rounded-2xl border border-black/5
+  bg-white shadow-sm` (`dark:border-white/10 dark:bg-zinc-950
+  dark:shadow-none`) — abans `rounded-xl border border-black/10` sense
+  ombra. Es va provar un estil "Nike/Puma" (botó negre, títol en
+  majúscules/cursiva/negreta, barra d'accent) a totes les pàgines i es va
+  revertir el 2026-08-21 — no tornar-hi sense que l'usuari ho demani
+  explícitament. La capçalera no té fons blanc ni vora/línia inferior: es
+  fon amb el fons de la pàgina, com el dashboard
 - Sempre `npx tsc --noEmit && npm run lint && npm run build` abans de fer commit
 - Commit i push automàtics: a partir del 2026-08-21 l'usuari ha autoritzat fer
   `commit` + `push` (a la branca de treball i fusió a `main`) sense demanar
@@ -84,3 +91,6 @@ factures de `/tecnic/factures` s'han de deixar com a esborrany.
 - Facturació SaaS→Tenant (`plataforma`, `factures_plataforma`, `/plataforma`,
   `/tecnic/factures`, cron mensual d'esborranys) i factures rectificatives
   Tenant→Client (sèrie `R`, botó manual, vista imprimible/PDF a totes dues)
+- Restyling inspirat en Airbnb a tota l'app: accent `sky`→`rose`, targetes
+  més arrodonides (`rounded-2xl`) amb ombra suau, més espai vertical a les
+  pàgines (`py-8`→`py-10`)

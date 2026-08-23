@@ -33,8 +33,8 @@ export default async function TecnicPage() {
 
   if (profile?.rol !== "tecnic") {
     return (
-      <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
-        <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
+      <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
+        <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.tecnic.nomesPerTecnic}</p>
         </main>
       </div>
@@ -73,9 +73,9 @@ export default async function TecnicPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
       <header className="flex flex-wrap items-center justify-between gap-4 px-6 py-5">
-        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
           {t.tecnic.titol}
         </h1>
         <div className="flex flex-wrap items-center gap-3">
@@ -103,8 +103,8 @@ export default async function TecnicPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
-        <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
+        <section className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
           <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
             {t.tecnic.creaTenantNou}
           </h2>
@@ -124,7 +124,7 @@ export default async function TecnicPage() {
               {tenants.map((tn) => (
                 <li
                   key={tn.id}
-                  className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
+                  className="rounded-2xl border border-black/5 bg-white shadow-sm p-4 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <Link href={`/tecnic/${tn.id}`} className="min-w-0 flex-1 hover:underline">

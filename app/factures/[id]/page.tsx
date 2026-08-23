@@ -87,15 +87,15 @@ export default async function FacturaDetallPage({
   const potRectificar = factura.estat === "pendent" || factura.estat === "pagada";
 
   return (
-    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black print:bg-white">
+    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black print:bg-white">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5 print:hidden">
         <Link
           href="/factures"
-          className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
         >
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
           {t.factures.facturaFormatada(formatNumeroFactura(factura.serie, factura.numero))}
         </h1>
         {factura.no_show && (
@@ -113,7 +113,7 @@ export default async function FacturaDetallPage({
         {original && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             {t.factures.detall.rectificaA(formatNumeroFactura(original.serie, original.numero))}{" "}
-            <Link href={`/factures/${original.id}`} className="text-sky-600 hover:underline dark:text-indigo-400">
+            <Link href={`/factures/${original.id}`} className="text-rose-600 hover:underline dark:text-rose-400">
               {t.factures.detall.veureFactura}
             </Link>
           </p>
@@ -125,14 +125,14 @@ export default async function FacturaDetallPage({
             )}{" "}
             <Link
               href={`/factures/${rectificativa.id}`}
-              className="text-sky-600 hover:underline dark:text-indigo-400"
+              className="text-rose-600 hover:underline dark:text-rose-400"
             >
               {t.factures.detall.veureFactura}
             </Link>
           </p>
         )}
 
-        <section className="flex flex-col gap-6 rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950 print:border-0 print:p-0">
+        <section className="flex flex-col gap-6 rounded-2xl border border-black/5 bg-white shadow-sm p-6 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none print:border-0 print:p-0">
           <div>
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">

@@ -41,25 +41,25 @@ export default async function EquipPage() {
     .returns<Membre[]>();
 
   return (
-    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5">
         <Link
           href="/dashboard"
-          className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
         >
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
           {t.equip.titol}
         </h1>
       </header>
 
-      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
         {!potGestionar ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.equip.sensePermisos}</p>
         ) : (
           <>
-            <section className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+            <section className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
               <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
                 {t.equip.convidaAlguNou}
               </h2>
@@ -77,7 +77,7 @@ export default async function EquipPage() {
                 {(membres ?? []).map((m) => (
                   <li
                     key={m.id}
-                    className="rounded-xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-950"
+                    className="rounded-2xl border border-black/5 bg-white shadow-sm p-4 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none"
                   >
                     <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
                       {m.nom ?? m.email ?? t.equip.senseNom}

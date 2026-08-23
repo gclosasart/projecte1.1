@@ -13,7 +13,7 @@ export function NavSecundariaPills({ items }: { items: ItemNav[] }) {
         <Link
           key={it.href}
           href={it.href}
-          className="rounded-full border border-black/10 px-3.5 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-sky-600 hover:text-sky-700 dark:border-white/10 dark:text-zinc-400 dark:hover:border-sky-500 dark:hover:text-sky-400"
+          className="rounded-full border border-black/10 px-3.5 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:border-rose-600 hover:text-rose-700 dark:border-white/10 dark:text-zinc-400 dark:hover:border-rose-500 dark:hover:text-rose-400"
         >
           {it.label}
         </Link>
@@ -48,7 +48,7 @@ export function NavSecundariaMenu({ items, menuLabel }: { items: ItemNav[]; menu
       {obert && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setObert(false)} />
-          <div className="absolute right-0 top-full z-20 mt-2 flex w-56 flex-col gap-1 rounded-xl border border-black/10 bg-white p-2 shadow-lg dark:border-white/10 dark:bg-zinc-950">
+          <div className="absolute right-0 top-full z-20 mt-2 flex w-56 flex-col gap-1 rounded-2xl border border-black/5 bg-white shadow-sm p-2 shadow-lg dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
             {items.map((it) => (
               <Link
                 key={it.href}

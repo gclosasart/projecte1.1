@@ -46,7 +46,7 @@ export function MembreActions({
           value={rolActual}
           disabled={pending}
           onChange={(e) => canviarRol(e.target.value as "tenant_admin" | "user")}
-          className="rounded-lg border border-black/10 bg-white px-2 py-1 text-xs text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-2 py-1 text-xs text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         >
           <option value="tenant_admin">{t.administrador}</option>
           <option value="user">{t.empleat}</option>
@@ -55,7 +55,7 @@ export function MembreActions({
           type="button"
           onClick={resetContrasenya}
           disabled={pending || !email}
-          className="text-xs font-medium text-sky-700 hover:underline disabled:opacity-40 dark:text-sky-400"
+          className="text-xs font-medium text-rose-700 hover:underline disabled:opacity-40 dark:text-rose-400"
         >
           {t.resetContrasenya}
         </button>

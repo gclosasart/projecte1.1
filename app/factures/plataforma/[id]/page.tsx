@@ -70,15 +70,15 @@ export default async function FacturaPlataformaDetallPage({
   const tornaHref = profile?.rol === "tecnic" ? "/tecnic/factures" : "/factures";
 
   return (
-    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black print:bg-white">
+    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black print:bg-white">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5 print:hidden">
         <Link
           href={tornaHref}
-          className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
         >
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
           {t.factures.quotaPlataforma.periode(factura.periode_mes, factura.periode_any)}
         </h1>
       </header>
@@ -89,7 +89,7 @@ export default async function FacturaPlataformaDetallPage({
           {factura.numero != null && ` · ${t.factures.quotaPlataforma.numero(factura.numero)}`}
         </h1>
 
-        <section className="flex flex-col gap-6 rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950 print:border-0 print:p-0">
+        <section className="flex flex-col gap-6 rounded-2xl border border-black/5 bg-white shadow-sm p-6 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none print:border-0 print:p-0">
           <div>
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">

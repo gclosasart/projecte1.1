@@ -81,7 +81,7 @@ export function AccionsCapcaleraMobil({
         {obert && (
           <>
             <div className="fixed inset-0 z-10" onClick={() => setObert(false)} />
-            <div className="absolute right-0 top-full z-20 mt-2 flex w-60 flex-col gap-2 rounded-xl border border-black/10 bg-white p-3 shadow-lg dark:border-white/10 dark:bg-zinc-950">
+            <div className="absolute right-0 top-full z-20 mt-2 flex w-60 flex-col gap-2 rounded-2xl border border-black/5 bg-white shadow-sm p-3 shadow-lg dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
               {items.map((it) => (
                 <Link
                   key={it.href}

@@ -66,7 +66,7 @@ function potAccedir(rol: string, permisos: string[], modul: string) {
 
 function StatTile({ valor, etiqueta }: { valor: number; etiqueta: string }) {
   return (
-    <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+    <div className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
       <p className="text-3xl font-semibold tabular-nums text-zinc-950 dark:text-zinc-50">{valor}</p>
       <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{etiqueta}</p>
     </div>
@@ -77,9 +77,9 @@ function StatLinkTile({ href, etiqueta }: { href: string; etiqueta: string }) {
   return (
     <Link
       href={href}
-      className="group flex flex-col justify-between rounded-xl border border-black/10 bg-white p-5 transition-colors hover:border-sky-600 dark:border-white/10 dark:bg-zinc-950 dark:hover:border-indigo-500"
+      className="group flex flex-col justify-between rounded-2xl border border-black/5 bg-white shadow-sm p-5 transition-colors hover:border-rose-600 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none dark:hover:border-rose-500"
     >
-      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-sky-600 text-white transition-transform group-hover:translate-x-0.5 dark:bg-indigo-500">
+      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-600 text-white transition-transform group-hover:translate-x-0.5 dark:bg-rose-500">
         <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden>
           <path
             d="M4 10h12m0 0-4.5-4.5M16 10l-4.5 4.5"
@@ -248,7 +248,7 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
       <main className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-10 px-6 py-10">
         {/* Salutació + accions de compte */}
         <section className="flex flex-wrap items-center justify-between gap-4">
@@ -282,7 +282,7 @@ export default async function DashboardPage() {
           {potNovaReserva && (
             <Link
               href="/reserves/nova"
-              className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
+              className="rounded-full bg-rose-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-rose-700"
             >
               {t.dashboard.novaReserva}
             </Link>
@@ -301,7 +301,7 @@ export default async function DashboardPage() {
           {potNovaReserva && (
             <Link
               href="/reserves/nova"
-              className="rounded-full bg-sky-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-sky-700"
+              className="rounded-full bg-rose-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-rose-700"
             >
               {t.dashboard.novaReserva}
             </Link>
@@ -337,11 +337,11 @@ export default async function DashboardPage() {
                 {t.dashboard.reservesAvui}
               </h2>
               {!ocurrenciesAvui || ocurrenciesAvui.length === 0 ? (
-                <div className="rounded-xl border border-black/10 bg-white p-8 text-center dark:border-white/10 dark:bg-zinc-950">
+                <div className="rounded-2xl border border-black/5 bg-white shadow-sm p-8 text-center dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.dashboard.capReservaAvui}</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-zinc-950">
+                <div className="overflow-x-auto rounded-2xl border border-black/5 bg-white shadow-sm dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-black/10 text-left text-xs uppercase tracking-wide text-zinc-500 dark:border-white/10 dark:text-zinc-400">
@@ -402,7 +402,7 @@ export default async function DashboardPage() {
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 {t.dashboard.previsio7dies}
               </h2>
-              <div className="rounded-xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-950">
+              <div className="rounded-2xl border border-black/5 bg-white shadow-sm p-6 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
                 <ForecastChart
                   dies={diesForecast}
                   textos={{
@@ -424,7 +424,7 @@ export default async function DashboardPage() {
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 {t.dashboard.notesDelDia}
               </h2>
-              <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+              <div className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
                 <NotesDelDia notes={notes} textos={{ ...t.notesDia, elimina: t.comu.elimina }} />
               </div>
             </section>
@@ -435,7 +435,7 @@ export default async function DashboardPage() {
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                   {t.llistaNegra.titol}
                 </h2>
-                <div className="rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950">
+                <div className="rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
                   {!llistaNegraRaw || llistaNegraRaw.length === 0 ? (
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.llistaNegra.capEntrada}</p>
                   ) : (
@@ -449,7 +449,7 @@ export default async function DashboardPage() {
                   )}
                   <Link
                     href="/clients/llista-negra"
-                    className="mt-3 inline-block text-sm font-medium text-sky-700 hover:underline dark:text-sky-400"
+                    className="mt-3 inline-block text-sm font-medium text-rose-700 hover:underline dark:text-rose-400"
                   >
                     {t.llistaNegra.titol} →
                   </Link>

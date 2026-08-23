@@ -8,7 +8,7 @@ export function ReservaCard({ r, idioma }: { r: Reserva; idioma: Idioma }) {
   const t = dict.reservaGestio;
 
   return (
-    <li className="rounded-xl border border-black/5 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-white/10 dark:bg-zinc-950">
+    <li className="rounded-xl border border-black/5 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-white/10 dark:bg-zinc-950 dark:shadow-none">
       <div className="flex items-start justify-between gap-2">
         <Link href={`/reserves/gestio/${r.id}`} className="min-w-0 flex-1 hover:underline">
           <p className="truncate font-mono text-xs text-zinc-400 dark:text-zinc-500">{r.codi}</p>

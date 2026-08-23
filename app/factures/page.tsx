@@ -67,20 +67,20 @@ export default async function FacturesPage() {
       : { data: null };
 
   return (
-    <div className="flex flex-1 flex-col bg-sky-50 dark:bg-black">
+    <div className="flex flex-1 flex-col bg-rose-50 dark:bg-black">
       <header className="flex flex-wrap items-center gap-4 px-6 py-5">
         <Link
           href="/dashboard"
-          className="text-5xl leading-none font-semibold text-sky-600 hover:text-sky-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+          className="text-5xl leading-none font-semibold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300"
         >
           ←
         </Link>
-        <h1 className="text-2xl font-semibold text-sky-600 dark:text-indigo-400">
+        <h1 className="text-2xl font-semibold text-rose-600 dark:text-rose-400">
           {t.factures.titol}
         </h1>
       </header>
 
-      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
         {!factures || factures.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.factures.capFactura}</p>
         ) : (
@@ -97,7 +97,7 @@ export default async function FacturesPage() {
                 <li key={f.id}>
                   <Link
                     href={`/factures/plataforma/${f.id}`}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-black/10 bg-white p-4 hover:underline dark:border-white/10 dark:bg-zinc-950"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/5 bg-white shadow-sm p-4 hover:underline dark:border-white/10 dark:bg-zinc-950 dark:shadow-none"
                   >
                     <span className="text-sm text-zinc-900 dark:text-zinc-100">
                       {t.factures.quotaPlataforma.periode(f.periode_mes, f.periode_any)}

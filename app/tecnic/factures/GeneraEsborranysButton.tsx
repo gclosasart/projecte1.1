@@ -20,7 +20,7 @@ export function GeneraEsborranysButton({ idioma }: { idioma: Idioma }) {
             setMissatge(res.error ?? t.esborranysGenerats);
           })
         }
-        className="rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+        className="rounded-full bg-rose-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rose-700 disabled:opacity-50 dark:bg-rose-500 dark:hover:bg-rose-400"
       >
         {pending ? t.generant : t.generaEsborranys}
       </button>

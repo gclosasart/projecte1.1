@@ -51,7 +51,7 @@ export function InvitatForm({ textos: t }: { textos: Dict["invitat"] }) {
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="new-password"
           required
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
@@ -66,7 +66,7 @@ export function InvitatForm({ textos: t }: { textos: Dict["invitat"] }) {
           onChange={(e) => setConfirmacio(e.target.value)}
           autoComplete="new-password"
           required
-          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-sky-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-zinc-950 outline-none focus:border-rose-600 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
         />
       </div>
 
@@ -75,7 +75,7 @@ export function InvitatForm({ textos: t }: { textos: Dict["invitat"] }) {
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 rounded-full bg-sky-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+        className="mt-2 rounded-full bg-rose-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-rose-700 disabled:opacity-50 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
       >
         {pending ? t.desant : t.entra}
       </button>

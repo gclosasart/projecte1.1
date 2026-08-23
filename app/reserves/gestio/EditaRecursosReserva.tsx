@@ -39,7 +39,7 @@ export function EditaRecursosReserva({
           {recursosDisponibles.map((r) => (
             <label
               key={r.id}
-              className={`cursor-pointer rounded-full px-3 py-1 text-sm ${recursIds.includes(r.id) ? "bg-sky-600 text-white dark:bg-indigo-500 dark:text-white" : "bg-sky-100 text-sky-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
+              className={`cursor-pointer rounded-full px-3 py-1 text-sm ${recursIds.includes(r.id) ? "bg-rose-600 text-white dark:bg-rose-500 dark:text-white" : "bg-rose-100 text-rose-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
             >
               <input
                 type="checkbox"
@@ -68,7 +68,7 @@ export function EditaRecursosReserva({
       <button
         type="submit"
         disabled={pending || recursosDisponibles.length === 0}
-        className="self-start rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+        className="self-start rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
       >
         {pending ? textos.actualitzant : textos.actualitzaRecursos}
       </button>

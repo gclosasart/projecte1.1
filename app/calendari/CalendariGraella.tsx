@@ -52,7 +52,7 @@ export function CalendariGraella({ dies, idioma }: { dies: DiaGraella[]; idioma:
           {dict.calendari.dies.map((nom) => (
             <div
               key={nom}
-              className="border-b border-black/10 bg-sky-600 px-2 py-2 text-center text-xs font-semibold text-white dark:border-white/10 dark:bg-indigo-500 dark:text-white"
+              className="border-b border-black/10 bg-rose-600 px-2 py-2 text-center text-xs font-semibold text-white dark:border-white/10 dark:bg-rose-500 dark:text-white"
             >
               {nom}
             </div>
@@ -67,14 +67,14 @@ export function CalendariGraella({ dies, idioma }: { dies: DiaGraella[]; idioma:
                 key={d.iso}
                 type="button"
                 onClick={() => setSeleccionat(d)}
-                className={`min-h-28 border-b border-r border-black/10 p-1.5 text-left last:border-r-0 hover:ring-1 hover:ring-inset hover:ring-sky-600 dark:border-white/10 dark:hover:ring-indigo-500 ${
-                  d.dinsDelMes ? "bg-white dark:bg-zinc-950" : "bg-sky-50 dark:bg-zinc-900/40"
+                className={`min-h-28 border-b border-r border-black/10 p-1.5 text-left last:border-r-0 hover:ring-1 hover:ring-inset hover:ring-rose-600 dark:border-white/10 dark:hover:ring-rose-500 ${
+                  d.dinsDelMes ? "bg-white dark:bg-zinc-950" : "bg-rose-50 dark:bg-zinc-900/40"
                 }`}
               >
                 <span
                   className={`inline-flex h-5 w-5 items-center justify-center rounded-full text-xs ${
                     d.esAvui
-                      ? "bg-sky-600 font-semibold text-white dark:bg-indigo-500 dark:text-white"
+                      ? "bg-rose-600 font-semibold text-white dark:bg-rose-500 dark:text-white"
                       : d.dinsDelMes
                         ? "text-zinc-700 dark:text-zinc-300"
                         : "text-zinc-400 dark:text-zinc-600"
@@ -113,7 +113,7 @@ export function CalendariGraella({ dies, idioma }: { dies: DiaGraella[]; idioma:
             role="dialog"
             aria-modal="true"
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[80vh] w-full max-w-md overflow-y-auto rounded-xl border border-black/10 bg-white p-5 dark:border-white/10 dark:bg-zinc-950"
+            className="max-h-[80vh] w-full max-w-md overflow-y-auto rounded-2xl border border-black/5 bg-white shadow-sm p-5 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none"
           >
             <div className="mb-4 flex items-center justify-between gap-3">
               <h2 className="text-base font-semibold text-zinc-950 dark:text-zinc-50">
@@ -138,7 +138,7 @@ export function CalendariGraella({ dies, idioma }: { dies: DiaGraella[]; idioma:
                     <Link
                       href={`/reserves/gestio/${oc.reservaId}`}
                       onClick={() => setSeleccionat(null)}
-                      className="block rounded-lg border border-black/10 p-3 transition-colors hover:border-sky-600 dark:border-white/10 dark:hover:border-indigo-500"
+                      className="block rounded-lg border border-black/10 p-3 transition-colors hover:border-rose-600 dark:border-white/10 dark:hover:border-rose-500"
                     >
                       <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
                         {oc.horaInici.slice(0, 5)}–{oc.horaFi.slice(0, 5)} · {oc.recursos}

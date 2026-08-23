@@ -17,7 +17,7 @@ export function MarcaPagadaForm({ facturaId, idioma }: { facturaId: string; idio
       <button
         type="button"
         onClick={() => setObert(true)}
-        className="rounded-full bg-sky-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+        className="rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-rose-700 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
       >
         {dict.factures.marcaPagada}
       </button>
@@ -30,7 +30,7 @@ export function MarcaPagadaForm({ facturaId, idioma }: { facturaId: string; idio
         value={metode}
         onChange={(e) => setMetode(e.target.value as (typeof METODES)[number])}
         disabled={pending}
-        className="rounded-lg border border-black/10 bg-white px-2 py-1.5 text-sm text-zinc-950 outline-none focus:border-sky-600 disabled:opacity-50 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+        className="rounded-lg border border-black/10 bg-white px-2 py-1.5 text-sm text-zinc-950 outline-none focus:border-rose-600 disabled:opacity-50 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
       >
         {METODES.map((m) => (
           <option key={m} value={m}>
@@ -42,7 +42,7 @@ export function MarcaPagadaForm({ facturaId, idioma }: { facturaId: string; idio
         type="button"
         disabled={pending}
         onClick={() => startTransition(() => marcarPagada(facturaId, dict.factures.metodes[metode]))}
-        className="rounded-full bg-sky-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-700 disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+        className="rounded-full bg-rose-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-rose-700 disabled:opacity-50 dark:bg-rose-500 dark:hover:bg-rose-400"
       >
         {pending ? "..." : dict.comu.confirma}
       </button>
