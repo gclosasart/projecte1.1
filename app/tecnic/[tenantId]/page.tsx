@@ -88,21 +88,23 @@ export default async function DetallTenantPage({
               {membres.map((m) => (
                 <li
                   key={m.id}
-                  className="flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-black/5 bg-white shadow-sm p-3 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none"
+                  className="flex flex-col gap-3 rounded-2xl border border-black/5 bg-white shadow-sm p-3 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none sm:flex-row sm:flex-wrap sm:items-start sm:justify-between"
                 >
-                  <div>
-                    <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
+                  <div className="min-w-0 sm:flex-1">
+                    <p className="truncate text-sm font-medium text-zinc-950 dark:text-zinc-50">
                       {m.nom ?? m.email ?? t.tecnic.detall.senseNom}
                     </p>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">{m.email}</p>
+                    <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">{m.email}</p>
                   </div>
-                  <MembreActions
-                    tenantId={tenantId}
-                    profileId={m.id}
-                    email={m.email}
-                    rolActual={m.rol}
-                    textos={t.tecnic.detall}
-                  />
+                  <div className="sm:shrink-0">
+                    <MembreActions
+                      tenantId={tenantId}
+                      profileId={m.id}
+                      email={m.email}
+                      rolActual={m.rol}
+                      textos={t.tecnic.detall}
+                    />
+                  </div>
                 </li>
               ))}
             </ul>

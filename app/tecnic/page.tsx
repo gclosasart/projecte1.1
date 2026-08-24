@@ -120,15 +120,15 @@ export default async function TecnicPage() {
                   key={tn.id}
                   className="rounded-2xl border border-black/5 bg-white shadow-sm p-4 dark:border-white/10 dark:bg-zinc-950 dark:shadow-none"
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <Link href={`/tecnic/${tn.id}`} className="min-w-0 flex-1 hover:underline">
-                      <p className="text-sm font-medium text-zinc-950 dark:text-zinc-50">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+                    <Link href={`/tecnic/${tn.id}`} className="min-w-0 sm:flex-1 hover:underline">
+                      <p className="truncate text-sm font-medium text-zinc-950 dark:text-zinc-50">
                         {tn.nom_comercial}
                       </p>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                      <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
                         {[tn.rao_social, tn.nif].filter(Boolean).join(" · ") || t.tecnic.senseDadesFiscals}
                       </p>
-                      <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+                      <p className="mt-1 truncate text-xs text-zinc-400 dark:text-zinc-500">
                         {t.tecnic.persones(staff.get(tn.id) ?? 0)}
                         {(admins.get(tn.id) ?? 0) === 0 && t.tecnic.senseAdmin}
                         {" · "}
@@ -136,7 +136,7 @@ export default async function TecnicPage() {
                         {tn.quota_mensual != null && t.tecnic.perMes(tn.quota_mensual)}
                       </p>
                     </Link>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 sm:shrink-0">
                       <ConvidaAdminInline tenantId={tn.id} idioma={idioma} />
                       <DeleteTenantInline tenantId={tn.id} idioma={idioma} />
                     </div>
