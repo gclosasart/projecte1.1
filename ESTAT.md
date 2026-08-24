@@ -150,3 +150,14 @@ factures de `/tecnic/factures` s'han de deixar com a esborrany.
   paral·lelitzades. Si en el futur alguna secció necessita un loading propi
   més específic (esquelet en lloc de spinner genèric), afegir un
   `loading.tsx` dins d'aquella carpeta de ruta
+- L'app segueix sentint-se lenta després de paral·lelitzar consultes i
+  afegir `loading.tsx` → sospita principal: les funcions serverless de
+  Vercel corren per defecte a `iad1` (Washington DC) mentre la base de
+  dades de Supabase és a `eu-west-2` (Londres) — cada `await supabase...`
+  (incloent `auth.getUser()`, que sempre valida contra el servidor) paga
+  una travessia transatlàntica. S'ha afegit `"regions": ["lhr1"]` a
+  `vercel.json` per fer que les funcions corrin a Londres, a prop de la
+  BD. **Important**: la selecció de regió de Vercel només té efecte als
+  plans Pro/Enterprise — al pla Hobby (gratuït) les funcions sempre corren
+  a `iad1` i aquest ajust no farà res. Cal que en Guillem comprovi el seu
+  pla de Vercel (Settings del projecte → Functions → Function Region)
