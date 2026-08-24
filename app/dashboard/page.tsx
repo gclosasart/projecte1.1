@@ -139,22 +139,56 @@ export default async function DashboardPage() {
   finSetmana.setDate(avui.getDate() + 6);
   const finSetmanaISO = toISODate(finSetmana);
 
-  // Bloc 1 i 2: ocurrències d'avui
-  const { data: ocurrenciesAvui } = await supabase
-    .from("ocurrencies")
-    .select("id, hora_inici, hora_fi, estat, reserves(reserva_recursos(recursos(nom)), clients(nom))")
-    .eq("data", avuiISO)
-    .order("hora_inici")
-    .returns<OcurrenciaAvui[]>();
+  // Blocs 1-5: cap d'aquestes consultes depèn del resultat de cap altra, així
+  // que es llancen totes en paral·lel en lloc d'esperar-les una a una (això
+  // reduïa el temps de càrrega del dashboard a la suma de totes elles).
+  const potClients = potAccedir(rol, permisos, "clients");
 
-  const ocIds = (ocurrenciesAvui ?? []).map((o) => o.id);
-  const { data: facturesAvui } =
-    ocIds.length > 0
-      ? await supabase
-          .from("factures")
-          .select("id, ocurrencia_id, numero, estat")
-          .in("ocurrencia_id", ocIds)
-      : { data: [] as { id: string; ocurrencia_id: string; numero: number; estat: string }[] };
+  const [
+    { data: ocurrenciesAvui },
+    { data: facturesAvui },
+    { data: notesRaw },
+    { data: reservesNoves },
+    { data: ocurrenciesSetmana },
+    { count: totalRecursosActius },
+    { data: llistaNegraRaw },
+  ] = await Promise.all([
+    supabase
+      .from("ocurrencies")
+      .select("id, hora_inici, hora_fi, estat, reserves(reserva_recursos(recursos(nom)), clients(nom))")
+      .eq("data", avuiISO)
+      .order("hora_inici")
+      .returns<OcurrenciaAvui[]>(),
+    supabase
+      .from("factures")
+      .select("id, ocurrencia_id, numero, estat, ocurrencies!inner(data)")
+      .eq("ocurrencies.data", avuiISO)
+      .returns<{ id: string; ocurrencia_id: string; numero: number; estat: string }[]>(),
+    supabase
+      .from("notes_dia")
+      .select("id, contingut, fet, created_at, profiles(nom, email)")
+      .eq("data", avuiISO)
+      .order("created_at")
+      .returns<
+        { id: string; contingut: string; fet: boolean; created_at: string; profiles: { nom: string | null; email: string | null } | null }[]
+      >(),
+    supabase
+      .from("reserves")
+      .select("data_inici")
+      .gte("data_inici", avuiISO)
+      .lte("data_inici", finSetmanaISO),
+    supabase
+      .from("ocurrencies")
+      .select("data, reserves(reserva_recursos(recurs_id))")
+      .eq("estat", "activa")
+      .gte("data", avuiISO)
+      .lte("data", finSetmanaISO)
+      .returns<OcurrenciaSetmana[]>(),
+    supabase.from("recursos").select("id", { count: "exact", head: true }).eq("actiu", true),
+    potClients
+      ? supabase.from("llista_negra").select("id, nif, nom").order("nif")
+      : Promise.resolve({ data: [] as { id: string; nif: string; nom: string | null }[] }),
+  ]);
 
   const facturaPerOc = new Map((facturesAvui ?? []).map((f) => [f.ocurrencia_id, f]));
 
@@ -164,16 +198,6 @@ export default async function DashboardPage() {
   const ocupatsAraMateix = activesAvui.filter(
     (o) => o.hora_inici <= araStr && o.hora_fi > araStr,
   ).length;
-
-  // Bloc 3: notes del dia
-  const { data: notesRaw } = await supabase
-    .from("notes_dia")
-    .select("id, contingut, fet, created_at, profiles(nom, email)")
-    .eq("data", avuiISO)
-    .order("created_at")
-    .returns<
-      { id: string; contingut: string; fet: boolean; created_at: string; profiles: { nom: string | null; email: string | null } | null }[]
-    >();
 
   const notes = (notesRaw ?? []).map((n) => {
     const d = new Date(n.created_at);
@@ -185,32 +209,6 @@ export default async function DashboardPage() {
       autorNom: n.profiles?.nom ?? n.profiles?.email ?? null,
     };
   });
-
-  // Bloc 4: previsió 7 dies
-  const { data: reservesNoves } = await supabase
-    .from("reserves")
-    .select("data_inici")
-    .gte("data_inici", avuiISO)
-    .lte("data_inici", finSetmanaISO);
-
-  const { data: ocurrenciesSetmana } = await supabase
-    .from("ocurrencies")
-    .select("data, reserves(reserva_recursos(recurs_id))")
-    .eq("estat", "activa")
-    .gte("data", avuiISO)
-    .lte("data", finSetmanaISO)
-    .returns<OcurrenciaSetmana[]>();
-
-  const { count: totalRecursosActius } = await supabase
-    .from("recursos")
-    .select("id", { count: "exact", head: true })
-    .eq("actiu", true);
-
-  // Bloc 5: llista negra (només lectura, per als qui tenen accés a Clients)
-  const potClients = potAccedir(rol, permisos, "clients");
-  const { data: llistaNegraRaw } = potClients
-    ? await supabase.from("llista_negra").select("id, nif, nom").order("nif")
-    : { data: [] as { id: string; nif: string; nom: string | null }[] };
 
   const novesPerDia = new Map<string, number>();
   for (const r of reservesNoves ?? []) {

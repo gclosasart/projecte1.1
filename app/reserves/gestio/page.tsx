@@ -6,6 +6,10 @@ import { ArxivadesSection } from "./ArxivadesSection";
 import type { Reserva } from "./tipus";
 import { BackButton } from "@/app/BackButton";
 
+type ReservaAmbOcurrencies = Reserva & {
+  ocurrencies: { id: string; factures: { estat: string }[] }[];
+};
+
 export default async function GestioReservesPage() {
   const supabase = await createClient();
   const t = await getDict();
@@ -14,30 +18,23 @@ export default async function GestioReservesPage() {
   const { data: reserves } = await supabase
     .from("reserves")
     .select(
-      "id, codi, tipus, frequencia, data_inici, condicio_final, model_preu, estat, arxivada, reserva_recursos(recursos(nom)), clients(nom)",
+      "id, codi, tipus, frequencia, data_inici, condicio_final, model_preu, estat, arxivada, reserva_recursos(recursos(nom)), clients(nom), ocurrencies(id, factures(estat))",
     )
     .order("data_inici", { ascending: false })
-    .returns<Reserva[]>();
+    .returns<ReservaAmbOcurrencies[]>();
 
-  const reservaIds = (reserves ?? []).map((r) => r.id);
-
-  const { data: ocurrencies } =
-    reservaIds.length > 0
-      ? await supabase.from("ocurrencies").select("id, reserva_id").in("reserva_id", reservaIds)
-      : { data: [] as { id: string; reserva_id: string }[] };
-
-  const ocIds = (ocurrencies ?? []).map((o) => o.id);
-  const { data: factures } =
-    ocIds.length > 0
-      ? await supabase.from("factures").select("ocurrencia_id, estat").in("ocurrencia_id", ocIds)
-      : { data: [] as { ocurrencia_id: string; estat: string }[] };
-
-  const facturaEstatPerOc = new Map((factures ?? []).map((f) => [f.ocurrencia_id, f.estat]));
+  const facturaEstatPerOc = new Map<string, string>();
   const ocsPerReserva = new Map<string, string[]>();
-  for (const oc of ocurrencies ?? []) {
-    const llista = ocsPerReserva.get(oc.reserva_id) ?? [];
-    llista.push(oc.id);
-    ocsPerReserva.set(oc.reserva_id, llista);
+  for (const r of reserves ?? []) {
+    const ocIds: string[] = [];
+    for (const oc of r.ocurrencies ?? []) {
+      ocIds.push(oc.id);
+      const factura = oc.factures?.[0];
+      if (factura) {
+        facturaEstatPerOc.set(oc.id, factura.estat);
+      }
+    }
+    ocsPerReserva.set(r.id, ocIds);
   }
 
   const visibles = (reserves ?? []).filter((r) => !r.arxivada);

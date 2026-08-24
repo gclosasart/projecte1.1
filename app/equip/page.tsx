@@ -26,19 +26,12 @@ export default async function EquipPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: perfilActual } = await supabase
-    .from("profiles")
-    .select("tenant_id, rol")
-    .eq("id", user!.id)
-    .single();
+  const [{ data: perfilActual }, { data: membres }] = await Promise.all([
+    supabase.from("profiles").select("tenant_id, rol").eq("id", user!.id).single(),
+    supabase.from("profiles").select("id, nom, email, rol, permisos").order("rol").returns<Membre[]>(),
+  ]);
 
   const potGestionar = perfilActual?.rol === "tenant_admin" || perfilActual?.rol === "tecnic";
-
-  const { data: membres } = await supabase
-    .from("profiles")
-    .select("id, nom, email, rol, permisos")
-    .order("rol")
-    .returns<Membre[]>();
 
   return (
     <div className="flex flex-1 flex-col bg-office-blur dark:bg-black">

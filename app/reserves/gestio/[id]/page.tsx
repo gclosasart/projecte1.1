@@ -50,13 +50,22 @@ export default async function DetallReservaPage({
   const t = await getDict();
   const idioma = await getIdioma();
 
-  const { data: reserva } = await supabase
-    .from("reserves")
-    .select(
-      "id, codi, tipus, frequencia, data_inici, condicio_final, model_preu, preu_base_snapshot, estat, notes, reserva_recursos(recursos(id, nom)), clients(nom)",
-    )
-    .eq("id", id)
-    .single();
+  const [{ data: reserva }, { data: totsRecursos }, { data: ocurrencies }] = await Promise.all([
+    supabase
+      .from("reserves")
+      .select(
+        "id, codi, tipus, frequencia, data_inici, condicio_final, model_preu, preu_base_snapshot, estat, notes, reserva_recursos(recursos(id, nom)), clients(nom)",
+      )
+      .eq("id", id)
+      .single(),
+    supabase.from("recursos").select("id, nom").order("nom"),
+    supabase
+      .from("ocurrencies")
+      .select("id, data, hora_inici, hora_fi, estat, preu, no_show")
+      .eq("reserva_id", id)
+      .order("data")
+      .returns<Ocurrencia[]>(),
+  ]);
 
   if (!reserva) {
     notFound();
@@ -72,18 +81,6 @@ export default async function DetallReservaPage({
     ? recursosSeleccionats.map((r) => r.nom).join(" + ")
     : t.reservaGestio.recursDesconegut;
   const client = reserva.clients as unknown as { nom: string } | null;
-
-  const { data: totsRecursos } = await supabase
-    .from("recursos")
-    .select("id, nom")
-    .order("nom");
-
-  const { data: ocurrencies } = await supabase
-    .from("ocurrencies")
-    .select("id, data, hora_inici, hora_fi, estat, preu, no_show")
-    .eq("reserva_id", id)
-    .order("data")
-    .returns<Ocurrencia[]>();
 
   const ocIds = (ocurrencies ?? []).map((o) => o.id);
   const { data: factures } =

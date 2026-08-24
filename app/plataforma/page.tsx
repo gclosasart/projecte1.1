@@ -12,21 +12,16 @@ export default async function PlataformaPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("rol")
-    .eq("id", user!.id)
-    .single();
+  const [{ data: profile }, { data: plataforma }] = await Promise.all([
+    supabase.from("profiles").select("rol").eq("id", user!.id).single(),
+    supabase
+      .from("plataforma")
+      .select("nom_comercial, rao_social, nif, adreca_fiscal, iva_percent")
+      .limit(1)
+      .single(),
+  ]);
 
   const esTecnic = profile?.rol === "tecnic";
-
-  const { data: plataforma } = esTecnic
-    ? await supabase
-        .from("plataforma")
-        .select("nom_comercial, rao_social, nif, adreca_fiscal, iva_percent")
-        .limit(1)
-        .single()
-    : { data: null };
 
   return (
     <div className="flex flex-1 flex-col bg-office-blur dark:bg-black">

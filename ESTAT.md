@@ -84,6 +84,17 @@ aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els
 - L'usuari (Guillem) sap de producte i dades però no és tècnic en eines de dev
   — donar-li passos clars; mai demanar-li ni escriure les seves contrasenyes
   reals
+- Rendiment: als Server Components, mai encadenar `await supabase...` un
+  darrere l'altre si les consultes no depenen realment l'una de l'altra
+  (evitar el "waterfall"). Agrupar-les amb `Promise.all([...])`. Quan una
+  consulta necessita l'`id` d'un resultat anterior per filtrar (p. ex.
+  `ocurrencia_id` que ve de `factures`), sovint es pot evitar aquesta
+  dependència fent servir un embed de PostgREST amb `!inner` (filtrar per
+  una columna d'una taula relacionada dins del mateix `.select()`) o
+  imbricant l'embed (p. ex. `reserves(...).ocurrencies(id, factures(estat))`)
+  en lloc de fer una consulta separada amb `.in(...)`. Un `notFound()` ha
+  d'anar sempre després del `Promise.all`, no abans (perquè no bloquegi la
+  resta de consultes independents)
 
 ## Estat actual
 
@@ -124,3 +135,10 @@ factures de `/tecnic/factures` s'han de deixar com a esborrany.
   d'oficina super difuminada (`bg-office-blur`, gradients CSS)
 - Afegits el francès (`fr`) i l'italià (`it`) com a idiomes, amb
   traducció completa dels 5 idiomes (`lib/i18n/*.ts`)
+- Optimització de rendiment: eliminats els "waterfalls" de consultes
+  seqüencials a Supabase a totes les pàgines de Server Component que en
+  tenien (dashboard, tecnic, tecnic/[tenantId], tecnic/factures, factures,
+  factures/[id], factures/plataforma/[id], plataforma, equip,
+  reserves/gestio, reserves/gestio/[id]), agrupant-les amb `Promise.all` o
+  restructurant-les amb embeds de PostgREST per evitar dependències
+  artificials entre consultes

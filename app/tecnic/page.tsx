@@ -41,16 +41,15 @@ export default async function TecnicPage() {
     );
   }
 
-  const { data: tenants } = await supabase
-    .from("tenants")
-    .select("id, nom_comercial, rao_social, nif, quota_mensual, created_at")
-    .order("created_at", { ascending: false })
-    .returns<Tenant[]>();
-
-  const { data: totsElsPerfils } = await supabase
-    .from("profiles")
-    .select("tenant_id, rol")
-    .not("tenant_id", "is", null);
+  const [{ data: tenants }, { data: totsElsPerfils }, { data: totsElsRecursos }] = await Promise.all([
+    supabase
+      .from("tenants")
+      .select("id, nom_comercial, rao_social, nif, quota_mensual, created_at")
+      .order("created_at", { ascending: false })
+      .returns<Tenant[]>(),
+    supabase.from("profiles").select("tenant_id, rol").not("tenant_id", "is", null),
+    supabase.from("recursos").select("tenant_id").eq("actiu", true),
+  ]);
 
   const admins = new Map<string, number>();
   const staff = new Map<string, number>();
@@ -61,11 +60,6 @@ export default async function TecnicPage() {
       admins.set(p.tenant_id, (admins.get(p.tenant_id) ?? 0) + 1);
     }
   }
-
-  const { data: totsElsRecursos } = await supabase
-    .from("recursos")
-    .select("tenant_id")
-    .eq("actiu", true);
 
   const recursosPerTenant = new Map<string, number>();
   for (const r of totsElsRecursos ?? []) {

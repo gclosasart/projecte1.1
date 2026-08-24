@@ -42,28 +42,28 @@ export default async function DetallTenantPage({
     );
   }
 
-  const { data: tenant } = await supabase
-    .from("tenants")
-    .select("id, nom_comercial, rao_social, nif, especificacions, quota_mensual")
-    .eq("id", tenantId)
-    .single();
+  const [{ data: tenant }, { data: membres }, { data: notes }] = await Promise.all([
+    supabase
+      .from("tenants")
+      .select("id, nom_comercial, rao_social, nif, especificacions, quota_mensual")
+      .eq("id", tenantId)
+      .single(),
+    supabase
+      .from("profiles")
+      .select("id, nom, email, rol")
+      .eq("tenant_id", tenantId)
+      .order("rol")
+      .returns<Membre[]>(),
+    supabase
+      .from("notes_tenant")
+      .select("id, contingut, created_at")
+      .eq("tenant_id", tenantId)
+      .order("created_at", { ascending: false }),
+  ]);
 
   if (!tenant) {
     notFound();
   }
-
-  const { data: membres } = await supabase
-    .from("profiles")
-    .select("id, nom, email, rol")
-    .eq("tenant_id", tenantId)
-    .order("rol")
-    .returns<Membre[]>();
-
-  const { data: notes } = await supabase
-    .from("notes_tenant")
-    .select("id, contingut, created_at")
-    .eq("tenant_id", tenantId)
-    .order("created_at", { ascending: false });
 
   return (
     <div className="flex flex-1 flex-col bg-office-blur dark:bg-black">

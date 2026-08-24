@@ -43,29 +43,21 @@ export default async function FacturaPlataformaDetallPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("rol")
-    .eq("id", user!.id)
-    .single();
-
-  const { data: factura } = await supabase
-    .from("factures_plataforma")
-    .select(
-      "id, numero, periode_any, periode_mes, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, tenants(nom_comercial, rao_social, nif, adreca_fiscal)",
-    )
-    .eq("id", id)
-    .single<FacturaPlataforma>();
+  const [{ data: profile }, { data: factura }, { data: plataforma }] = await Promise.all([
+    supabase.from("profiles").select("rol").eq("id", user!.id).single(),
+    supabase
+      .from("factures_plataforma")
+      .select(
+        "id, numero, periode_any, periode_mes, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, tenants(nom_comercial, rao_social, nif, adreca_fiscal)",
+      )
+      .eq("id", id)
+      .single<FacturaPlataforma>(),
+    supabase.from("plataforma").select("nom_comercial, rao_social, nif, adreca_fiscal").limit(1).single(),
+  ]);
 
   if (!factura) {
     notFound();
   }
-
-  const { data: plataforma } = await supabase
-    .from("plataforma")
-    .select("nom_comercial, rao_social, nif, adreca_fiscal")
-    .limit(1)
-    .single();
 
   const tornaHref = profile?.rol === "tecnic" ? "/tecnic/factures" : "/factures";
 

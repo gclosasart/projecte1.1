@@ -42,19 +42,16 @@ export default async function FacturesPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("rol")
-    .eq("id", user!.id)
-    .single();
-
-  const { data: factures } = await supabase
-    .from("factures")
-    .select(
-      "id, numero, serie, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, no_show, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
-    )
-    .order("numero", { ascending: false })
-    .returns<Factura[]>();
+  const [{ data: profile }, { data: factures }] = await Promise.all([
+    supabase.from("profiles").select("rol").eq("id", user!.id).single(),
+    supabase
+      .from("factures")
+      .select(
+        "id, numero, serie, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, no_show, ocurrencies(data, reserves(reserva_recursos(recursos(nom)), clients(nom)))",
+      )
+      .order("numero", { ascending: false })
+      .returns<Factura[]>(),
+  ]);
 
   const { data: facturesPlataforma } =
     profile?.rol === "tenant_admin"

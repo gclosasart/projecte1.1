@@ -33,11 +33,16 @@ export default async function TecnicFacturesPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("rol")
-    .eq("id", user!.id)
-    .single();
+  const [{ data: profile }, { data: factures }] = await Promise.all([
+    supabase.from("profiles").select("rol").eq("id", user!.id).single(),
+    supabase
+      .from("factures_plataforma")
+      .select(
+        "id, numero, periode_any, periode_mes, base_imposable, iva_percent, total, estat, tenants(nom_comercial)",
+      )
+      .order("created_at", { ascending: false })
+      .returns<FacturaPlataforma[]>(),
+  ]);
 
   if (profile?.rol !== "tecnic") {
     return (
@@ -48,14 +53,6 @@ export default async function TecnicFacturesPage() {
       </div>
     );
   }
-
-  const { data: factures } = await supabase
-    .from("factures_plataforma")
-    .select(
-      "id, numero, periode_any, periode_mes, base_imposable, iva_percent, total, estat, tenants(nom_comercial)",
-    )
-    .order("created_at", { ascending: false })
-    .returns<FacturaPlataforma[]>();
 
   return (
     <div className="flex flex-1 flex-col bg-office-blur dark:bg-black">

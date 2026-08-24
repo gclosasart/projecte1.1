@@ -54,13 +54,16 @@ export default async function FacturaDetallPage({
   const t = await getDict();
   const idioma = await getIdioma();
 
-  const { data: factura } = await supabase
-    .from("factures")
-    .select(
-      "id, numero, serie, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, no_show, factura_rectificada_id, tenants(nom_comercial, rao_social, nif, adreca_fiscal), ocurrencies(data, hora_inici, hora_fi, reserves(reserva_recursos(recursos(nom)), clients(nom, nif, email, adreca)))",
-    )
-    .eq("id", id)
-    .single<Factura>();
+  const [{ data: factura }, { data: rectificativa }] = await Promise.all([
+    supabase
+      .from("factures")
+      .select(
+        "id, numero, serie, data_emissio, base_imposable, iva_percent, total, estat, metode_pagament, no_show, factura_rectificada_id, tenants(nom_comercial, rao_social, nif, adreca_fiscal), ocurrencies(data, hora_inici, hora_fi, reserves(reserva_recursos(recursos(nom)), clients(nom, nif, email, adreca)))",
+      )
+      .eq("id", id)
+      .single<Factura>(),
+    supabase.from("factures").select("id, numero, serie").eq("factura_rectificada_id", id).maybeSingle(),
+  ]);
 
   if (!factura) {
     notFound();
@@ -73,12 +76,6 @@ export default async function FacturaDetallPage({
         .eq("id", factura.factura_rectificada_id)
         .single()
     : { data: null };
-
-  const { data: rectificativa } = await supabase
-    .from("factures")
-    .select("id, numero, serie")
-    .eq("factura_rectificada_id", factura.id)
-    .maybeSingle();
 
   const client = factura.ocurrencies?.reserves?.clients ?? null;
   const noms = (factura.ocurrencies?.reserves?.reserva_recursos ?? [])
