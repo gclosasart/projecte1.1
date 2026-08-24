@@ -53,25 +53,26 @@ input[type="number"]::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Escala totes les mides de text (text-xs...text-9xl) x1.5 respecte
+/* Escala totes les mides de text (text-xs...text-9xl) x1.25 respecte
    l'original de Tailwind, sobreescrivint els tokens — així no cal tocar cap
    className individual i afecta tota l'app per igual. Els line-height es
    mantenen proporcionals perquè Tailwind els defineix com a ràtio (no en
-   rem). */
+   rem). Abans era x1.5: era massa gran i feia que botons/text no cabessin
+   en una línia en targetes estretes (p.ex. Panell de tècnic al mòbil). */
 :root {
-  --text-xs: 1.125rem;
-  --text-sm: 1.3125rem;
-  --text-base: 1.5rem;
-  --text-lg: 1.6875rem;
-  --text-xl: 1.875rem;
-  --text-2xl: 2.25rem;
-  --text-3xl: 2.8125rem;
-  --text-4xl: 3.375rem;
-  --text-5xl: 4.5rem;
-  --text-6xl: 5.625rem;
-  --text-7xl: 6.75rem;
-  --text-8xl: 9rem;
-  --text-9xl: 12rem;
+  --text-xs: 0.9375rem;
+  --text-sm: 1.09375rem;
+  --text-base: 1.25rem;
+  --text-lg: 1.40625rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.34375rem;
+  --text-4xl: 2.8125rem;
+  --text-5xl: 3.75rem;
+  --text-6xl: 4.6875rem;
+  --text-7xl: 5.625rem;
+  --text-8xl: 7.5rem;
+  --text-9xl: 10rem;
 }
 
 /* Fons de pàgina amb ambient d'oficina super difuminada: taques de color
