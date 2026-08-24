@@ -142,3 +142,11 @@ factures de `/tecnic/factures` s'han de deixar com a esborrany.
   reserves/gestio, reserves/gestio/[id]), agrupant-les amb `Promise.all` o
   restructurant-les amb embeds de PostgREST per evitar dependències
   artificials entre consultes
+- Afegit `app/loading.tsx` (un sol spinner arrel, ja que no hi ha cap altre
+  `layout.tsx` a sota del principal): sense això, Next.js no mostrava cap
+  feedback durant la navegació entre pàgines fins que el Server Component de
+  destí acabava totes les seves consultes — es notava com a canvis de
+  pàgina "molt lents" encara que les consultes ja estiguessin
+  paral·lelitzades. Si en el futur alguna secció necessita un loading propi
+  més específic (esquelet en lloc de spinner genèric), afegir un
+  `loading.tsx` dins d'aquella carpeta de ruta
