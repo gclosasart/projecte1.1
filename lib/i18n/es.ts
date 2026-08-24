@@ -59,7 +59,7 @@ const es: Dict = {
     situacioDelDia: "Situación de hoy",
     comencenReserves: "Reservas que empiezan",
     recursosReservats: "Recursos reservados hoy",
-    ocupatsAraMateix: "Ocupados ahora mismo",
+    ocupatsAraMateix: "Recursos ocupados ahora mismo",
     disponibilitat: "Disponibilidad",
     reservesAvui: "Reservas de hoy",
     capReservaAvui: "No hay ninguna reserva para hoy.",

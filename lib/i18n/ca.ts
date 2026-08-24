@@ -57,7 +57,7 @@ const ca = {
     situacioDelDia: "Situació d'avui",
     comencenReserves: "Reserves que comencen",
     recursosReservats: "Recursos reservats avui",
-    ocupatsAraMateix: "Ocupats ara mateix",
+    ocupatsAraMateix: "Recursos ocupats ara mateix",
     disponibilitat: "Disponibilitat",
     reservesAvui: "Reserves d'avui",
     capReservaAvui: "Cap reserva per avui.",

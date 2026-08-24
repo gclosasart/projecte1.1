@@ -59,7 +59,7 @@ const en: Dict = {
     situacioDelDia: "Today's situation",
     comencenReserves: "Bookings starting",
     recursosReservats: "Resources booked today",
-    ocupatsAraMateix: "Occupied right now",
+    ocupatsAraMateix: "Resources occupied right now",
     disponibilitat: "Availability",
     reservesAvui: "Today's bookings",
     capReservaAvui: "No bookings for today.",
