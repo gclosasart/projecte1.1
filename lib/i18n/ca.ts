@@ -55,7 +55,7 @@ const ca = {
     situacioAvui: "Aquesta és la situació d'avui al teu coworking.",
     novaReserva: "+ Nova reserva",
     situacioDelDia: "Situació d'avui",
-    comencenReserves: "Reserves que comencen",
+    comencenReserves: "Reserves d'avui",
     recursosReservats: "Recursos reservats avui",
     ocupatsAraMateix: "Recursos ocupats ara mateix",
     disponibilitat: "Disponibilitat",

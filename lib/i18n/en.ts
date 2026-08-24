@@ -57,7 +57,7 @@ const en: Dict = {
     situacioAvui: "Here's today's situation at your coworking.",
     novaReserva: "+ New booking",
     situacioDelDia: "Today's situation",
-    comencenReserves: "Bookings starting",
+    comencenReserves: "Today's bookings",
     recursosReservats: "Resources booked today",
     ocupatsAraMateix: "Resources occupied right now",
     disponibilitat: "Availability",

@@ -57,7 +57,7 @@ const it: Dict = {
     situacioAvui: "Ecco la situazione di oggi nel tuo coworking.",
     novaReserva: "+ Nuova prenotazione",
     situacioDelDia: "Situazione di oggi",
-    comencenReserves: "Prenotazioni che iniziano",
+    comencenReserves: "Prenotazioni di oggi",
     recursosReservats: "Risorse prenotate oggi",
     ocupatsAraMateix: "Occupati in questo momento",
     disponibilitat: "Disponibilità",
