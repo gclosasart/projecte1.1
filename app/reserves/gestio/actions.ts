@@ -56,6 +56,12 @@ export async function canviarEstatReserva(id: string, nouEstat: "activa" | "canc
   revalidatePath("/dashboard");
 }
 
+export async function processarSollicitud(id: string, estat: "acceptada" | "rebutjada") {
+  const supabase = await createClient();
+  await supabase.from("sol_licituds_reserva").update({ estat }).eq("id", id);
+  revalidatePath("/reserves/gestio");
+}
+
 export async function canviarNoShow(ocurrenciaId: string, reservaId: string, marcar: boolean) {
   const supabase = await createClient();
   await supabase.from("ocurrencies").update({ no_show: marcar }).eq("id", ocurrenciaId);

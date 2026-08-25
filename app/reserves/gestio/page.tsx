@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getDict, getIdioma } from "@/lib/i18n";
 import { ReservesCercador } from "./ReservesCercador";
 import { ArxivadesSection } from "./ArxivadesSection";
+import { SollicitudsPendents } from "./SollicitudsPendents";
 import type { Reserva } from "./tipus";
 import { BackButton } from "@/app/BackButton";
 
@@ -10,10 +11,29 @@ type ReservaAmbOcurrencies = Reserva & {
   ocurrencies: { id: string; factures: { estat: string }[] }[];
 };
 
+type SollicitudAmbRecurs = {
+  id: string;
+  data: string;
+  hora_inici: string;
+  hora_fi: string;
+  nom: string;
+  email: string | null;
+  telefon: string | null;
+  missatge: string | null;
+  recursos: { nom: string } | null;
+};
+
 export default async function GestioReservesPage() {
   const supabase = await createClient();
   const t = await getDict();
   const idioma = await getIdioma();
+
+  const { data: sollicituds } = await supabase
+    .from("sol_licituds_reserva")
+    .select("id, data, hora_inici, hora_fi, nom, email, telefon, missatge, recursos(nom)")
+    .eq("estat", "pendent")
+    .order("created_at", { ascending: false })
+    .returns<SollicitudAmbRecurs[]>();
 
   const { data: reserves } = await supabase
     .from("reserves")
@@ -68,6 +88,21 @@ export default async function GestioReservesPage() {
       </header>
 
       <main className="mx-auto w-full max-w-screen-2xl flex-1 px-6 py-10">
+        <SollicitudsPendents
+          sollicituds={(sollicituds ?? []).map((s) => ({
+            id: s.id,
+            data: s.data,
+            hora_inici: s.hora_inici,
+            hora_fi: s.hora_fi,
+            nom: s.nom,
+            email: s.email,
+            telefon: s.telefon,
+            missatge: s.missatge,
+            recurs_nom: s.recursos?.nom ?? t.reservaGestio.recursDesconegut,
+          }))}
+          textos={t.reservaGestio}
+        />
+
         <Link
           href="/reserves/nova"
           className="mb-6 inline-block rounded-full bg-teal-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-teal-700 hover:shadow-md dark:bg-teal-500 dark:text-white dark:hover:bg-teal-400"

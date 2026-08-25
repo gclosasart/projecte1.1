@@ -1,11 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/invitat"];
+const PUBLIC_PATHS = ["/login", "/invitat", "/reserva"];
 // Un usuari autenticat NO s'ha de fer fora d'aquests camins públics: "/invitat" el
 // visita algú que acaba d'acceptar una invitació i ja té sessió, però encara no ha
-// establert la contrasenya.
-const NO_REDIRECT_IF_AUTHED = ["/invitat"];
+// establert la contrasenya. "/reserva" és la pàgina pública de reserva d'un tenant,
+// que el mateix personal del coworking també ha de poder veure estant connectat.
+const NO_REDIRECT_IF_AUTHED = ["/invitat", "/reserva"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
