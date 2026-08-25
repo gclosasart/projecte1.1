@@ -104,6 +104,16 @@ funcioni en producció, i que en Guillem es doni d'alta com a autònom (o societ
 abans de confirmar cap factura de plataforma de debò — mentre no ho estigui, les
 factures de `/tecnic/factures` s'han de deixar com a esborrany.
 
+S'ha afegit la pàgina pública de reserva (`/reserva/[tenantId]`), pensada perquè
+cada coworking la publiqui/incrusti a la seva pròpia web. **Important**: encara
+NO crea reserves reals — les sol·licituds es desen com a pendents
+(`sol_licituds_reserva`) i el personal les ha d'acceptar o rebutjar manualment
+des de "Gestiona reserves". Si en el futur es vol que accepti-les creï la
+reserva real automàticament (en lloc de només canviar l'`estat` a
+`acceptada`), caldrà reutilitzar la lògica de `app/reserves/nova/actions.ts`
+(`crearReserva`/`crear_reserva` RPC), que actualment només s'invoca des de
+l'àrea autenticada.
+
 ## Fet fins ara (de més antic a més recent)
 
 - No-show a reserves/factures
@@ -161,3 +171,10 @@ factures de `/tecnic/factures` s'han de deixar com a esborrany.
   plans Pro/Enterprise — al pla Hobby (gratuït) les funcions sempre corren
   a `iad1` i aquest ajust no farà res. Cal que en Guillem comprovi el seu
   pla de Vercel (Settings del projecte → Functions → Function Region)
+- Pàgina pública de reserva `/reserva/[tenantId]` (sense necessitat de
+  compte), amb enllaç i botó "Copia l'enllaç" a Configuració. Nova taula
+  `sol_licituds_reserva` (amb RLS) per a les sol·licituds pendents, i una
+  secció "Sol·licituds pendents des de la web" a Gestiona reserves amb
+  botons Accepta/Rebutja. No crea reserves automàticament (decisió
+  explícita de l'usuari, per evitar abús sense protecció anti-bots): el
+  personal ha de revisar-les i crear la reserva real a mà si l'accepta
