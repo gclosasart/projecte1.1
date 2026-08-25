@@ -98,11 +98,11 @@ export function SolicitudForm({
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.horaInici}</label>
-            <input type="time" name="hora_inici" defaultValue="09:00" required className={inputClass} />
+            <input type="time" name="hora_inici" required className={inputClass} />
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{t.horaFi}</label>
-            <input type="time" name="hora_fi" defaultValue="10:00" required className={inputClass} />
+            <input type="time" name="hora_fi" required className={inputClass} />
           </div>
         </div>
       </section>
