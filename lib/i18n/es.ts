@@ -69,8 +69,6 @@ const es: Dict = {
     estat: "Estado",
     factura: "Factura",
     previsio7dies: "Previsión de los próximos 7 días",
-    reservesNoves: "Reservas nuevas",
-    novesCurt: "nuevas",
     sessionsCurt: "sesiones",
     sessionsDelDia: "Sesiones del día",
     ocupacioEstimada: "% ocupación estimada",

@@ -67,8 +67,6 @@ const ca = {
     estat: "Estat",
     factura: "Factura",
     previsio7dies: "Previsió dels propers 7 dies",
-    reservesNoves: "Reserves noves",
-    novesCurt: "noves",
     sessionsCurt: "sessions",
     sessionsDelDia: "Sessions del dia",
     ocupacioEstimada: "% ocupació estimada",

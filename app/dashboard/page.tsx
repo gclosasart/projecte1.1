@@ -148,7 +148,6 @@ export default async function DashboardPage() {
     { data: ocurrenciesAvui },
     { data: facturesAvui },
     { data: notesRaw },
-    { data: reservesNoves },
     { data: ocurrenciesSetmana },
     { count: totalRecursosActius },
     { data: llistaNegraRaw },
@@ -172,11 +171,6 @@ export default async function DashboardPage() {
       .returns<
         { id: string; contingut: string; fet: boolean; created_at: string; profiles: { nom: string | null; email: string | null } | null }[]
       >(),
-    supabase
-      .from("reserves")
-      .select("data_inici")
-      .gte("data_inici", avuiISO)
-      .lte("data_inici", finSetmanaISO),
     supabase
       .from("ocurrencies")
       .select("data, reserves(reserva_recursos(recurs_id))")
@@ -210,12 +204,6 @@ export default async function DashboardPage() {
     };
   });
 
-  const novesPerDia = new Map<string, number>();
-  for (const r of reservesNoves ?? []) {
-    if (!r.data_inici) continue;
-    novesPerDia.set(r.data_inici, (novesPerDia.get(r.data_inici) ?? 0) + 1);
-  }
-
   const sessionsPerDia = new Map<string, number>();
   const recursosPerDia = new Map<string, Set<string>>();
   for (const o of ocurrenciesSetmana ?? []) {
@@ -239,7 +227,6 @@ export default async function DashboardPage() {
         : null;
     return {
       label,
-      comencen: novesPerDia.get(iso) ?? 0,
       sessions: sessionsPerDia.get(iso) ?? 0,
       ocupacioPercent,
     };
@@ -404,8 +391,6 @@ export default async function DashboardPage() {
                 <ForecastChart
                   dies={diesForecast}
                   textos={{
-                    reservesNoves: t.dashboard.reservesNoves,
-                    novesCurt: t.dashboard.novesCurt,
                     sessionsCurt: t.dashboard.sessionsCurt,
                     sessionsDelDia: t.dashboard.sessionsDelDia,
                     ocupacioEstimada: t.dashboard.ocupacioEstimada,
