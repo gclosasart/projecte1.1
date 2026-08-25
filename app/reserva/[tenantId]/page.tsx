@@ -61,7 +61,7 @@ export default async function ReservaPublicaPage({
         {!recursos || recursos.length === 0 ? (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">{t.reservaPublica.capRecurs}</p>
         ) : (
-          <SolicitudForm tenantId={tenantId} recursos={recursos} textos={t.reservaPublica} />
+          <SolicitudForm tenantId={tenantId} recursos={recursos} idioma={idioma} />
         )}
       </main>
     </div>

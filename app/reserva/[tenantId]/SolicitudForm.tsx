@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { crearSolicitud, type SolicitudState } from "./actions";
-import type { Dict } from "@/lib/i18n";
+import { dictDe, type Idioma } from "@/lib/i18n/client";
 
 type Recurs = {
   id: string;
@@ -19,12 +19,13 @@ const inputClass =
 export function SolicitudForm({
   tenantId,
   recursos,
-  textos: t,
+  idioma,
 }: {
   tenantId: string;
   recursos: Recurs[];
-  textos: Dict["reservaPublica"];
+  idioma: Idioma;
 }) {
+  const t = dictDe(idioma).reservaPublica;
   const [state, formAction, pending] = useActionState<SolicitudState, FormData>(
     crearSolicitud,
     ESTAT_INICIAL,
