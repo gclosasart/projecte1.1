@@ -278,7 +278,7 @@ const en: Dict = {
     exitText: "The coworking will review your request and get in touch to confirm it.",
     avisNoConfirmada: "This doesn't confirm the booking: the coworking still has to validate it.",
     errorGeneric: "Couldn't send the request.",
-    errorSeleccionaRecurs: "Select a resource.",
+    errorSeleccionaRecurs: "Select at least one resource.",
     errorNomObligatori: "Name is required.",
     errorFaltaData: "Date is missing.",
     errorFranjaHoraria: "The time range isn't valid.",

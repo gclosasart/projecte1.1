@@ -20,7 +20,7 @@ export async function crearSolicitud(
   }
 
   const tenant_id = formData.get("tenant_id");
-  const recurs_id = formData.get("recurs_id");
+  const recurs_ids = formData.getAll("recurs_ids").filter((v): v is string => typeof v === "string" && v !== "");
   const data = formData.get("data");
   const hora_inici = formData.get("hora_inici");
   const hora_fi = formData.get("hora_fi");
@@ -32,7 +32,7 @@ export async function crearSolicitud(
   if (typeof tenant_id !== "string" || !tenant_id) {
     return { ...ESTAT_INICIAL, error: t.reservaPublica.errorGeneric };
   }
-  if (typeof recurs_id !== "string" || !recurs_id) {
+  if (recurs_ids.length === 0) {
     return { ...ESTAT_INICIAL, error: t.reservaPublica.errorSeleccionaRecurs };
   }
   if (typeof nom !== "string" || !nom.trim()) {
@@ -58,20 +58,22 @@ export async function crearSolicitud(
 
   const admin = createAdminClient();
 
-  const { data: recurs } = await admin
+  const { data: recursos } = await admin
     .from("recursos")
     .select("id, actiu, bloquejat")
-    .eq("id", recurs_id)
-    .eq("tenant_id", tenant_id)
-    .maybeSingle();
+    .in("id", recurs_ids)
+    .eq("tenant_id", tenant_id);
 
-  if (!recurs || !recurs.actiu || recurs.bloquejat) {
+  if (
+    !recursos ||
+    recursos.length !== recurs_ids.length ||
+    recursos.some((r) => !r.actiu || r.bloquejat)
+  ) {
     return { ...ESTAT_INICIAL, error: t.reservaPublica.errorRecursNoDisponible };
   }
 
-  const { error } = await admin.from("sol_licituds_reserva").insert({
+  const camps = {
     tenant_id,
-    recurs_id,
     data,
     hora_inici,
     hora_fi,
@@ -79,7 +81,11 @@ export async function crearSolicitud(
     email: typeof email === "string" && email.trim() ? email.trim() : null,
     telefon: typeof telefon === "string" && telefon.trim() ? telefon.trim() : null,
     missatge: typeof missatge === "string" && missatge.trim() ? missatge.trim() : null,
-  });
+  };
+
+  const { error } = await admin
+    .from("sol_licituds_reserva")
+    .insert(recurs_ids.map((recurs_id) => ({ ...camps, recurs_id })));
 
   if (error) {
     return { ...ESTAT_INICIAL, error: t.reservaPublica.errorEnviar };

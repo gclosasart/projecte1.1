@@ -30,7 +30,11 @@ export function SolicitudForm({
     crearSolicitud,
     ESTAT_INICIAL,
   );
-  const [recursId, setRecursId] = useState(recursos[0]?.id ?? "");
+  const [recursIds, setRecursIds] = useState<string[]>(recursos[0] ? [recursos[0].id] : []);
+
+  function toggleRecurs(id: string) {
+    setRecursIds((prev) => (prev.includes(id) ? prev.filter((r) => r !== id) : [...prev, id]));
+  }
 
   if (state.exit) {
     return (
@@ -60,18 +64,18 @@ export function SolicitudForm({
             <label
               key={r.id}
               className={`flex cursor-pointer items-center justify-between gap-2 rounded-lg border px-3 py-2 text-sm ${
-                recursId === r.id
+                recursIds.includes(r.id)
                   ? "border-teal-600 bg-teal-50 dark:border-teal-500 dark:bg-teal-950/20"
                   : "border-black/10 dark:border-white/10"
               }`}
             >
               <span className="flex items-center gap-2">
                 <input
-                  type="radio"
-                  name="recurs_id"
+                  type="checkbox"
+                  name="recurs_ids"
                   value={r.id}
-                  checked={recursId === r.id}
-                  onChange={() => setRecursId(r.id)}
+                  checked={recursIds.includes(r.id)}
+                  onChange={() => toggleRecurs(r.id)}
                 />
                 <span className="text-zinc-950 dark:text-zinc-50">
                   {r.nom}

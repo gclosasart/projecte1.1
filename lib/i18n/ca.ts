@@ -276,7 +276,7 @@ const ca = {
     exitText: "El coworking revisarà la teva sol·licitud i es posarà en contacte amb tu per confirmar-la.",
     avisNoConfirmada: "Això no confirma la reserva: el coworking l'ha de validar abans.",
     errorGeneric: "No s'ha pogut enviar la sol·licitud.",
-    errorSeleccionaRecurs: "Selecciona un recurs.",
+    errorSeleccionaRecurs: "Selecciona almenys un recurs.",
     errorNomObligatori: "El nom és obligatori.",
     errorFaltaData: "Falta la data.",
     errorFranjaHoraria: "La franja horària no és vàlida.",

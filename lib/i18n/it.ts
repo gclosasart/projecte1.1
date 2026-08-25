@@ -278,7 +278,7 @@ const it: Dict = {
     exitText: "Il coworking esaminerà la tua richiesta e ti contatterà per confermarla.",
     avisNoConfirmada: "Questo non conferma la prenotazione: il coworking deve ancora validarla.",
     errorGeneric: "Impossibile inviare la richiesta.",
-    errorSeleccionaRecurs: "Seleziona una risorsa.",
+    errorSeleccionaRecurs: "Seleziona almeno una risorsa.",
     errorNomObligatori: "Il nome è obbligatorio.",
     errorFaltaData: "Manca la data.",
     errorFranjaHoraria: "La fascia oraria non è valida.",
