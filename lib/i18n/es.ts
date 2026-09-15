@@ -286,6 +286,15 @@ const es: Dict = {
     errorRecursNoDisponible: "Este recurso ya no está disponible.",
     errorEnviar: "No se ha podido enviar la solicitud.",
   },
+  cerca: {
+    titol: "Encuentra tu coworking",
+    subtitol: "Busca el espacio que mejor se adapte a ti y reserva en pocos clics.",
+    cercaPlaceholder: "Busca por nombre...",
+    capCoworking: "Todavía no hay ningún coworking disponible para reservar.",
+    capResultat: "No se ha encontrado ningún coworking con esta búsqueda.",
+    recursosDisponibles: (n: number) => `${n} recurso${n === 1 ? "" : "s"} disponible${n === 1 ? "" : "s"}`,
+    reservaAra: "Reserva ahora",
+  },
   clients: {
     titol: "Clientes",
     nouClient: "Nuevo cliente",

@@ -286,6 +286,15 @@ const en: Dict = {
     errorRecursNoDisponible: "This resource is no longer available.",
     errorEnviar: "Couldn't send the request.",
   },
+  cerca: {
+    titol: "Find your coworking space",
+    subtitol: "Search for the space that suits you best and book in a few clicks.",
+    cercaPlaceholder: "Search by name...",
+    capCoworking: "There's no coworking space available to book yet.",
+    capResultat: "No coworking space found for this search.",
+    recursosDisponibles: (n: number) => `${n} resource${n === 1 ? "" : "s"} available`,
+    reservaAra: "Book now",
+  },
   clients: {
     titol: "Clients",
     nouClient: "New client",
