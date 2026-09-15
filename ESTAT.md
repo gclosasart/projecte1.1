@@ -114,6 +114,18 @@ reserva real automàticament (en lloc de només canviar l'`estat` a
 (`crearReserva`/`crear_reserva` RPC), que actualment només s'invoca des de
 l'àrea autenticada.
 
+S'ha afegit un cercador públic de coworkings a `/cerca`: llista tots els
+tenants amb almenys un recurs actiu, amb filtre de text pel nom, i cada
+targeta enllaça a la seva pàgina de reserva (`/reserva/[tenantId]`). Es va
+fer després de revisar `local-desk-hub` (un projecte de Lovable, marca
+"Nexing") com a referència visual d'un marketplace de coworkings — es va
+decidir NO reutilitzar-ne el codi (Vite + React Router, i la seva
+cerca/reserva/pagament eren només simulacions sobre dades fixes) i
+recrear-ho natiu dins de Trempt. De moment `/cerca` no és accessible des
+de cap menú de l'app (és una pàgina pública independent) ni és la pàgina
+d'inici (`/` continua redirigint a `/dashboard`) — decidir si ha de
+substituir-la o enllaçar-s'hi és una decisió pendent de l'usuari.
+
 ## Fet fins ara (de més antic a més recent)
 
 - No-show a reserves/factures
