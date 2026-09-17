@@ -114,17 +114,25 @@ reserva real automàticament (en lloc de només canviar l'`estat` a
 (`crearReserva`/`crear_reserva` RPC), que actualment només s'invoca des de
 l'àrea autenticada.
 
-S'ha afegit un cercador públic de coworkings a `/cerca`: llista tots els
+**Pausat (no és al codi actual, però es vol retenir per retorn futur)**: es
+va construir un cercador públic de coworkings a `/cerca` (llistava tots els
 tenants amb almenys un recurs actiu, amb filtre de text pel nom, i cada
-targeta enllaça a la seva pàgina de reserva (`/reserva/[tenantId]`). Es va
+targeta enllaçava a la seva pàgina de reserva `/reserva/[tenantId]`). Es va
 fer després de revisar `local-desk-hub` (un projecte de Lovable, marca
 "Nexing") com a referència visual d'un marketplace de coworkings — es va
 decidir NO reutilitzar-ne el codi (Vite + React Router, i la seva
 cerca/reserva/pagament eren només simulacions sobre dades fixes) i
-recrear-ho natiu dins de Trempt. De moment `/cerca` no és accessible des
-de cap menú de l'app (és una pàgina pública independent) ni és la pàgina
-d'inici (`/` continua redirigint a `/dashboard`) — decidir si ha de
-substituir-la o enllaçar-s'hi és una decisió pendent de l'usuari.
+recrear-ho natiu dins de Trempt. L'usuari va demanar treure-ho de l'app
+("tornarem en algun moment futur"), així que s'ha revertit
+(`app/cerca/`, l'entrada a `PUBLIC_PATHS` i les claus `cerca` als 5
+idiomes). El codi complet queda recuperable a l'historial de git de la
+branca `claude/coworking-saas-resume-5owz7d` / `main` (commits
+"Add public coworking search page at /cerca" i el revert posterior) per
+si es vol reprendre. Pendents de decidir quan es reprengui: si `/cerca`
+ha de substituir la pàgina d'inici (`/` continua redirigint a
+`/dashboard`) o si només s'hi enllaça, i si val la pena ampliar la fitxa
+de cada tenant amb camps pensats per a un marketplace (ciutat, foto,
+descripció) que ara no existeixen.
 
 ## Fet fins ara (de més antic a més recent)
 

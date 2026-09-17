@@ -284,15 +284,6 @@ const ca = {
     errorRecursNoDisponible: "Aquest recurs ja no està disponible.",
     errorEnviar: "No s'ha pogut enviar la sol·licitud.",
   },
-  cerca: {
-    titol: "Troba el teu coworking",
-    subtitol: "Cerca l'espai que millor s'adapti a tu i reserva en pocs clics.",
-    cercaPlaceholder: "Cerca per nom...",
-    capCoworking: "Encara no hi ha cap coworking disponible per reservar.",
-    capResultat: "No s'ha trobat cap coworking amb aquesta cerca.",
-    recursosDisponibles: (n: number) => `${n} recurs${n === 1 ? "" : "os"} disponible${n === 1 ? "" : "s"}`,
-    reservaAra: "Reserva ara",
-  },
   clients: {
     titol: "Clients",
     nouClient: "Nou client",

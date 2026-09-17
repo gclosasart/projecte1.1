@@ -286,15 +286,6 @@ const it: Dict = {
     errorRecursNoDisponible: "Questa risorsa non è più disponibile.",
     errorEnviar: "Impossibile inviare la richiesta.",
   },
-  cerca: {
-    titol: "Trova il tuo coworking",
-    subtitol: "Cerca lo spazio più adatto a te e prenota in pochi clic.",
-    cercaPlaceholder: "Cerca per nome...",
-    capCoworking: "Non c'è ancora nessun coworking disponibile da prenotare.",
-    capResultat: "Nessun coworking trovato con questa ricerca.",
-    recursosDisponibles: (n: number) => (n === 1 ? "1 risorsa disponibile" : `${n} risorse disponibili`),
-    reservaAra: "Prenota ora",
-  },
   clients: {
     titol: "Clienti",
     nouClient: "Nuovo cliente",
