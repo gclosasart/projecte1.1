@@ -69,7 +69,10 @@ aquesta variable configurada a Vercel, el cron respondrà 401 i no generarà els
   negre, títol en majúscules/cursiva/negreta, barra d'accent) a totes les
   pàgines i es va revertir el 2026-08-21 — no tornar-hi sense que
   l'usuari ho demani explícitament. La capçalera no té fons blanc ni
-  vora/línia inferior: es fon amb el fons de la pàgina, com el dashboard
+  vora/línia inferior: es fon amb el fons de la pàgina, com el dashboard.
+  **Excepció**: el reproductor de música (`/musica`) va en fosc, a petició
+  explícita de l'usuari el 2026-09-21 ("més foscos, però no massa") — no
+  tornar-lo a clar. És l'única pantalla fosca de tot el projecte
 - Tipografia (des del 2026-08-23): una sola família, Nunito Sans, tant pel
   cos com pels títols (abans Source Sans 3 + Hanken Grotesk) — arrodonida i
   càlida, a l'estil Airbnb (Cereal és propietària, no es pot fer servir)
@@ -177,6 +180,18 @@ importants:
   hagi cap variable d'entorn configurada (`npm run dev` sense `.env.local`:
   la resta de l'app peta, però `/musica` va). Per això `/musica` ja no cal
   que sigui a `PUBLIC_PATHS`.
+- **Paleta fosca** (només aquí): fons `.bg-estudi` a `globals.css`, base
+  `#23262b` amb les mateixes taques difuminades que el fons clar però en to
+  mitjanit; targetes `bg-white/[0.06]` amb vora `border-white/10`; barra del
+  reproductor `bg-[#1c1f23]/95`; text `zinc-50`/`zinc-400`; accent `teal-400`
+  per a text i icones i `teal-500` amb text `zinc-950` per als botons plens
+  (sobre fosc contrasta molt més que el `teal-600` amb text blanc de la resta
+  de l'app). El `theme_color` del manifest i el `themeColor` de la pàgina són
+  `#23262b`, perquè la barra de sistema del mòbil hi vagi a joc. Les barres de
+  progrés i volum es dibuixen amb CSS propi (`::-webkit-slider-runnable-track`
+  amb la variable `--progres` que hi posa el component): amb `accent-color`
+  sol, el Chrome deixa el solc buit d'un gris clar fix i quedava una ratlla
+  blanca damunt del fons fosc.
 - Per fer-lo anar en local: `npm run dev` i obrir
   `http://localhost:3000/musica` (no `127.0.0.1`, que en desenvolupament fa
   que Next bloquegi el websocket de recàrrega automàtica i la pàgina es

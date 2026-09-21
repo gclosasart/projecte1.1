@@ -81,18 +81,18 @@ export function InstalaApp() {
 
   if (installada) {
     return (
-      <p className="rounded-2xl border border-black/5 bg-white px-4 py-3 text-xs text-zinc-500 shadow-sm dark:border-white/10 dark:bg-zinc-950 dark:text-zinc-400">
+      <p className="rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-xs text-zinc-400">
         Tens l&apos;app instal·lada al dispositiu. Un cop hi has afegit cançons, funciona sense connexió.
       </p>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-black/5 bg-white px-4 py-4 shadow-sm dark:border-white/10 dark:bg-zinc-950">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-4 shadow-lg shadow-black/20">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">Instal·la l&apos;app</p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm font-semibold text-zinc-50">Instal·la l&apos;app</p>
+          <p className="mt-1 text-xs text-zinc-400">
             {plataforma === "ios"
               ? "A l'iPhone i l'iPad: botó Compartir → «Afegeix a la pantalla d'inici»."
               : peticio
@@ -112,7 +112,7 @@ export function InstalaApp() {
               if (outcome === "accepted") setAcabadaInstallar(true);
               setPeticio(null); // la petició només es pot fer servir un cop
             }}
-            className="inline-flex items-center gap-2 rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-teal-700"
+            className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition-colors hover:bg-teal-400"
           >
             <IconaDescarrega className="h-5 w-5" />
             Instal·la

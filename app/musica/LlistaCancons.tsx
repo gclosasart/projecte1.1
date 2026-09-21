@@ -14,7 +14,7 @@ type Props = {
 
 export function LlistaCancons({ cancons, idActual, reproduint, onTria, onEsborra }: Props) {
   return (
-    <ul className="divide-y divide-black/5 dark:divide-white/10">
+    <ul className="divide-y divide-white/10">
       {cancons.map((canco) => {
         const esActual = canco.id === idActual;
         return (
@@ -22,14 +22,12 @@ export function LlistaCancons({ cancons, idActual, reproduint, onTria, onEsborra
             <button
               type="button"
               onClick={() => onTria(canco.id)}
-              className="flex min-w-0 flex-1 items-center gap-3 rounded-xl px-2 py-1.5 text-left transition-colors hover:bg-teal-50 dark:hover:bg-zinc-900"
+              className="flex min-w-0 flex-1 items-center gap-3 rounded-xl px-2 py-1.5 text-left transition-colors hover:bg-white/5"
               aria-label={`Reprodueix ${canco.titol}`}
             >
               <span
                 className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-                  esActual
-                    ? "bg-teal-600 text-white"
-                    : "bg-zinc-100 text-zinc-400 dark:bg-zinc-900 dark:text-zinc-500"
+                  esActual ? "bg-teal-500 text-zinc-950" : "bg-white/10 text-zinc-400"
                 }`}
               >
                 {esActual && reproduint ? (
@@ -43,17 +41,17 @@ export function LlistaCancons({ cancons, idActual, reproduint, onTria, onEsborra
               <span className="min-w-0 flex-1">
                 <span
                   className={`block truncate text-sm font-semibold ${
-                    esActual ? "text-teal-700 dark:text-teal-400" : "text-zinc-900 dark:text-zinc-50"
+                    esActual ? "text-teal-300" : "text-zinc-100"
                   }`}
                 >
                   {canco.titol}
                 </span>
-                <span className="block truncate text-xs text-zinc-500 dark:text-zinc-400">
+                <span className="block truncate text-xs text-zinc-400">
                   {canco.artista}
                   {canco.album ? ` · ${canco.album}` : ""}
                 </span>
               </span>
-              <span className="shrink-0 font-mono text-xs text-zinc-400 dark:text-zinc-500">
+              <span className="shrink-0 font-mono text-xs text-zinc-500">
                 {canco.durada ? formatDurada(canco.durada) : "--:--"}
               </span>
             </button>
@@ -62,7 +60,7 @@ export function LlistaCancons({ cancons, idActual, reproduint, onTria, onEsborra
               onClick={() => onEsborra(canco)}
               aria-label={`Treu ${canco.titol} de la biblioteca`}
               title="Treu-la de la biblioteca"
-              className="shrink-0 rounded-lg p-2 text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-zinc-900"
+              className="shrink-0 rounded-lg p-2 text-zinc-500 transition-colors hover:bg-red-500/15 hover:text-red-300"
             >
               <IconaPaperera className="h-5 w-5" />
             </button>
@@ -80,7 +78,7 @@ function BarresSonant() {
       {[0, 150, 300].map((retard) => (
         <span
           key={retard}
-          className="w-1 origin-bottom animate-[sonant_900ms_ease-in-out_infinite] rounded-full bg-white"
+          className="w-1 origin-bottom animate-[sonant_900ms_ease-in-out_infinite] rounded-full bg-zinc-950"
           style={{ animationDelay: `${retard}ms`, height: "100%" }}
         />
       ))}

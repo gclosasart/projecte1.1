@@ -453,13 +453,11 @@ export function Reproductor() {
   const totalMida = cancons.reduce((total, canco) => total + canco.mida, 0);
 
   return (
-    <div className="flex flex-1 flex-col bg-office-blur dark:bg-black">
+    <div className="flex flex-1 flex-col bg-estudi">
       <header className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6">
-        <p className="text-xs font-medium uppercase tracking-wide text-teal-600 dark:text-teal-400">
-          Reproductor
-        </p>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Música</h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="text-xs font-medium uppercase tracking-wide text-teal-400">Reproductor</p>
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-50">Música</h1>
+        <p className="mt-1 text-sm text-zinc-300">
           Les cançons que ja tens descarregades, desades en aquest dispositiu i a punt per sonar sense connexió.
         </p>
       </header>
@@ -468,12 +466,12 @@ export function Reproductor() {
         <InstalaApp />
 
         {avis && (
-          <div className="flex items-start justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <div className="flex items-start justify-between gap-3 rounded-2xl border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
             <p>{avis}</p>
             <button
               type="button"
               onClick={() => setAvis(null)}
-              className="shrink-0 text-xs font-semibold uppercase tracking-wide text-amber-700 hover:text-amber-900"
+              className="shrink-0 text-xs font-semibold uppercase tracking-wide text-amber-300 hover:text-amber-100"
             >
               Entesos
             </button>
@@ -492,14 +490,14 @@ export function Reproductor() {
             const fitxers = Array.from(event.dataTransfer.files ?? []);
             if (fitxers.length) void importa(fitxers);
           }}
-          className={`rounded-2xl border bg-white px-4 py-4 shadow-sm transition-colors dark:bg-zinc-950 dark:shadow-none sm:px-6 ${
-            arrossegant ? "border-teal-500 bg-teal-50/60" : "border-black/5 dark:border-white/10"
+          className={`rounded-2xl border px-4 py-4 shadow-lg shadow-black/20 transition-colors sm:px-6 ${
+            arrossegant ? "border-teal-400 bg-teal-400/15" : "border-white/10 bg-white/[0.06]"
           }`}
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">La teva biblioteca</h2>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <h2 className="text-sm font-semibold text-zinc-50">La teva biblioteca</h2>
+              <p className="text-xs text-zinc-400">
                 {carregant
                   ? "Carregant…"
                   : `${cancons.length} ${cancons.length === 1 ? "cançó" : "cançons"} · ${formatMida(totalMida)}`}
@@ -510,7 +508,7 @@ export function Reproductor() {
               <button
                 type="button"
                 onClick={() => inputFitxers.current?.click()}
-                className="inline-flex items-center gap-2 rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-teal-700"
+                className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition-colors hover:bg-teal-400"
               >
                 <IconaMes className="h-5 w-5" />
                 Afegeix cançons
@@ -518,7 +516,7 @@ export function Reproductor() {
               <button
                 type="button"
                 onClick={() => inputCarpeta.current?.click()}
-                className="hidden items-center gap-2 rounded-full border border-black/10 px-4 py-2 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-white/10 dark:text-zinc-200 dark:hover:bg-zinc-900 sm:inline-flex"
+                className="hidden items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 sm:inline-flex"
               >
                 <IconaCarpeta className="h-5 w-5" />
                 Una carpeta
@@ -538,12 +536,12 @@ export function Reproductor() {
 
           {progres && (
             <div className="mt-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs text-zinc-400">
                 Afegint cançons… {progres.fets} de {progres.total}
               </p>
-              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-900">
+              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full rounded-full bg-teal-600 transition-all"
+                  className="h-full rounded-full bg-teal-400 transition-all"
                   style={{ width: `${Math.round((progres.fets / progres.total) * 100)}%` }}
                 />
               </div>
@@ -552,14 +550,14 @@ export function Reproductor() {
 
           {cancons.length > 0 && (
             <div className="relative mt-4">
-              <IconaCerca className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
+              <IconaCerca className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
               <input
                 type="search"
                 value={cerca}
                 onChange={(event) => setCerca(event.target.value)}
                 placeholder="Cerca per títol, artista o àlbum"
                 aria-label="Cerca a la biblioteca"
-                className="w-full rounded-xl border border-black/10 bg-white py-2 pl-11 pr-3 text-sm text-zinc-900 outline-none transition-colors focus:border-teal-500 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-50"
+                className="w-full rounded-xl border border-white/10 bg-white/[0.06] py-2 pl-11 pr-3 text-sm text-zinc-50 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
               />
             </div>
           )}
@@ -567,17 +565,15 @@ export function Reproductor() {
           <div className="mt-2">
             {carregant ? null : cancons.length === 0 ? (
               <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
-                <IconaNota className="h-10 w-10 text-teal-600 dark:text-teal-400" />
-                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                  Encara no hi ha cap cançó
-                </p>
-                <p className="max-w-sm text-xs text-zinc-500 dark:text-zinc-400">
+                <IconaNota className="h-10 w-10 text-teal-400" />
+                <p className="text-sm font-semibold text-zinc-50">Encara no hi ha cap cançó</p>
+                <p className="max-w-sm text-xs text-zinc-400">
                   Afegeix fitxers d&apos;àudio del teu dispositiu (o arrossega&apos;ls aquí, si ets a l&apos;ordinador).
                   Es queden desats aquí dins: no es pugen enlloc.
                 </p>
               </div>
             ) : visibles.length === 0 ? (
-              <p className="px-2 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+              <p className="px-2 py-8 text-center text-sm text-zinc-400">
                 Cap cançó coincideix amb «{cerca}».
               </p>
             ) : (
@@ -592,7 +588,7 @@ export function Reproductor() {
           </div>
 
           {cancons.length > 0 && (
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-black/5 pt-3 text-xs text-zinc-500 dark:border-white/10 dark:text-zinc-400">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3 text-xs text-zinc-400">
               <span>
                 {espai
                   ? `${formatMida(espai.usat)} ocupats en aquest dispositiu${
@@ -600,7 +596,7 @@ export function Reproductor() {
                     }`
                   : "Desat en aquest dispositiu"}
               </span>
-              <button type="button" onClick={buida} className="font-semibold text-red-600 hover:text-red-700">
+              <button type="button" onClick={buida} className="font-semibold text-red-400 hover:text-red-300">
                 Esborra-ho tot
               </button>
             </div>

@@ -56,12 +56,15 @@ export function BarraReproduccio({
   onRepeticio,
 }: Props) {
   const total = durada || canco?.durada || 0;
+  // El tros ja reproduït i el volum triat es pinten des del CSS (.bg-estudi),
+  // que llegeix aquest percentatge.
+  const percentatge = (fraccio: number) => ({ "--progres": `${fraccio * 100}%` }) as React.CSSProperties;
 
   return (
-    <div className="sticky bottom-0 z-10 border-t border-black/5 bg-white/95 backdrop-blur dark:border-white/10 dark:bg-zinc-950/95">
+    <div className="sticky bottom-0 z-10 border-t border-white/10 bg-[#1c1f23]/95 backdrop-blur">
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-zinc-100 text-zinc-400 dark:bg-zinc-900 dark:text-zinc-600">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/10 text-zinc-500">
             {caratulaUrl ? (
               // Blob local del dispositiu: next/image no el pot optimitzar.
               // eslint-disable-next-line @next/next/no-img-element
@@ -72,10 +75,10 @@ export function BarraReproduccio({
           </span>
 
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <p className="truncate text-sm font-semibold text-zinc-50">
               {canco ? canco.titol : "Cap cançó seleccionada"}
             </p>
-            <p className="truncate text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="truncate text-xs text-zinc-400">
               {canco ? canco.artista : "Tria'n una de la biblioteca"}
             </p>
           </div>
@@ -86,7 +89,7 @@ export function BarraReproduccio({
               onClick={onAnterior}
               disabled={!canco}
               aria-label="Cançó anterior"
-              className="rounded-full p-2 text-zinc-700 transition-colors hover:bg-zinc-100 disabled:opacity-30 dark:text-zinc-200 dark:hover:bg-zinc-900"
+              className="rounded-full p-2 text-zinc-200 transition-colors hover:bg-white/10 disabled:opacity-30"
             >
               <IconaAnterior className="h-6 w-6" />
             </button>
@@ -95,7 +98,7 @@ export function BarraReproduccio({
               onClick={onAlterna}
               disabled={!canco}
               aria-label={reproduint ? "Pausa" : "Reprodueix"}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-600 text-white shadow-sm transition-colors hover:bg-teal-700 disabled:opacity-30"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-500 text-zinc-950 shadow-lg shadow-teal-500/20 transition-colors hover:bg-teal-400 disabled:opacity-30"
             >
               {reproduint ? <IconaPausa className="h-6 w-6" /> : <IconaReprodueix className="h-6 w-6" />}
             </button>
@@ -104,7 +107,7 @@ export function BarraReproduccio({
               onClick={onSeguent}
               disabled={!canco}
               aria-label="Cançó següent"
-              className="rounded-full p-2 text-zinc-700 transition-colors hover:bg-zinc-100 disabled:opacity-30 dark:text-zinc-200 dark:hover:bg-zinc-900"
+              className="rounded-full p-2 text-zinc-200 transition-colors hover:bg-white/10 disabled:opacity-30"
             >
               <IconaSeguent className="h-6 w-6" />
             </button>
@@ -112,7 +115,7 @@ export function BarraReproduccio({
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="w-12 shrink-0 text-right font-mono text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="w-12 shrink-0 text-right font-mono text-xs text-zinc-400">
             {formatDurada(posicio)}
           </span>
           <input
@@ -124,9 +127,10 @@ export function BarraReproduccio({
             disabled={!canco || !total}
             onChange={(event) => onSalta(Number(event.target.value))}
             aria-label="Posició de la cançó"
-            className="h-1.5 w-full cursor-pointer accent-teal-600 disabled:cursor-default"
+            style={percentatge(total ? Math.min(posicio, total) / total : 0)}
+            className="w-full cursor-pointer disabled:cursor-default"
           />
-          <span className="w-12 shrink-0 font-mono text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="w-12 shrink-0 font-mono text-xs text-zinc-400">
             {total ? formatDurada(total) : "--:--"}
           </span>
         </div>
@@ -139,9 +143,7 @@ export function BarraReproduccio({
               aria-pressed={barreja}
               title={barreja ? "Ordre aleatori activat" : "Ordre aleatori desactivat"}
               className={`rounded-lg p-2 transition-colors ${
-                barreja
-                  ? "bg-teal-50 text-teal-700 dark:bg-zinc-900 dark:text-teal-400"
-                  : "text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                barreja ? "bg-teal-400/15 text-teal-300" : "text-zinc-500 hover:bg-white/10"
               }`}
             >
               <IconaBarreja className="h-5 w-5" />
@@ -152,9 +154,7 @@ export function BarraReproduccio({
               title={TEXT_REPETICIO[repeticio]}
               aria-label={TEXT_REPETICIO[repeticio]}
               className={`rounded-lg p-2 transition-colors ${
-                repeticio === "cap"
-                  ? "text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
-                  : "bg-teal-50 text-teal-700 dark:bg-zinc-900 dark:text-teal-400"
+                repeticio === "cap" ? "text-zinc-500 hover:bg-white/10" : "bg-teal-400/15 text-teal-300"
               }`}
             >
               <IconaRepeticio className="h-5 w-5" una={repeticio === "una"} />
@@ -163,7 +163,7 @@ export function BarraReproduccio({
 
           {/* Al mòbil el volum el manen els botons físics del dispositiu. */}
           <div className="hidden items-center gap-2 sm:flex">
-            <IconaVolum className="h-5 w-5 text-zinc-400" silenci={volum === 0} />
+            <IconaVolum className="h-5 w-5 text-zinc-500" silenci={volum === 0} />
             <input
               type="range"
               min={0}
@@ -172,7 +172,8 @@ export function BarraReproduccio({
               value={volum}
               onChange={(event) => onVolum(Number(event.target.value))}
               aria-label="Volum"
-              className="h-1.5 w-28 cursor-pointer accent-teal-600"
+              style={percentatge(volum)}
+              className="w-28 cursor-pointer"
             />
           </div>
         </div>
