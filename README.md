@@ -22,6 +22,10 @@ com una app (PWA) tant a l'ordinador com al mòbil, funciona sense connexió i l
 música no surt mai del navegador (es desa a IndexedDB). No comparteix compte ni
 base de dades amb la gestió de coworkings.
 
+Per provar-lo en local no calen les variables d'entorn de Supabase: `npm run dev`
+i obrir `http://localhost:3000/musica`. Des d'allà ja es pot instal·lar, i un cop
+instal·lat funciona sense connexió i sense el servidor.
+
 ## Desenvolupament local
 
 ```bash

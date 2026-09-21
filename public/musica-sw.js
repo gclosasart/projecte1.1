@@ -10,7 +10,12 @@
 // passen: viuen a IndexedDB perquè és qui les hi ha posat des del seu
 // dispositiu, no s'han descarregat mai d'aquest servidor.
 
-const CAU = "musica-v1";
+// En desenvolupament es registra com a "/musica-sw.js?dev=1": llavors res no
+// se serveix mai de la memòria cau mentre hi hagi xarxa, perquè els fragments
+// de Next.js canvien a cada recàrrega i una còpia desada trencaria la pàgina.
+// Sense connexió, en canvi, la còpia desada segueix servint igual.
+const DESENVOLUPAMENT = new URL(self.location.href).searchParams.has("dev");
+const CAU = DESENVOLUPAMENT ? "musica-dev" : "musica-v1";
 const ESQUELET = [
   "/musica",
   "/musica/icona-192.png",
@@ -48,34 +53,38 @@ self.addEventListener("fetch", (event) => {
   // Navegació cap al reproductor: primer la xarxa (per estrenar desplegaments
   // nous de seguida), i si no n'hi ha, la còpia desada.
   if (peticio.mode === "navigate" && url.pathname.startsWith("/musica")) {
-    event.respondWith(
-      fetch(peticio)
-        .then((resposta) => {
-          desa(peticio, resposta.clone());
-          return resposta;
-        })
-        .catch(async () => (await caches.match("/musica")) ?? Response.error()),
-    );
+    event.respondWith(xarxaPrimer(peticio, "/musica"));
     return;
   }
 
-  // Estàtics de Next.js i icones: tenen un hash al nom o no canvien mai, així
-  // que la còpia desada sempre és bona i estalvia xarxa.
+  // Estàtics de Next.js i icones: en producció tenen un hash al nom o no
+  // canvien mai, així que la còpia desada sempre és bona i estalvia xarxa.
   const esEstatic =
     url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/musica/");
   if (!esEstatic) return;
 
-  event.respondWith(
-    caches.match(peticio).then(
-      (desada) =>
-        desada ??
-        fetch(peticio).then((resposta) => {
-          desa(peticio, resposta.clone());
-          return resposta;
-        }),
-    ),
-  );
+  event.respondWith(DESENVOLUPAMENT ? xarxaPrimer(peticio) : cauPrimer(peticio));
 });
+
+async function xarxaPrimer(peticio, alternativa) {
+  try {
+    const resposta = await fetch(peticio);
+    desa(peticio, resposta.clone());
+    return resposta;
+  } catch (error) {
+    const desada = (await caches.match(peticio)) ?? (alternativa ? await caches.match(alternativa) : null);
+    if (desada) return desada;
+    throw error;
+  }
+}
+
+async function cauPrimer(peticio) {
+  const desada = await caches.match(peticio);
+  if (desada) return desada;
+  const resposta = await fetch(peticio);
+  desa(peticio, resposta.clone());
+  return resposta;
+}
 
 function desa(peticio, resposta) {
   if (!resposta || !resposta.ok || resposta.type === "opaque") return;

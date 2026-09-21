@@ -159,17 +159,29 @@ importants:
   Si el fitxer no en porta, s'endevinen del nom ("01 - Artista - Títol.mp3").
   Només s'entén ID3 (el que porten els MP3): un FLAC o un M4A amb etiquetes
   d'un altre format sortiran amb el nom del fitxer.
-- El service worker **només es registra en producció**: a `npm run dev`
-  guardaria a la memòria cau els fragments de Next.js, que canvien a cada
-  recàrrega. Si n'hi troba un de registrat, el desregistra.
+- **Funciona igual executant l'app en local**: el service worker també es
+  registra a `npm run dev`, però com a `/musica-sw.js?dev=1`, i amb aquest
+  paràmetre no serveix mai res de la memòria cau mentre hi hagi xarxa (els
+  fragments de Next.js canvien a cada recàrrega); sense connexió, en canvi,
+  segueix servint la còpia desada. A `http://localhost:3000/musica` el
+  navegador considera la pàgina segura i deixa instal·lar-la com si fos
+  producció.
 - La interfície és **només en català**, a diferència de la resta de l'app: no
   passa pel diccionari de `lib/i18n` perquè és una app personal i no part del
   producte multitenant. Si algun dia s'ha de traduir, caldrà afegir-ne les
   claus als 5 idiomes.
-- `/musica` és a `PUBLIC_PATHS` i a `NO_REDIRECT_IF_AUTHED` de
-  `lib/supabase/proxy.ts`: funciona igual amb la sessió oberta o sense (i de
-  passada deixa passar `/musica-sw.js`, que si no acabaria redirigit a
-  `/login`).
+- `lib/supabase/proxy.ts` **surt abans de crear el client de Supabase** per a
+  tot el que comenci per `/musica` (la pàgina i `/musica-sw.js`). Tres
+  conseqüències: funciona igual amb la sessió oberta o sense, no paga una
+  crida d'autenticació a cada petició, i s'obre en local encara que no hi
+  hagi cap variable d'entorn configurada (`npm run dev` sense `.env.local`:
+  la resta de l'app peta, però `/musica` va). Per això `/musica` ja no cal
+  que sigui a `PUBLIC_PATHS`.
+- Per fer-lo anar en local: `npm run dev` i obrir
+  `http://localhost:3000/musica` (no `127.0.0.1`, que en desenvolupament fa
+  que Next bloquegi el websocket de recàrrega automàtica i la pàgina es
+  recarregui en bucle). Un cop instal·lat, ja no depèn ni del servidor local
+  ni d'internet.
 - Les icones es regeneren amb `node scripts/genera-icones-musica.mjs`, que
   escriu els PNG a mà (sense dependències) a partir d'un dibuix vectorial
   senzill amb el teal de l'app.

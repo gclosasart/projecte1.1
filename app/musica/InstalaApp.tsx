@@ -66,24 +66,17 @@ export function InstalaApp() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
-    // En desenvolupament no el registrem: guardaria a la memòria cau els
-    // fragments de Next.js que canvien a cada recàrrega. Si n'hi ha un de
-    // registrat d'una visita a producció, el traiem del mig.
-    if (process.env.NODE_ENV !== "production") {
-      navigator.serviceWorker.getRegistrations().then((registres) => {
-        registres.forEach((registre) => {
-          if (registre.scope.includes("/musica")) registre.unregister();
-        });
-      });
-      return;
-    }
+    // També en desenvolupament, perquè el reproductor es pugui instal·lar i
+    // provar del tot executant l'app en local (a "localhost" el navegador
+    // tracta la pàgina com a segura i ho permet). El paràmetre "dev" li diu
+    // al service worker que no serveixi res de la memòria cau mentre hi hagi
+    // xarxa: els fragments de Next.js canvien a cada recàrrega.
+    const guio = process.env.NODE_ENV === "production" ? "/musica-sw.js" : "/musica-sw.js?dev=1";
 
-    navigator.serviceWorker
-      .register("/musica-sw.js", { scope: "/musica", updateViaCache: "none" })
-      .catch(() => {
-        // Sense service worker el reproductor segueix funcionant: només perd
-        // poder obrir-se sense connexió.
-      });
+    navigator.serviceWorker.register(guio, { scope: "/musica", updateViaCache: "none" }).catch(() => {
+      // Sense service worker el reproductor segueix funcionant: només perd
+      // poder obrir-se sense connexió.
+    });
   }, []);
 
   if (installada) {
