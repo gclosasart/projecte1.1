@@ -22,6 +22,8 @@ import {
 import { etiquetesDelNom, llegeixDurada, llegeixEtiquetes } from "./etiquetes";
 import { formatMida } from "./format";
 import { BarraLlistes } from "./BarraLlistes";
+import { CapcaleraLlista } from "./CapcaleraLlista";
+import { DialegAfegirCancons } from "./DialegAfegirCancons";
 import { BarraReproduccio } from "./BarraReproduccio";
 import { DialegLlistes } from "./DialegLlistes";
 import { InstalaApp } from "./InstalaApp";
@@ -62,6 +64,7 @@ export function Reproductor() {
   const [llistes, setLlistes] = useState<Llista[]>([]);
   const [llistaActiva, setLlistaActiva] = useState<string | null>(null);
   const [cancoPerAfegir, setCancoPerAfegir] = useState<Canco | null>(null);
+  const [afegintALlista, setAfegintALlista] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const urlAudio = useRef<string | null>(null);
@@ -508,6 +511,11 @@ export function Reproductor() {
     [cancons, llista],
   );
 
+  const obreLlista = useCallback((id: string | null) => {
+    setCerca("");
+    setLlistaActiva(id);
+  }, []);
+
   const creaLlista = useCallback(
     async (nom: string, cancoId?: string) => {
       const nova: Llista = {
@@ -521,12 +529,12 @@ export function Reproductor() {
         setLlistes((previes) => [...previes, nova]);
         // En crear-la des dels xips s'hi entra; en crear-la des d'una cançó,
         // no, que la persona estava fent una altra cosa.
-        if (!cancoId) setLlistaActiva(nova.id);
+        if (!cancoId) obreLlista(nova.id);
       } catch (error) {
         setAvis(missatge(error));
       }
     },
-    [],
+    [obreLlista],
   );
 
   const canviaNomLlista = useCallback(async (id: string, nom: string) => {
@@ -641,11 +649,13 @@ export function Reproductor() {
 
         <section
           onDragOver={(event) => {
+            if (llista) return;
             event.preventDefault();
             setArrossegant(true);
           }}
           onDragLeave={() => setArrossegant(false)}
           onDrop={(event) => {
+            if (llista) return;
             event.preventDefault();
             setArrossegant(false);
             const fitxers = Array.from(event.dataTransfer.files ?? []);
@@ -655,35 +665,45 @@ export function Reproductor() {
             arrossegant ? "border-teal-400 bg-teal-400/15" : "border-white/10 bg-white/[0.06]"
           }`}
         >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-semibold text-zinc-50">La teva biblioteca</h2>
-              <p className="text-xs text-zinc-400">
-                {carregant
-                  ? "Carregant…"
-                  : `${cancons.length} ${cancons.length === 1 ? "cançó" : "cançons"} · ${formatMida(totalMida)}`}
-              </p>
-            </div>
+          {llista ? (
+            <CapcaleraLlista
+              llista={llista}
+              onTorna={() => obreLlista(null)}
+              onCanviaNom={canviaNomLlista}
+              onEsborra={treuLlista}
+              onAfegeix={() => setAfegintALlista(true)}
+            />
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-sm font-semibold text-zinc-50">La teva biblioteca</h2>
+                <p className="text-xs text-zinc-400">
+                  {carregant
+                    ? "Carregant…"
+                    : `${cancons.length} ${cancons.length === 1 ? "cançó" : "cançons"} · ${formatMida(totalMida)}`}
+                </p>
+              </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={() => inputFitxers.current?.click()}
-                className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition-colors hover:bg-teal-400"
-              >
-                <IconaMes className="h-5 w-5" />
-                Afegeix cançons
-              </button>
-              <button
-                type="button"
-                onClick={() => inputCarpeta.current?.click()}
-                className="hidden items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 sm:inline-flex"
-              >
-                <IconaCarpeta className="h-5 w-5" />
-                Una carpeta
-              </button>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => inputFitxers.current?.click()}
+                  className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition-colors hover:bg-teal-400"
+                >
+                  <IconaMes className="h-5 w-5" />
+                  Afegeix cançons
+                </button>
+                <button
+                  type="button"
+                  onClick={() => inputCarpeta.current?.click()}
+                  className="hidden items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 sm:inline-flex"
+                >
+                  <IconaCarpeta className="h-5 w-5" />
+                  Una carpeta
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           <input
             ref={inputFitxers}
@@ -709,25 +729,18 @@ export function Reproductor() {
             </div>
           )}
 
-          {cancons.length > 0 && (
-            <BarraLlistes
-              llistes={llistes}
-              activa={llistaActiva}
-              onTria={setLlistaActiva}
-              onCrea={creaLlista}
-              onCanviaNom={canviaNomLlista}
-              onEsborra={treuLlista}
-            />
+          {!llista && cancons.length > 0 && (
+            <BarraLlistes llistes={llistes} onObre={obreLlista} onCrea={creaLlista} />
           )}
 
-          {cancons.length > 0 && (
+          {!llista && cancons.length > 0 && (
             <div className="relative mt-4">
               <IconaCerca className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
               <input
                 type="search"
                 value={cerca}
                 onChange={(event) => setCerca(event.target.value)}
-                placeholder={llista ? `Cerca dins de «${llista.nom}»` : "Cerca per títol, artista o àlbum"}
+                placeholder="Cerca per títol, artista o àlbum"
                 aria-label="Cerca a la biblioteca"
                 className="w-full rounded-xl border border-white/10 bg-white/[0.06] py-2 pl-11 pr-3 text-sm text-zinc-50 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
               />
@@ -794,6 +807,15 @@ export function Reproductor() {
           )}
         </section>
       </main>
+
+      {llista && afegintALlista && (
+        <DialegAfegirCancons
+          llista={llista}
+          cancons={cancons}
+          onAlterna={alternaALlista}
+          onTanca={() => setAfegintALlista(false)}
+        />
+      )}
 
       {cancoPerAfegir && (
         <DialegLlistes

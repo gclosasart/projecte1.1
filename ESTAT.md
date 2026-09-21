@@ -190,16 +190,24 @@ importants:
   s'afegeixen al final, alfabètiques entre elles, per no descol·locar res.
   Mentre hi ha una cerca activa no es pot reordenar, perquè la llista que es
   veu no és la sencera.
-- **Llistes de reproducció**: xips a dalt de la biblioteca ("Totes les
-  cançons" + una per llista + "Nova llista"). Cada llista és un nom i una
-  llista d'ids de cançons en ordre (magatzem `llistes` d'IndexedDB), així que
-  una cançó pot ser a diverses llistes sense duplicar-ne el fitxer. Dins
-  d'una llista, arrossegar canvia l'ordre d'aquella llista i no el de la
-  biblioteca, i la paperera es converteix en "treu-la d'aquesta llista" (per
-  esborrar del dispositiu cal anar a "Totes les cançons"). El nom es canvia
-  amb "Canvia el nom", i esborrar una llista no toca cap cançó. El que sona
-  segueix sempre el que es veu: dins d'una llista, "següent" va a la següent
-  d'aquella llista. La llista oberta es recorda entre sessions.
+- **Llistes de reproducció**: a la biblioteca hi ha un desplegable ("Llistes
+  de reproducció", `BarraLlistes.tsx`) que ensenya totes les llistes una sota
+  l'altra i deixa crear-ne. En tocar-ne una s'entra a la seva pantalla
+  (`CapcaleraLlista.tsx`): fletxa enrere, nom (amb llapis per canviar-lo i
+  paperera per esborrar la llista), les cançons en el seu ordre i un botó
+  "Afegeix cançons" que obre la biblioteca amb caselles
+  (`DialegAfegirCancons.tsx`). Allà dins no hi ha cercador, ni botons
+  d'importar, ni comptadors d'espai: la pantalla és només la llista. Des de
+  la biblioteca, cada cançó també té un botó per posar-la a les llistes que
+  es vulgui (`DialegLlistes.tsx`).
+  Cada llista és un nom i uns ids de cançons en ordre (magatzem `llistes`
+  d'IndexedDB), així que una cançó pot ser a diverses llistes sense
+  duplicar-ne el fitxer. Dins d'una llista, arrossegar canvia l'ordre
+  d'aquella llista i no el de la biblioteca, i la paperera de cada fila es
+  converteix en "treu-la d'aquesta llista" (per esborrar-la del dispositiu
+  cal sortir a la biblioteca). Esborrar una llista no toca cap cançó. El que
+  sona segueix sempre el que es veu: dins d'una llista, "següent" va a la
+  següent d'aquella llista. La llista oberta es recorda entre sessions.
 - **La base de dades va per la versió 3**: el camp `ordre` a cada cançó (v2) i
   el magatzem `llistes` (v3).
   La migració des de la versió 1 (`onupgradeneeded` a `biblioteca.ts`)

@@ -2,192 +2,116 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Llista } from "./biblioteca";
-import { IconaLlapis, IconaMes, IconaPaperera } from "./icones";
+import { IconaFletxaAvall, IconaLlistes, IconaMes } from "./icones";
 
 type Props = {
   llistes: Llista[];
-  activa: string | null; // null = tota la biblioteca
-  onTria: (id: string | null) => void;
+  onObre: (id: string) => void;
   onCrea: (nom: string) => void;
-  onCanviaNom: (id: string, nom: string) => void;
-  onEsborra: (llista: Llista) => void;
 };
 
-export function BarraLlistes({ llistes, activa, onTria, onCrea, onCanviaNom, onEsborra }: Props) {
+/** Desplegable amb totes les llistes de reproducció, una sota l'altra. */
+export function BarraLlistes({ llistes, onObre, onCrea }: Props) {
+  const [obert, setObert] = useState(false);
   const [creant, setCreant] = useState(false);
-  const [nomNou, setNomNou] = useState("");
-  const [editant, setEditant] = useState(false);
-  const [nomEditat, setNomEditat] = useState("");
+  const [nom, setNom] = useState("");
   const camp = useRef<HTMLInputElement>(null);
 
-  const llistaActiva = llistes.find((llista) => llista.id === activa) ?? null;
-
   useEffect(() => {
-    if (creant || editant) camp.current?.focus();
-  }, [creant, editant]);
-
-  // En canviar de llista, cap edició a mitges no ha de sobreviure.
-  const tria = (id: string | null) => {
-    setEditant(false);
-    setCreant(false);
-    onTria(id);
-  };
+    if (creant) camp.current?.focus();
+  }, [creant]);
 
   const crea = () => {
-    const nom = nomNou.trim();
-    if (nom) onCrea(nom);
-    setNomNou("");
+    const net = nom.trim();
+    if (net) onCrea(net);
+    setNom("");
     setCreant(false);
-  };
-
-  const reanomena = () => {
-    const nom = nomEditat.trim();
-    if (nom && llistaActiva && nom !== llistaActiva.nom) onCanviaNom(llistaActiva.id, nom);
-    setEditant(false);
+    setObert(false);
   };
 
   return (
     <div className="mt-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <Xip actiu={activa === null} onClick={() => tria(null)}>
-          Totes les cançons
-        </Xip>
+      <button
+        type="button"
+        onClick={() => setObert((actual) => !actual)}
+        aria-expanded={obert}
+        className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/[0.06] px-4 py-3 text-left transition-colors hover:border-white/25"
+      >
+        <IconaLlistes className="h-5 w-5 shrink-0 text-teal-400" />
+        <span className="flex-1 text-sm font-semibold text-zinc-100">Llistes de reproducció</span>
+        <span className="text-xs text-zinc-500">{llistes.length}</span>
+        <IconaFletxaAvall
+          className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${obert ? "rotate-180" : ""}`}
+        />
+      </button>
 
-        {llistes.map((llista) => (
-          <Xip key={llista.id} actiu={llista.id === activa} onClick={() => tria(llista.id)}>
-            {llista.nom}
-            <span className="ml-1.5 text-xs opacity-60">{llista.cancons.length}</span>
-          </Xip>
-        ))}
+      {obert && (
+        <div className="mt-2 rounded-xl border border-white/10 bg-white/[0.04] p-2">
+          {llistes.length === 0 && !creant && (
+            <p className="px-3 py-2 text-xs text-zinc-500">
+              Encara no tens cap llista. Crea&apos;n una i podràs posar-hi les cançons que vulguis.
+            </p>
+          )}
 
-        {!creant && (
-          <button
-            type="button"
-            onClick={() => setCreant(true)}
-            className="inline-flex items-center gap-1 rounded-full border border-dashed border-white/20 px-3 py-1.5 text-xs font-semibold text-zinc-400 transition-colors hover:border-teal-400 hover:text-teal-300"
-          >
-            <IconaMes className="h-4 w-4" />
-            Nova llista
-          </button>
-        )}
-      </div>
+          <ul>
+            {llistes.map((llista) => (
+              <li key={llista.id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setObert(false);
+                    onObre(llista.id);
+                  }}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-white/5"
+                >
+                  <span className="min-w-0 flex-1 truncate text-sm font-semibold text-zinc-100">
+                    {llista.nom}
+                  </span>
+                  <span className="shrink-0 text-xs text-zinc-500">
+                    {llista.cancons.length} {llista.cancons.length === 1 ? "cançó" : "cançons"}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
 
-      {creant && (
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            crea();
-          }}
-          className="mt-2 flex items-center gap-2"
-        >
-          <input
-            ref={camp}
-            value={nomNou}
-            onChange={(event) => setNomNou(event.target.value)}
-            onKeyDown={(event) => event.key === "Escape" && setCreant(false)}
-            maxLength={60}
-            placeholder="Nom de la llista (per exemple, «Per córrer»)"
-            aria-label="Nom de la llista nova"
-            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm text-zinc-50 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
-          />
-          <button
-            type="submit"
-            className="shrink-0 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-teal-400"
-          >
-            Crea
-          </button>
-          <button
-            type="button"
-            onClick={() => setCreant(false)}
-            className="shrink-0 rounded-full px-3 py-2 text-sm font-semibold text-zinc-400 transition-colors hover:text-zinc-200"
-          >
-            Deixa-ho
-          </button>
-        </form>
-      )}
-
-      {llistaActiva && !editant && (
-        <div className="mt-2 flex items-center gap-3 text-xs text-zinc-500">
-          <button
-            type="button"
-            onClick={() => {
-              setNomEditat(llistaActiva.nom);
-              setEditant(true);
-            }}
-            className="inline-flex items-center gap-1 font-semibold text-zinc-400 transition-colors hover:text-teal-300"
-          >
-            <IconaLlapis className="h-4 w-4" />
-            Canvia el nom
-          </button>
-          <button
-            type="button"
-            onClick={() => onEsborra(llistaActiva)}
-            className="inline-flex items-center gap-1 font-semibold text-zinc-400 transition-colors hover:text-red-300"
-          >
-            <IconaPaperera className="h-4 w-4" />
-            Esborra la llista
-          </button>
-          <span className="ml-auto">Les cançons no es perden</span>
+          {creant ? (
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                crea();
+              }}
+              className="mt-1 flex items-center gap-2 px-1 pb-1"
+            >
+              <input
+                ref={camp}
+                value={nom}
+                onChange={(event) => setNom(event.target.value)}
+                onKeyDown={(event) => event.key === "Escape" && setCreant(false)}
+                maxLength={60}
+                placeholder="Nom de la llista"
+                aria-label="Nom de la llista nova"
+                className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm text-zinc-50 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
+              />
+              <button
+                type="submit"
+                className="shrink-0 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-teal-400"
+              >
+                Crea
+              </button>
+            </form>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setCreant(true)}
+              className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-teal-300 transition-colors hover:bg-white/5"
+            >
+              <IconaMes className="h-5 w-5" />
+              Nova llista
+            </button>
+          )}
         </div>
       )}
-
-      {llistaActiva && editant && (
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            reanomena();
-          }}
-          className="mt-2 flex items-center gap-2"
-        >
-          <input
-            ref={camp}
-            value={nomEditat}
-            onChange={(event) => setNomEditat(event.target.value)}
-            onKeyDown={(event) => event.key === "Escape" && setEditant(false)}
-            maxLength={60}
-            aria-label="Nom de la llista"
-            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm text-zinc-50 outline-none transition-colors focus:border-teal-400"
-          />
-          <button
-            type="submit"
-            className="shrink-0 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-teal-400"
-          >
-            Desa
-          </button>
-          <button
-            type="button"
-            onClick={() => setEditant(false)}
-            className="shrink-0 rounded-full px-3 py-2 text-sm font-semibold text-zinc-400 transition-colors hover:text-zinc-200"
-          >
-            Deixa-ho
-          </button>
-        </form>
-      )}
     </div>
-  );
-}
-
-function Xip({
-  actiu,
-  onClick,
-  children,
-}: {
-  actiu: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={actiu}
-      className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-        actiu
-          ? "bg-teal-500 text-zinc-950"
-          : "border border-white/10 bg-white/[0.06] text-zinc-300 hover:border-white/25 hover:text-zinc-100"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
