@@ -130,6 +130,20 @@ export function IconaPaperera({ className }: Props) {
   );
 }
 
+export function IconaAgafador({ className }: Props) {
+  return (
+    <Svg className={className}>
+      <path
+        d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}
+
 export function IconaCerca({ className }: Props) {
   return (
     <Svg className={className}>

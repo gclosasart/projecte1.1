@@ -12,6 +12,7 @@ export type Canco = {
   titol: string;
   artista: string;
   album: string;
+  ordre: number; // posició a la llista, canviable arrossegant
   durada: number; // segons; 0 si no s'ha pogut llegir
   mida: number; // bytes
   tipus: string; // MIME
@@ -20,7 +21,7 @@ export type Canco = {
 };
 
 const DB_NOM = "musica";
-const DB_VERSIO = 1;
+const DB_VERSIO = 2;
 const CANCONS = "cancons";
 const AUDIOS = "audios";
 const CARATULES = "caratules";
@@ -34,7 +35,7 @@ function obreDb(): Promise<IDBDatabase> {
   if (!dbPromesa) {
     dbPromesa = new Promise((resolve, reject) => {
       const peticio = indexedDB.open(DB_NOM, DB_VERSIO);
-      peticio.onupgradeneeded = () => {
+      peticio.onupgradeneeded = (esdeveniment) => {
         const db = peticio.result;
         if (!db.objectStoreNames.contains(CANCONS)) {
           db.createObjectStore(CANCONS, { keyPath: "id" });
@@ -43,6 +44,20 @@ function obreDb(): Promise<IDBDatabase> {
         // keyPath: així el valor desat és el Blob tal qual.
         if (!db.objectStoreNames.contains(AUDIOS)) db.createObjectStore(AUDIOS);
         if (!db.objectStoreNames.contains(CARATULES)) db.createObjectStore(CARATULES);
+
+        // Versió 2: l'ordre de la llista deixa de ser alfabètic i passa a ser
+        // el que decideixi qui escolta, arrossegant. A les cançons que ja hi
+        // havia se'ls dona el número que els tocava per ordre alfabètic, que
+        // és com es veien fins ara.
+        if (esdeveniment.oldVersion < 2 && peticio.transaction) {
+          const magatzem = peticio.transaction.objectStore(CANCONS);
+          const totes = magatzem.getAll();
+          totes.onsuccess = () => {
+            ordenaPerEtiquetes(totes.result as Canco[]).forEach((canco, posicio) => {
+              magatzem.put({ ...canco, ordre: posicio });
+            });
+          };
+        }
       };
       peticio.onsuccess = () => resolve(peticio.result);
       peticio.onerror = () => reject(peticio.error);
@@ -73,14 +88,35 @@ export async function llistaCancons(): Promise<Canco[]> {
   return ordenaCancons(cancons);
 }
 
-/** Ordre de la biblioteca: artista, després àlbum, després títol. */
+/** Ordre de la biblioteca: el que ha decidit qui escolta arrossegant. */
 export function ordenaCancons(cancons: Canco[]): Canco[] {
+  return [...cancons].sort((a, b) => a.ordre - b.ordre);
+}
+
+/** Ordre alfabètic, per col·locar les cançons noves d'una tacada. */
+export function ordenaPerEtiquetes(cancons: Canco[]): Canco[] {
   return [...cancons].sort(
     (a, b) =>
       a.artista.localeCompare(b.artista, "ca", { sensitivity: "base" }) ||
       a.album.localeCompare(b.album, "ca", { sensitivity: "base" }) ||
       a.titol.localeCompare(b.titol, "ca", { sensitivity: "base" }),
   );
+}
+
+/** Desa el número d'ordre de les cançons que han canviat de lloc. */
+export async function desaOrdre(posicions: { id: string; ordre: number }[]): Promise<void> {
+  if (!posicions.length) return;
+  const db = await obreDb();
+  const tx = db.transaction(CANCONS, "readwrite");
+  const magatzem = tx.objectStore(CANCONS);
+  for (const { id, ordre } of posicions) {
+    const peticio = magatzem.get(id);
+    peticio.onsuccess = () => {
+      const canco = peticio.result as Canco | undefined;
+      if (canco) magatzem.put({ ...canco, ordre });
+    };
+  }
+  await esperaTransaccio(tx);
 }
 
 export async function desaCanco(canco: Canco, audio: Blob, caratula?: Blob): Promise<void> {

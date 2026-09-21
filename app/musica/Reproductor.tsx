@@ -7,10 +7,12 @@ import {
   desaCanco,
   esborraCanco,
   espaiUsat,
+  desaOrdre,
   llistaCancons,
   obtenAudio,
   obtenCaratula,
   ordenaCancons,
+  ordenaPerEtiquetes,
   type Canco,
 } from "./biblioteca";
 import { etiquetesDelNom, llegeixDurada, llegeixEtiquetes } from "./etiquetes";
@@ -351,6 +353,9 @@ export function Reproductor() {
 
       const jaHiSon = new Set(cancons.map((canco) => `${canco.nomFitxer}:${canco.mida}`));
       const noves: Canco[] = [];
+      // Les noves van al final de la llista, per no descol·locar l'ordre que
+      // s'hagi triat arrossegant.
+      let seguentOrdre = cancons.reduce((maxim, canco) => Math.max(maxim, canco.ordre), -1) + 1;
       let repetides = 0;
       let fallades = 0;
 
@@ -369,6 +374,7 @@ export function Reproductor() {
             const canco: Canco = {
               id: identificador(),
               nomFitxer: fitxer.name,
+              ordre: 0, // es reparteix més avall, un cop es té tot el grup
               titol: etiquetes.titol || delNom.titol,
               artista: etiquetes.artista || delNom.artista || "Artista desconegut",
               album: etiquetes.album || "",
@@ -388,7 +394,14 @@ export function Reproductor() {
         setProgres((anterior) => (anterior ? { ...anterior, fets: anterior.fets + 1 } : anterior));
       }
 
-      if (noves.length) setCancons((previes) => ordenaCancons([...previes, ...noves]));
+      if (noves.length) {
+        const ordenades = ordenaPerEtiquetes(noves).map((canco) => ({
+          ...canco,
+          ordre: seguentOrdre++,
+        }));
+        await desaOrdre(ordenades.map(({ id, ordre }) => ({ id, ordre })));
+        setCancons((previes) => ordenaCancons([...previes, ...ordenades]));
+      }
       setProgres(null);
       refrescaEspai();
 
@@ -419,6 +432,26 @@ export function Reproductor() {
       }
     },
     [idActual, refrescaEspai],
+  );
+
+  const reordena = useCallback(
+    (origen: number, desti: number) => {
+      if (origen === desti || origen < 0 || desti < 0) return;
+      if (origen >= cancons.length || desti >= cancons.length) return;
+
+      const reordenades = [...cancons];
+      const [moguda] = reordenades.splice(origen, 1);
+      reordenades.splice(desti, 0, moguda);
+      const renumerades = reordenades.map((canco, posicio) => ({ ...canco, ordre: posicio }));
+
+      // Al disc només hi van les que realment han canviat de lloc: les que
+      // queden entre la posició d'origen i la d'arribada.
+      const canviades = renumerades.filter((canco, posicio) => cancons[posicio]?.id !== canco.id);
+      void desaOrdre(canviades.map(({ id, ordre }) => ({ id, ordre })));
+
+      setCancons(renumerades);
+    },
+    [cancons],
   );
 
   const buida = useCallback(async () => {
@@ -559,6 +592,11 @@ export function Reproductor() {
                 aria-label="Cerca a la biblioteca"
                 className="w-full rounded-xl border border-white/10 bg-white/[0.06] py-2 pl-11 pr-3 text-sm text-zinc-50 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
               />
+              {cerca.trim() && visibles.length > 1 && (
+                <p className="mt-2 text-xs text-zinc-500">
+                  Buida la cerca per poder tornar a canviar l&apos;ordre arrossegant.
+                </p>
+              )}
             </div>
           )}
 
@@ -581,8 +619,10 @@ export function Reproductor() {
                 cancons={visibles}
                 idActual={idActual}
                 reproduint={reproduint}
+                reordenable={!cerca.trim()}
                 onTria={triaCanco}
                 onEsborra={treu}
+                onReordena={reordena}
               />
             )}
           </div>

@@ -180,6 +180,22 @@ importants:
   hagi cap variable d'entorn configurada (`npm run dev` sense `.env.local`:
   la resta de l'app peta, però `/musica` va). Per això `/musica` ja no cal
   que sigui a `PUBLIC_PATHS`.
+- **L'ordre de la llista el decideix qui escolta**, arrossegant les cançons
+  per l'agafador de l'esquerra (o amb les fletxes amunt/avall quan l'agafador
+  té el focus). Es fa amb esdeveniments de punter, no amb l'arrossegament
+  natiu del navegador, perquè al mòbil aquell no existeix: així el dit i el
+  ratolí segueixen exactament el mateix camí (cal `touch-none` a l'agafador o
+  el mòbil fa scroll en lloc d'arrossegar). Aquest ordre és també el de
+  reproducció (el botó "següent" va a la cançó de sota). Les cançons noves
+  s'afegeixen al final, alfabètiques entre elles, per no descol·locar res.
+  Mentre hi ha una cerca activa no es pot reordenar, perquè la llista que es
+  veu no és la sencera.
+- **La base de dades va per la versió 2**: el camp nou `ordre` a cada cançó.
+  La migració des de la versió 1 (`onupgradeneeded` a `biblioteca.ts`)
+  numera les cançons que ja hi havia per ordre alfabètic d'artista/àlbum/
+  títol, que és com es veien abans, de manera que qui ja tingués biblioteca
+  no nota cap salt. Provat sembrant una base de dades v1 a mà i obrint el
+  reproductor.
 - **Paleta fosca** (només aquí): fons `.bg-estudi` a `globals.css`, base
   `#23262b` amb les mateixes taques difuminades que el fons clar però en to
   mitjanit; targetes `bg-white/[0.06]` amb vora `border-white/10`; barra del
