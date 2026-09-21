@@ -134,6 +134,46 @@ ha de substituir la pàgina d'inici (`/` continua redirigint a
 de cada tenant amb camps pensats per a un marketplace (ciutat, foto,
 descripció) que ara no existeixen.
 
+S'ha afegit un **reproductor de música** a `/musica`. No té res a veure amb el
+negoci del coworking: és una app a part que viu dins d'aquest mateix projecte
+(i del mateix desplegament) per no haver de mantenir-ne un altre. Punts
+importants:
+
+- És una **PWA amb àmbit propi** (`/musica`): manifest a
+  `public/musica/manifest.webmanifest`, service worker a `public/musica-sw.js`
+  i icones pròpies a `public/musica/`. El service worker ha de viure a l'arrel
+  de `public/` i no dins de `/musica/`, perquè l'àmbit d'un service worker no
+  pot pujar de directori i la pàgina és `/musica` (sense barra final).
+  Instal·lar el reproductor NO instal·la el SaaS: per al navegador són dues
+  apps diferents. A l'ordinador i a Android s'instal·la amb el botó
+  "Instal·la"; a l'iPhone i l'iPad, amb Compartir → "Afegeix a la pantalla
+  d'inici" (Safari no dispara `beforeinstallprompt` i per tant no hi ha botó).
+- Les cançons **no es pugen enlloc**: qui escolta tria fitxers que ja té al
+  dispositiu i es desen a IndexedDB (`app/musica/biblioteca.ts`), demanant
+  `navigator.storage.persist()` perquè el sistema no els esborri quan li falti
+  espai. Cada dispositiu té la seva biblioteca i s'hi han d'afegir les cançons
+  un cop; no se sincronitzen entre dispositius (caldria servidor, i la gràcia
+  era justament no tenir-ne).
+- Títol, artista, àlbum i caràtula es llegeixen de les etiquetes ID3 amb un
+  lector escrit a mà (`app/musica/etiquetes.ts`, sense cap dependència nova).
+  Si el fitxer no en porta, s'endevinen del nom ("01 - Artista - Títol.mp3").
+  Només s'entén ID3 (el que porten els MP3): un FLAC o un M4A amb etiquetes
+  d'un altre format sortiran amb el nom del fitxer.
+- El service worker **només es registra en producció**: a `npm run dev`
+  guardaria a la memòria cau els fragments de Next.js, que canvien a cada
+  recàrrega. Si n'hi troba un de registrat, el desregistra.
+- La interfície és **només en català**, a diferència de la resta de l'app: no
+  passa pel diccionari de `lib/i18n` perquè és una app personal i no part del
+  producte multitenant. Si algun dia s'ha de traduir, caldrà afegir-ne les
+  claus als 5 idiomes.
+- `/musica` és a `PUBLIC_PATHS` i a `NO_REDIRECT_IF_AUTHED` de
+  `lib/supabase/proxy.ts`: funciona igual amb la sessió oberta o sense (i de
+  passada deixa passar `/musica-sw.js`, que si no acabaria redirigit a
+  `/login`).
+- Les icones es regeneren amb `node scripts/genera-icones-musica.mjs`, que
+  escriu els PNG a mà (sense dependències) a partir d'un dibuix vectorial
+  senzill amb el teal de l'app.
+
 ## Fet fins ara (de més antic a més recent)
 
 - No-show a reserves/factures
@@ -198,3 +238,7 @@ descripció) que ara no existeixen.
   botons Accepta/Rebutja. No crea reserves automàticament (decisió
   explícita de l'usuari, per evitar abús sense protecció anti-bots): el
   personal ha de revisar-les i crear la reserva real a mà si l'accepta
+- Reproductor de música offline a `/musica`: PWA instal·lable a ordinador i
+  mòbil, biblioteca de cançons pròpies desada a IndexedDB, lector d'etiquetes
+  ID3 propi, cerca, ordre aleatori, repetició i controls a la pantalla de
+  bloqueig (Media Session)

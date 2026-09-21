@@ -107,3 +107,16 @@ select {
      amunt en lloc de centrat verticalment. */
   line-height: 1.2;
 }
+
+/* Barretes que pugen i baixen al costat de la cançó que sona al reproductor
+   de música (/musica). L'animació es referencia des de les classes de
+   Tailwind com a `animate-[sonant_900ms_ease-in-out_infinite]`. */
+@keyframes sonant {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
