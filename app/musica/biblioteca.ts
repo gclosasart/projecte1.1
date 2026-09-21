@@ -20,9 +20,18 @@ export type Canco = {
   afegit: number; // epoch ms
 };
 
+/** Una llista de reproducció: un nom i les cançons que hi ha, en ordre. */
+export type Llista = {
+  id: string;
+  nom: string;
+  cancons: string[]; // ids de cançons, en l'ordre en què sonen
+  creada: number;
+};
+
 const DB_NOM = "musica";
-const DB_VERSIO = 2;
+const DB_VERSIO = 3;
 const CANCONS = "cancons";
+const LLISTES = "llistes";
 const AUDIOS = "audios";
 const CARATULES = "caratules";
 
@@ -44,6 +53,9 @@ function obreDb(): Promise<IDBDatabase> {
         // keyPath: així el valor desat és el Blob tal qual.
         if (!db.objectStoreNames.contains(AUDIOS)) db.createObjectStore(AUDIOS);
         if (!db.objectStoreNames.contains(CARATULES)) db.createObjectStore(CARATULES);
+        // Versió 3: llistes de reproducció. No cal migrar res, qui no en
+        // tingui cap simplement comença amb el magatzem buit.
+        if (!db.objectStoreNames.contains(LLISTES)) db.createObjectStore(LLISTES, { keyPath: "id" });
 
         // Versió 2: l'ordre de la llista deixa de ser alfabètic i passa a ser
         // el que decideixi qui escolta, arrossegant. A les cançons que ja hi
@@ -151,10 +163,33 @@ export async function esborraCanco(id: string): Promise<void> {
 
 export async function buidaBiblioteca(): Promise<void> {
   const db = await obreDb();
-  const tx = db.transaction([CANCONS, AUDIOS, CARATULES], "readwrite");
+  const tx = db.transaction([CANCONS, AUDIOS, CARATULES, LLISTES], "readwrite");
   tx.objectStore(CANCONS).clear();
   tx.objectStore(AUDIOS).clear();
   tx.objectStore(CARATULES).clear();
+  // Sense cançons, les llistes quedarien totes buides i amb nom de fantasma.
+  tx.objectStore(LLISTES).clear();
+  await esperaTransaccio(tx);
+}
+
+export async function llistaLlistes(): Promise<Llista[]> {
+  const db = await obreDb();
+  const tx = db.transaction(LLISTES, "readonly");
+  const llistes = await esperaPeticio<Llista[]>(tx.objectStore(LLISTES).getAll());
+  return llistes.sort((a, b) => a.creada - b.creada);
+}
+
+export async function desaLlista(llista: Llista): Promise<void> {
+  const db = await obreDb();
+  const tx = db.transaction(LLISTES, "readwrite");
+  tx.objectStore(LLISTES).put(llista);
+  await esperaTransaccio(tx);
+}
+
+export async function esborraLlista(id: string): Promise<void> {
+  const db = await obreDb();
+  const tx = db.transaction(LLISTES, "readwrite");
+  tx.objectStore(LLISTES).delete(id);
   await esperaTransaccio(tx);
 }
 

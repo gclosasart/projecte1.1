@@ -6,18 +6,24 @@ import {
   demanaEmmagatzematgePersistent,
   desaCanco,
   esborraCanco,
+  esborraLlista,
   espaiUsat,
+  desaLlista,
   desaOrdre,
   llistaCancons,
+  llistaLlistes,
   obtenAudio,
   obtenCaratula,
   ordenaCancons,
   ordenaPerEtiquetes,
   type Canco,
+  type Llista,
 } from "./biblioteca";
 import { etiquetesDelNom, llegeixDurada, llegeixEtiquetes } from "./etiquetes";
 import { formatMida } from "./format";
+import { BarraLlistes } from "./BarraLlistes";
 import { BarraReproduccio } from "./BarraReproduccio";
+import { DialegLlistes } from "./DialegLlistes";
 import { InstalaApp } from "./InstalaApp";
 import { LlistaCancons } from "./LlistaCancons";
 import { IconaCarpeta, IconaCerca, IconaMes, IconaNota } from "./icones";
@@ -33,6 +39,7 @@ type Preferencies = {
   barreja: boolean;
   repeticio: Repeticio;
   darrera: string | null;
+  llista: string | null;
 };
 
 export function Reproductor() {
@@ -52,6 +59,9 @@ export function Reproductor() {
   const [caratulaUrl, setCaratulaUrl] = useState<string | null>(null);
   const [espai, setEspai] = useState<{ usat: number; disponible: number } | null>(null);
   const [arrossegant, setArrossegant] = useState(false);
+  const [llistes, setLlistes] = useState<Llista[]>([]);
+  const [llistaActiva, setLlistaActiva] = useState<string | null>(null);
+  const [cancoPerAfegir, setCancoPerAfegir] = useState<Canco | null>(null);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const urlAudio = useRef<string | null>(null);
@@ -66,13 +76,26 @@ export function Reproductor() {
     [cancons, idActual],
   );
 
+  const llista = useMemo(
+    () => llistes.find((altra) => altra.id === llistaActiva) ?? null,
+    [llistes, llistaActiva],
+  );
+
   const visibles = useMemo(() => {
+    // Dins d'una llista manen l'ordre i el contingut de la llista; fora, la
+    // biblioteca sencera. Les cançons esborrades del dispositiu es descarten.
+    const base = llista
+      ? llista.cancons
+          .map((id) => cancons.find((canco) => canco.id === id))
+          .filter((canco): canco is Canco => Boolean(canco))
+      : cancons;
+
     const text = cerca.trim().toLowerCase();
-    if (!text) return cancons;
-    return cancons.filter((canco) =>
+    if (!text) return base;
+    return base.filter((canco) =>
       `${canco.titol} ${canco.artista} ${canco.album} ${canco.nomFitxer}`.toLowerCase().includes(text),
     );
-  }, [cancons, cerca]);
+  }, [cancons, cerca, llista]);
 
   // Ordre en què sonaran les cançons: el de la llista que es veu, barrejat si
   // cal. La llavor fa que la barreja sigui sempre la mateixa mentre no es
@@ -91,15 +114,19 @@ export function Reproductor() {
     let viu = true;
     (async () => {
       try {
-        const desades = await llistaCancons();
+        const [desades, desadesLlistes] = await Promise.all([llistaCancons(), llistaLlistes()]);
         if (!viu) return;
         setCancons(desades);
+        setLlistes(desadesLlistes);
 
         const preferencies = llegeixPreferencies();
         if (preferencies) {
           setVolum(preferencies.volum);
           setBarreja(preferencies.barreja);
           setRepeticio(preferencies.repeticio);
+          if (preferencies.llista && desadesLlistes.some((altra) => altra.id === preferencies.llista)) {
+            setLlistaActiva(preferencies.llista);
+          }
           if (preferencies.darrera && desades.some((canco) => canco.id === preferencies.darrera)) {
             // Es deixa a punt, però no sona fins que algú ho demana: cap
             // navegador no deixa arrencar so sol, i tampoc seria agradable.
@@ -125,12 +152,18 @@ export function Reproductor() {
     // esborraria quina sonava l'últim cop.
     if (!preferenciesLlestes.current) return;
     try {
-      const preferencies: Preferencies = { volum, barreja, repeticio, darrera: idActual };
+      const preferencies: Preferencies = {
+        volum,
+        barreja,
+        repeticio,
+        darrera: idActual,
+        llista: llistaActiva,
+      };
       localStorage.setItem(CLAU_PREFERENCIES, JSON.stringify(preferencies));
     } catch {
       // Mode privat o emmagatzematge ple: no passa res, són preferències.
     }
-  }, [volum, barreja, repeticio, idActual]);
+  }, [volum, barreja, repeticio, idActual, llistaActiva]);
 
   // Carrega el so de la cançó triada des d'IndexedDB.
   useEffect(() => {
@@ -420,6 +453,15 @@ export function Reproductor() {
       try {
         await esborraCanco(canco.id);
         setCancons((previes) => previes.filter((altra) => altra.id !== canco.id));
+        // Si era a alguna llista, treu-la'n: si no, hi quedaria un forat.
+        setLlistes((previes) =>
+          previes.map((altra) => {
+            if (!altra.cancons.includes(canco.id)) return altra;
+            const neta = { ...altra, cancons: altra.cancons.filter((id) => id !== canco.id) };
+            void desaLlista(neta);
+            return neta;
+          }),
+        );
         if (canco.id === idActual) {
           audioRef.current?.pause();
           setIdActual(null);
@@ -437,6 +479,18 @@ export function Reproductor() {
   const reordena = useCallback(
     (origen: number, desti: number) => {
       if (origen === desti || origen < 0 || desti < 0) return;
+
+      if (llista) {
+        if (origen >= llista.cancons.length || desti >= llista.cancons.length) return;
+        const ids = [...llista.cancons];
+        const [mogut] = ids.splice(origen, 1);
+        ids.splice(desti, 0, mogut);
+        const actualitzada = { ...llista, cancons: ids };
+        void desaLlista(actualitzada);
+        setLlistes((previes) => previes.map((altra) => (altra.id === llista.id ? actualitzada : altra)));
+        return;
+      }
+
       if (origen >= cancons.length || desti >= cancons.length) return;
 
       const reordenades = [...cancons];
@@ -451,7 +505,79 @@ export function Reproductor() {
 
       setCancons(renumerades);
     },
-    [cancons],
+    [cancons, llista],
+  );
+
+  const creaLlista = useCallback(
+    async (nom: string, cancoId?: string) => {
+      const nova: Llista = {
+        id: identificador(),
+        nom,
+        cancons: cancoId ? [cancoId] : [],
+        creada: Date.now(),
+      };
+      try {
+        await desaLlista(nova);
+        setLlistes((previes) => [...previes, nova]);
+        // En crear-la des dels xips s'hi entra; en crear-la des d'una cançó,
+        // no, que la persona estava fent una altra cosa.
+        if (!cancoId) setLlistaActiva(nova.id);
+      } catch (error) {
+        setAvis(missatge(error));
+      }
+    },
+    [],
+  );
+
+  const canviaNomLlista = useCallback(async (id: string, nom: string) => {
+    setLlistes((previes) => {
+      const actualitzades = previes.map((altra) => (altra.id === id ? { ...altra, nom } : altra));
+      const canviada = actualitzades.find((altra) => altra.id === id);
+      if (canviada) void desaLlista(canviada);
+      return actualitzades;
+    });
+  }, []);
+
+  const treuLlista = useCallback(async (aEsborrar: Llista) => {
+    if (
+      !window.confirm(
+        `Vols esborrar la llista «${aEsborrar.nom}»? Les cançons es queden al dispositiu.`,
+      )
+    ) {
+      return;
+    }
+    try {
+      await esborraLlista(aEsborrar.id);
+      setLlistes((previes) => previes.filter((altra) => altra.id !== aEsborrar.id));
+      setLlistaActiva((actual) => (actual === aEsborrar.id ? null : actual));
+    } catch (error) {
+      setAvis(missatge(error));
+    }
+  }, []);
+
+  /** Posa o treu una cançó d'una llista, segons si ja hi era. */
+  const alternaALlista = useCallback((llistaId: string, cancoId: string) => {
+    setLlistes((previes) => {
+      const actualitzades = previes.map((altra) => {
+        if (altra.id !== llistaId) return altra;
+        const hiEs = altra.cancons.includes(cancoId);
+        return {
+          ...altra,
+          cancons: hiEs ? altra.cancons.filter((id) => id !== cancoId) : [...altra.cancons, cancoId],
+        };
+      });
+      const canviada = actualitzades.find((altra) => altra.id === llistaId);
+      if (canviada) void desaLlista(canviada);
+      return actualitzades;
+    });
+  }, []);
+
+  const treuDeLlista = useCallback(
+    (canco: Canco) => {
+      if (!llista) return;
+      alternaALlista(llista.id, canco.id);
+    },
+    [alternaALlista, llista],
   );
 
   const buida = useCallback(async () => {
@@ -462,6 +588,8 @@ export function Reproductor() {
       await buidaBiblioteca();
       audioRef.current?.pause();
       setCancons([]);
+      setLlistes([]);
+      setLlistaActiva(null);
       setIdActual(null);
       setPosicio(0);
       setDurada(0);
@@ -582,13 +710,24 @@ export function Reproductor() {
           )}
 
           {cancons.length > 0 && (
+            <BarraLlistes
+              llistes={llistes}
+              activa={llistaActiva}
+              onTria={setLlistaActiva}
+              onCrea={creaLlista}
+              onCanviaNom={canviaNomLlista}
+              onEsborra={treuLlista}
+            />
+          )}
+
+          {cancons.length > 0 && (
             <div className="relative mt-4">
               <IconaCerca className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
               <input
                 type="search"
                 value={cerca}
                 onChange={(event) => setCerca(event.target.value)}
-                placeholder="Cerca per títol, artista o àlbum"
+                placeholder={llista ? `Cerca dins de «${llista.nom}»` : "Cerca per títol, artista o àlbum"}
                 aria-label="Cerca a la biblioteca"
                 className="w-full rounded-xl border border-white/10 bg-white/[0.06] py-2 pl-11 pr-3 text-sm text-zinc-50 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
               />
@@ -610,24 +749,36 @@ export function Reproductor() {
                   Es queden desats aquí dins: no es pugen enlloc.
                 </p>
               </div>
-            ) : visibles.length === 0 ? (
+            ) : visibles.length === 0 && cerca.trim() ? (
               <p className="px-2 py-8 text-center text-sm text-zinc-400">
                 Cap cançó coincideix amb «{cerca}».
               </p>
+            ) : visibles.length === 0 ? (
+              <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
+                <IconaNota className="h-10 w-10 text-teal-400" />
+                <p className="text-sm font-semibold text-zinc-50">Aquesta llista encara és buida</p>
+                <p className="max-w-sm text-xs text-zinc-400">
+                  Ves a «Totes les cançons» i toca el botó de llistes de cada cançó que hi vulguis
+                  posar.
+                </p>
+              </div>
             ) : (
               <LlistaCancons
                 cancons={visibles}
                 idActual={idActual}
                 reproduint={reproduint}
                 reordenable={!cerca.trim()}
+                enLlista={Boolean(llista)}
                 onTria={triaCanco}
                 onEsborra={treu}
                 onReordena={reordena}
+                onAfegeixALlista={setCancoPerAfegir}
+                onTreuDeLlista={treuDeLlista}
               />
             )}
           </div>
 
-          {cancons.length > 0 && (
+          {cancons.length > 0 && !llista && (
             <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3 text-xs text-zinc-400">
               <span>
                 {espai
@@ -643,6 +794,16 @@ export function Reproductor() {
           )}
         </section>
       </main>
+
+      {cancoPerAfegir && (
+        <DialegLlistes
+          canco={cancoPerAfegir}
+          llistes={llistes}
+          onAlterna={alternaALlista}
+          onCrea={(nom, cancoId) => void creaLlista(nom, cancoId)}
+          onTanca={() => setCancoPerAfegir(null)}
+        />
+      )}
 
       <BarraReproduccio
         canco={cancoActual}
@@ -718,6 +879,7 @@ function llegeixPreferencies(): Preferencies | null {
       barreja: Boolean(dades.barreja),
       repeticio: dades.repeticio === "tot" || dades.repeticio === "una" ? dades.repeticio : "cap",
       darrera: typeof dades.darrera === "string" ? dades.darrera : null,
+      llista: typeof dades.llista === "string" ? dades.llista : null,
     };
   } catch {
     return null;

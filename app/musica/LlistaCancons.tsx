@@ -3,7 +3,14 @@
 import { useRef, useState } from "react";
 import type { Canco } from "./biblioteca";
 import { formatDurada } from "./format";
-import { IconaAgafador, IconaNota, IconaPaperera, IconaReprodueix } from "./icones";
+import {
+  IconaAfegeixALlista,
+  IconaAgafador,
+  IconaNota,
+  IconaPaperera,
+  IconaReprodueix,
+  IconaTreuDeLlista,
+} from "./icones";
 
 type Props = {
   cancons: Canco[];
@@ -11,9 +18,13 @@ type Props = {
   reproduint: boolean;
   /** Només es pot reordenar la llista sencera, no un resultat de cerca. */
   reordenable: boolean;
+  /** Cert quan el que es veu és una llista de reproducció i no la biblioteca. */
+  enLlista: boolean;
   onTria: (id: string) => void;
   onEsborra: (canco: Canco) => void;
   onReordena: (origen: number, desti: number) => void;
+  onAfegeixALlista: (canco: Canco) => void;
+  onTreuDeLlista: (canco: Canco) => void;
 };
 
 type Arrossegament = {
@@ -30,9 +41,12 @@ export function LlistaCancons({
   idActual,
   reproduint,
   reordenable,
+  enLlista,
   onTria,
   onEsborra,
   onReordena,
+  onAfegeixALlista,
+  onTreuDeLlista,
 }: Props) {
   const llista = useRef<HTMLUListElement>(null);
   const [arros, setArros] = useState<Arrossegament | null>(null);
@@ -169,15 +183,39 @@ export function LlistaCancons({
               </span>
             </button>
 
-            <button
-              type="button"
-              onClick={() => onEsborra(canco)}
-              aria-label={`Treu ${canco.titol} de la biblioteca`}
-              title="Treu-la de la biblioteca"
-              className="shrink-0 rounded-lg p-2 text-zinc-500 transition-colors hover:bg-red-500/15 hover:text-red-300"
-            >
-              <IconaPaperera className="h-5 w-5" />
-            </button>
+            {!enLlista && (
+              <button
+                type="button"
+                onClick={() => onAfegeixALlista(canco)}
+                aria-label={`Afegeix ${canco.titol} a una llista`}
+                title="Afegeix a una llista"
+                className="shrink-0 rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-white/10 hover:text-teal-300"
+              >
+                <IconaAfegeixALlista className="h-5 w-5" />
+              </button>
+            )}
+
+            {enLlista ? (
+              <button
+                type="button"
+                onClick={() => onTreuDeLlista(canco)}
+                aria-label={`Treu ${canco.titol} d'aquesta llista`}
+                title="Treu-la d'aquesta llista (no s'esborra del dispositiu)"
+                className="shrink-0 rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-white/10 hover:text-zinc-200"
+              >
+                <IconaTreuDeLlista className="h-5 w-5" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onEsborra(canco)}
+                aria-label={`Treu ${canco.titol} de la biblioteca`}
+                title="Esborra-la del dispositiu"
+                className="shrink-0 rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-red-500/15 hover:text-red-300"
+              >
+                <IconaPaperera className="h-5 w-5" />
+              </button>
+            )}
           </li>
         );
       })}

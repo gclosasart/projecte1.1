@@ -144,6 +144,49 @@ export function IconaAgafador({ className }: Props) {
   );
 }
 
+export function IconaAfegeixALlista({ className }: Props) {
+  return (
+    <Svg className={className}>
+      <path
+        d="M4 7h11M4 12h7M4 17h7M16 12v8M20 16h-8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}
+
+export function IconaTreuDeLlista({ className }: Props) {
+  return (
+    <Svg className={className}>
+      <path
+        d="M4 7h11M4 12h7M4 17h7M20 16h-8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}
+
+export function IconaLlapis({ className }: Props) {
+  return (
+    <Svg className={className}>
+      <path
+        d="M4 20h4l10-10a2.1 2.1 0 0 0-3-3L5 17v3ZM14.5 6.5l3 3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
 export function IconaCerca({ className }: Props) {
   return (
     <Svg className={className}>

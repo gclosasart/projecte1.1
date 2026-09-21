@@ -190,12 +190,24 @@ importants:
   s'afegeixen al final, alfabètiques entre elles, per no descol·locar res.
   Mentre hi ha una cerca activa no es pot reordenar, perquè la llista que es
   veu no és la sencera.
-- **La base de dades va per la versió 2**: el camp nou `ordre` a cada cançó.
+- **Llistes de reproducció**: xips a dalt de la biblioteca ("Totes les
+  cançons" + una per llista + "Nova llista"). Cada llista és un nom i una
+  llista d'ids de cançons en ordre (magatzem `llistes` d'IndexedDB), així que
+  una cançó pot ser a diverses llistes sense duplicar-ne el fitxer. Dins
+  d'una llista, arrossegar canvia l'ordre d'aquella llista i no el de la
+  biblioteca, i la paperera es converteix en "treu-la d'aquesta llista" (per
+  esborrar del dispositiu cal anar a "Totes les cançons"). El nom es canvia
+  amb "Canvia el nom", i esborrar una llista no toca cap cançó. El que sona
+  segueix sempre el que es veu: dins d'una llista, "següent" va a la següent
+  d'aquella llista. La llista oberta es recorda entre sessions.
+- **La base de dades va per la versió 3**: el camp `ordre` a cada cançó (v2) i
+  el magatzem `llistes` (v3).
   La migració des de la versió 1 (`onupgradeneeded` a `biblioteca.ts`)
   numera les cançons que ja hi havia per ordre alfabètic d'artista/àlbum/
   títol, que és com es veien abans, de manera que qui ja tingués biblioteca
-  no nota cap salt. Provat sembrant una base de dades v1 a mà i obrint el
-  reproductor.
+  no nota cap salt (provat sembrant una base de dades v1 a mà i obrint el
+  reproductor). El pas a la v3 no migra res: qui no tingui llistes comença
+  amb el magatzem buit.
 - **Paleta fosca** (només aquí): fons `.bg-estudi` a `globals.css`, base
   `#23262b` amb les mateixes taques difuminades que el fons clar però en to
   mitjanit; targetes `bg-white/[0.06]` amb vora `border-white/10`; barra del
