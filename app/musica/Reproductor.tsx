@@ -897,6 +897,8 @@ export function Reproductor() {
           caratulaUrl={caratulaUrl}
           lletra={lletraActual}
           posicio={posicio}
+          reproduint={reproduint}
+          audioRef={audioRef}
           onSalta={salta}
           onLletra={() => void obreLletra()}
         />

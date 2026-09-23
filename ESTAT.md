@@ -279,6 +279,21 @@ importants:
   el panell i el karaoke perquè els dos ensenyin exactament el mateix. La
   lletra de la cançó que sona es carrega un sol cop a `lletraActual` i la fan
   servir el panell, el karaoke, l'editor i el sincronitzador.
+- **Taula de mescles** (`TaulaDeMescles.tsx`): quan la cançó no porta
+  caràtula —cap de les baixades de YouTube no en porta—, el quadrat del
+  panell l'ocupa un dibuix SVG de dos plats i una taula. Els plats giren
+  mentre sona (animació `gira` a `globals.css`, en pausa quan es pausa), els
+  braços cauen sobre el disc, i el VU es mou amb el so de debò: un
+  `AnalyserNode` de la Web Audio API llegint l'element `<audio>`.
+  **Compte si s'hi torna**: `createMediaElementSource` només es pot cridar un
+  cop per element, i a partir del moment que s'hi crida el so va als altaveus
+  *només* a través del graf, de manera que l'analitzador ha d'acabar
+  connectat a `context.destination` i el context s'ha de reprendre
+  (`resume()`) o la cançó queda muda. Per això el node viu a nivell de mòdul
+  (un per a tota l'app) i tot va dins d'un `try/catch` que, si falla, deixa
+  les barres amb una animació falsa però no toca mai la reproducció. Les
+  alçades de les barres es canvien a mà sobre els `rect` dins d'un
+  `requestAnimationFrame`, sense passar per l'estat de React.
 - **Paleta fosca** (només aquí): fons `.bg-estudi` a `globals.css`, base
   `#23262b` amb les mateixes taques difuminades que el fons clar però en to
   mitjanit; targetes `bg-white/[0.06]` amb vora `border-white/10`; barra del

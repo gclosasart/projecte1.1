@@ -199,3 +199,11 @@ select {
 body:has(.bg-estudi) {
   background: #23262b;
 }
+
+/* Els plats de la taula de mescles del reproductor (/musica), que giren
+   mentre sona la cançó i es queden quiets quan es pausa. */
+@keyframes gira {
+  to {
+    transform: rotate(360deg);
+  }
+}

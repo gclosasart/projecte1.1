@@ -2,13 +2,16 @@
 
 import type { Canco, Lletra } from "./biblioteca";
 import { LletraEnCurs } from "./LletraEnCurs";
-import { IconaLletra, IconaNota } from "./icones";
+import { IconaLletra } from "./icones";
+import { TaulaDeMescles } from "./TaulaDeMescles";
 
 type Props = {
   canco: Canco | null;
   caratulaUrl: string | null;
   lletra: Lletra | null;
   posicio: number;
+  reproduint: boolean;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
   onSalta: (segons: number) => void;
   onLletra: () => void;
 };
@@ -18,18 +21,29 @@ type Props = {
  * caràtula gran i la lletra avançant sola. A les estretes no es dibuixa; allà
  * l'espai és per a la llista.
  */
-export function PanellAraSona({ canco, caratulaUrl, lletra, posicio, onSalta, onLletra }: Props) {
+export function PanellAraSona({
+  canco,
+  caratulaUrl,
+  lletra,
+  posicio,
+  reproduint,
+  audioRef,
+  onSalta,
+  onLletra,
+}: Props) {
   const teLletra = Boolean(lletra?.text.trim());
 
   return (
     <aside className="sticky top-6 hidden max-h-[calc(100vh-11rem)] flex-col rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-lg shadow-black/20 lg:flex">
-      <div className="flex aspect-square w-full shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/[0.06] text-zinc-600">
+      {/* Si la cançó porta caràtula, mana ella; si no (cap dels fitxers
+          baixats de YouTube no en porta), hi ha la taula de mescles. */}
+      <div className="flex aspect-square w-full shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/[0.06] p-2 text-zinc-600">
         {caratulaUrl ? (
           // Blob del dispositiu: next/image no el pot optimitzar.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={caratulaUrl} alt="" className="h-full w-full object-cover" />
+          <img src={caratulaUrl} alt="" className="-m-2 h-full w-full object-cover" />
         ) : (
-          <IconaNota className="h-16 w-16" />
+          <TaulaDeMescles audioRef={audioRef} reproduint={reproduint} />
         )}
       </div>
 
