@@ -704,7 +704,9 @@ export function Reproductor() {
 
   return (
     <div className="flex flex-1 flex-col bg-estudi">
-      <header className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6">
+      {/* La mateixa amplada i els mateixos marges que el contingut de sota,
+          perquè les vores quadrin, i el text centrat a sobre de tot plegat. */}
+      <header className="mx-auto w-full max-w-3xl px-4 py-6 text-center sm:px-6 lg:max-w-6xl">
         <p className="text-xs font-medium uppercase tracking-wide text-teal-400">Reproductor</p>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-50">Música</h1>
         <p className="mt-1 text-sm text-zinc-300">
