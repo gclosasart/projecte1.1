@@ -67,7 +67,7 @@ export function BarraReproduccio({
 
   return (
     <div className="sticky bottom-0 z-10 border-t border-white/10 bg-[#1c1f23]/95 backdrop-blur">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-4 py-3 sm:px-6 lg:max-w-none lg:px-8">
         <div className="flex items-center gap-3">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/10 text-zinc-500">
             {caratulaUrl ? (

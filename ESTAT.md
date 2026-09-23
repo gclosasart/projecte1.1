@@ -268,8 +268,11 @@ importants:
   no nota cap salt (provat sembrant una base de dades v1 a mà i obrint el
   reproductor). El pas a la v3 no migra res: qui no tingui llistes comença
   amb el magatzem buit.
-- **Pantalla partida a l'escriptori** (a partir de `lg`): a l'esquerra la
-  biblioteca de sempre, a la dreta un panell enganxat (`PanellAraSona.tsx`)
+- **Pantalla partida a l'escriptori** (a partir de `lg`), ocupant tota
+  l'amplada de la finestra (`lg:max-w-none lg:px-8` a la capçalera, al
+  contingut i a la barra de sota, perquè les tres quedin alineades; el
+  panell de la dreta passa de 20rem a 24rem a partir de `xl`): a l'esquerra
+  la biblioteca de sempre, a la dreta un panell enganxat (`PanellAraSona.tsx`)
   amb la caràtula gran, el títol i la lletra de la cançó que sona, avançant
   sola si està sincronitzada. Es va fer perquè en pantalla ampla l'app era
   una columna estreta amb molt buit als costats (l'usuari va triar aquesta

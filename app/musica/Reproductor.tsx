@@ -706,7 +706,7 @@ export function Reproductor() {
     <div className="flex flex-1 flex-col bg-estudi">
       {/* La mateixa amplada i els mateixos marges que el contingut de sota,
           perquè les vores quadrin, i el text centrat a sobre de tot plegat. */}
-      <header className="mx-auto w-full max-w-3xl px-4 py-6 text-center sm:px-6 lg:max-w-6xl">
+      <header className="mx-auto w-full max-w-3xl px-4 py-6 text-center sm:px-6 lg:max-w-none lg:px-8">
         <p className="text-xs font-medium uppercase tracking-wide text-teal-400">Reproductor</p>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-50">Música</h1>
         <p className="mt-1 text-sm text-zinc-300">
@@ -714,7 +714,7 @@ export function Reproductor() {
         </p>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-8 sm:px-6 lg:grid lg:max-w-6xl lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-5">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-8 sm:px-6 lg:grid lg:max-w-none lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-5 lg:px-8 xl:grid-cols-[minmax(0,1fr)_24rem]">
         <div className="space-y-4">
           <InstalaApp />
 
