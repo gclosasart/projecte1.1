@@ -231,6 +231,15 @@ importants:
   el permís es perd en amagar-la). Amb el karaoke obert, la lletra segueix la
   cançó que sona: si la següent no en té, ofereix enganxar-la. Editant-la des
   d'aquí, en tancar l'editor es torna al karaoke.
+  Per escurçar el camí de copiar-enganxar hi ha tres ajudes (2026-09-23):
+  el nom dels fitxers de YouTube es neteja en importar-los (`netejaSoroll` a
+  `etiquetes.ts` treu "Video Oficial", "youtube", resolucions, i descarta
+  l'últim tros del nom quan repeteix l'artista, que és el canal); la caixa de
+  la lletra té un enllaç **"Busca la lletra"** que obre una cerca de Google
+  amb artista, títol i "lyrics" ja escrits (la cerca i el copia-enganxa els
+  fa la persona: l'app no baixa mai cap lletra); i el text enganxat s'endreça
+  en desar-lo (`netejaLletra` a `format.ts`: salts de línia, espais i línies
+  buides de més, sense esborrar mai text).
   **Context**: es va comprovar que els MP3 baixats de YouTube de l'usuari no
   porten cap etiqueta (ni ID3, ni ID3v1, ni APE: cap ni una, ni tan sols
   títol), així que la via de llegir la lletra del fitxer no serveix amb els

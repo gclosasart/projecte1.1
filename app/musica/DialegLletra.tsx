@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Canco } from "./biblioteca";
+import { consultaDeLletra } from "./etiquetes";
+import { netejaLletra } from "./format";
+import { IconaCerca } from "./icones";
 
 type Props = {
   canco: Canco;
@@ -18,6 +21,9 @@ export function DialegLletra({ canco, lletra, onDesa, onTanca }: Props) {
   const [editant, setEditant] = useState(!lletra);
   const [text, setText] = useState(lletra);
   const camp = useRef<HTMLTextAreaElement>(null);
+  // La cerca la fa la persona: l'app només hi porta amb el títol i l'artista
+  // ja escrits, i el text el copia i l'enganxa ella.
+  const cerca = `https://www.google.com/search?q=${encodeURIComponent(consultaDeLletra(canco.titol, canco.artista))}`;
 
   useEffect(() => {
     if (editant) camp.current?.focus();
@@ -54,9 +60,18 @@ export function DialegLletra({ canco, lletra, onDesa, onTanca }: Props) {
               aria-label="Lletra de la cançó"
               className="mt-3 min-h-40 flex-1 resize-none rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm leading-relaxed text-zinc-100 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
             />
-            <p className="mt-2 text-xs text-zinc-500">
-              Es queda en aquest dispositiu, com les cançons: no es puja enlloc.
-            </p>
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+              <a
+                href={cerca}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-200 transition-colors hover:bg-white/10"
+              >
+                <IconaCerca className="h-4 w-4" />
+                Busca la lletra
+              </a>
+              <p className="text-xs text-zinc-500">Es queda en aquest dispositiu.</p>
+            </div>
             <div className="mt-3 flex items-center justify-end gap-2">
               {lletra && (
                 <button
@@ -73,9 +88,11 @@ export function DialegLletra({ canco, lletra, onDesa, onTanca }: Props) {
               <button
                 type="button"
                 onClick={() => {
-                  onDesa(text);
+                  const endrecada = netejaLletra(text);
+                  setText(endrecada);
+                  onDesa(endrecada);
                   setEditant(false);
-                  if (!text.trim()) onTanca();
+                  if (!endrecada) onTanca();
                 }}
                 className="rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-teal-400"
               >

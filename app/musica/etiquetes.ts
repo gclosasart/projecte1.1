@@ -153,21 +153,63 @@ function sincSegur(bytes: Uint8Array): number {
   return bytes.reduce((total, byte) => total * 128 + (byte & 0x7f), 0);
 }
 
+// Brossa que els descarregadors de YouTube enganxen al nom del fitxer i que
+// no forma part del títol de la cançó.
+const SOROLL =
+  /\b(?:official\s+(?:music\s+)?video|official\s+audio|video\s+oficial|audio\s+oficial|videoclip(?:\s+oficial)?|lyrics?\s+video|video\s+lyrics?|con\s+letra|letra\s+oficial|visualizer|youtube|hd|hq|4k|1080p|720p|320\s*kbps)\b/gi;
+
+/**
+ * Treu del text la brossa típica dels noms de YouTube i els claudàtors o
+ * parèntesis que només la contenien. No toca coses com "feat. X", que sí que
+ * ajuden a trobar la cançó.
+ */
+export function netejaSoroll(text: string): string {
+  return text
+    .replace(/[([{][^)\]}]*[)\]}]/g, (tros) => (SOROLL.test(tros) ? " " : tros))
+    .replace(SOROLL, " ")
+    .replace(/\s{2,}/g, " ")
+    .replace(/^[\s\-–—_.·|]+|[\s\-–—_.·|]+$/g, "")
+    .trim();
+}
+
 /** Pla B quan el fitxer no porta etiquetes: "01 - Artista - Títol.mp3". */
 export function etiquetesDelNom(nomFitxer: string): { titol: string; artista?: string } {
-  const net = nomFitxer
-    .replace(/\.[^.]+$/, "")
-    .replace(/_/g, " ")
-    .replace(/^\s*\d{1,3}\s*[-.]?\s+/, "") // número de pista del davant
-    .trim();
+  const net = netejaSoroll(
+    nomFitxer
+      .replace(/\.[^.]+$/, "")
+      .replace(/_/g, " ")
+      .replace(/^\s*\d{1,3}\s*[-.]?\s+/, "") // número de pista del davant
+      .trim(),
+  );
 
-  const parts = net.split(" - ");
+  const parts = net
+    .split(/\s+[-–—]\s+/)
+    .map((tros) => netejaSoroll(tros))
+    .filter(Boolean);
+
+  // "WOS - MELON VINO - WOS DS3": l'últim tros repeteix l'artista perquè és
+  // el nom del canal de YouTube, no part del títol.
+  if (parts.length >= 3) {
+    const primer = parts[0].toLowerCase();
+    const ultim = parts[parts.length - 1].toLowerCase();
+    if (ultim.includes(primer) || primer.includes(ultim)) parts.pop();
+  }
+
   if (parts.length >= 2) {
-    const artista = parts[0].trim();
-    const titol = parts.slice(1).join(" - ").trim();
+    const artista = parts[0];
+    const titol = parts.slice(1).join(" - ");
     if (artista && titol) return { titol, artista };
   }
-  return { titol: net || nomFitxer };
+  return { titol: parts[0] || net || nomFitxer };
+}
+
+/** La cerca que obre el botó "Busca la lletra": artista, títol i "lyrics". */
+export function consultaDeLletra(titol: string, artista: string): string {
+  const net = [artista, titol]
+    .map((tros) => netejaSoroll(tros || ""))
+    .filter((tros) => tros && tros.toLowerCase() !== "artista desconegut")
+    .join(" ");
+  return `${net} lyrics`.trim();
 }
 
 /**

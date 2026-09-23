@@ -24,3 +24,18 @@ export function formatMida(bytes: number): string {
   const decimals = valor < 10 && unitat > 1 ? 1 : 0;
   return `${valor.toLocaleString("ca-ES", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })} ${unitats[unitat]}`;
 }
+
+/**
+ * Endreça la lletra enganxada: salts de línia d'un sol tipus, sense espais
+ * sobrants als extrems de cada línia i sense parades de tres línies buides.
+ * No esborra mai text: només espais.
+ */
+export function netejaLletra(text: string): string {
+  return text
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .map((linia) => linia.trim())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
