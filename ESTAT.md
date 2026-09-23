@@ -208,8 +208,25 @@ importants:
   cal sortir a la biblioteca). Esborrar una llista no toca cap cançó. El que
   sona segueix sempre el que es veu: dins d'una llista, "següent" va a la
   següent d'aquella llista. La llista oberta es recorda entre sessions.
-- **La base de dades va per la versió 3**: el camp `ordre` a cada cançó (v2) i
-  el magatzem `llistes` (v3).
+- **Lletres de les cançons** (primer pas de tres cap a un mode karaoke, fet el
+  2026-09-23): el botó de la lletra és a la barra del reproductor, al costat
+  de l'ordre aleatori, i obre la lletra de la cançó que sona
+  (`DialegLletra.tsx`); si encara no en té, s'obre directament amb la caixa
+  per enganxar-la. El text es desa tal qual al magatzem `lletres` d'IndexedDB
+  (v4), a part de les cançons, perquè llistar la biblioteca no hagi de
+  carregar-les totes; com a objecte `{ text }` i no com a text pelat, per
+  poder-hi afegir els temps de cada línia sense migrar res. Saber quines
+  cançons en tenen es fa amb `getAllKeys` (només els ids). Els dos passos que
+  falten: la pantalla de karaoke a pantalla completa, i un sincronitzador que
+  marqui el temps de cada línia tocant un botó mentre sona.
+  **Context**: es va comprovar que els MP3 baixats de YouTube de l'usuari no
+  porten cap etiqueta (ni ID3, ni ID3v1, ni APE: cap ni una, ni tan sols
+  títol), així que la via de llegir la lletra del fitxer no serveix amb els
+  seus fitxers i la lletra l'ha d'enganxar ell. No fer mai un scraper de
+  Spotify o de cap servei de lletres: són continguts llicenciats i va contra
+  les seves condicions.
+- **La base de dades va per la versió 4**: el camp `ordre` a cada cançó (v2),
+  el magatzem `llistes` (v3) i el magatzem `lletres` (v4).
   La migració des de la versió 1 (`onupgradeneeded` a `biblioteca.ts`)
   numera les cançons que ja hi havia per ordre alfabètic d'artista/àlbum/
   títol, que és com es veien abans, de manera que qui ja tingués biblioteca

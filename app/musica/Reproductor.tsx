@@ -10,8 +10,11 @@ import {
   espaiUsat,
   desaLlista,
   desaOrdre,
+  desaLletra,
+  idsAmbLletra,
   llistaCancons,
   llistaLlistes,
+  obtenLletra,
   obtenAudio,
   obtenCaratula,
   ordenaCancons,
@@ -25,6 +28,7 @@ import { BarraLlistes } from "./BarraLlistes";
 import { CapcaleraLlista } from "./CapcaleraLlista";
 import { DialegAfegirCancons } from "./DialegAfegirCancons";
 import { BarraReproduccio } from "./BarraReproduccio";
+import { DialegLletra } from "./DialegLletra";
 import { DialegLlistes } from "./DialegLlistes";
 import { InstalaApp } from "./InstalaApp";
 import { LlistaCancons } from "./LlistaCancons";
@@ -65,6 +69,9 @@ export function Reproductor() {
   const [llistaActiva, setLlistaActiva] = useState<string | null>(null);
   const [cancoPerAfegir, setCancoPerAfegir] = useState<Canco | null>(null);
   const [afegintALlista, setAfegintALlista] = useState(false);
+  // Només els ids: saber qui té lletra no ha de costar carregar-les totes.
+  const [ambLletra, setAmbLletra] = useState<Set<string>>(new Set());
+  const [lletraOberta, setLletraOberta] = useState<{ canco: Canco; text: string } | null>(null);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const urlAudio = useRef<string | null>(null);
@@ -117,10 +124,15 @@ export function Reproductor() {
     let viu = true;
     (async () => {
       try {
-        const [desades, desadesLlistes] = await Promise.all([llistaCancons(), llistaLlistes()]);
+        const [desades, desadesLlistes, idsLletres] = await Promise.all([
+          llistaCancons(),
+          llistaLlistes(),
+          idsAmbLletra(),
+        ]);
         if (!viu) return;
         setCancons(desades);
         setLlistes(desadesLlistes);
+        setAmbLletra(new Set(idsLletres));
 
         const preferencies = llegeixPreferencies();
         if (preferencies) {
@@ -456,6 +468,11 @@ export function Reproductor() {
       try {
         await esborraCanco(canco.id);
         setCancons((previes) => previes.filter((altra) => altra.id !== canco.id));
+        setAmbLletra((previs) => {
+          const seguents = new Set(previs);
+          seguents.delete(canco.id);
+          return seguents;
+        });
         // Si era a alguna llista, treu-la'n: si no, hi quedaria un forat.
         setLlistes((previes) =>
           previes.map((altra) => {
@@ -510,6 +527,30 @@ export function Reproductor() {
     },
     [cancons, llista],
   );
+
+  const obreLletra = useCallback(async () => {
+    if (!cancoActual) return;
+    try {
+      setLletraOberta({ canco: cancoActual, text: await obtenLletra(cancoActual.id) });
+    } catch (error) {
+      setAvis(missatge(error));
+    }
+  }, [cancoActual]);
+
+  const desaLletraDe = useCallback(async (canco: Canco, text: string) => {
+    try {
+      await desaLletra(canco.id, text);
+      setAmbLletra((previs) => {
+        const seguents = new Set(previs);
+        if (text.trim()) seguents.add(canco.id);
+        else seguents.delete(canco.id);
+        return seguents;
+      });
+      setLletraOberta((oberta) => (oberta ? { ...oberta, text } : oberta));
+    } catch (error) {
+      setAvis(missatge(error));
+    }
+  }, []);
 
   const obreLlista = useCallback((id: string | null) => {
     setCerca("");
@@ -597,6 +638,7 @@ export function Reproductor() {
       audioRef.current?.pause();
       setCancons([]);
       setLlistes([]);
+      setAmbLletra(new Set());
       setLlistaActiva(null);
       setIdActual(null);
       setPosicio(0);
@@ -808,6 +850,15 @@ export function Reproductor() {
         </section>
       </main>
 
+      {lletraOberta && (
+        <DialegLletra
+          canco={lletraOberta.canco}
+          lletra={lletraOberta.text}
+          onDesa={(text) => void desaLletraDe(lletraOberta.canco, text)}
+          onTanca={() => setLletraOberta(null)}
+        />
+      )}
+
       {llista && afegintALlista && (
         <DialegAfegirCancons
           llista={llista}
@@ -836,6 +887,8 @@ export function Reproductor() {
         volum={volum}
         barreja={barreja}
         repeticio={repeticio}
+        teLletra={Boolean(idActual && ambLletra.has(idActual))}
+        onLletra={() => void obreLletra()}
         onAlterna={alterna}
         onAnterior={anterior}
         onSeguent={() => seguent()}

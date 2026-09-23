@@ -29,9 +29,10 @@ export type Llista = {
 };
 
 const DB_NOM = "musica";
-const DB_VERSIO = 3;
+const DB_VERSIO = 4;
 const CANCONS = "cancons";
 const LLISTES = "llistes";
+const LLETRES = "lletres";
 const AUDIOS = "audios";
 const CARATULES = "caratules";
 
@@ -56,6 +57,9 @@ function obreDb(): Promise<IDBDatabase> {
         // Versió 3: llistes de reproducció. No cal migrar res, qui no en
         // tingui cap simplement comença amb el magatzem buit.
         if (!db.objectStoreNames.contains(LLISTES)) db.createObjectStore(LLISTES, { keyPath: "id" });
+        // Versió 4: la lletra de cada cançó, en un magatzem a part perquè
+        // llistar la biblioteca no hagi de carregar-les totes a memòria.
+        if (!db.objectStoreNames.contains(LLETRES)) db.createObjectStore(LLETRES);
 
         // Versió 2: l'ordre de la llista deixa de ser alfabètic i passa a ser
         // el que decideixi qui escolta, arrossegant. A les cançons que ja hi
@@ -154,19 +158,46 @@ export async function obtenCaratula(id: string): Promise<Blob | undefined> {
 
 export async function esborraCanco(id: string): Promise<void> {
   const db = await obreDb();
-  const tx = db.transaction([CANCONS, AUDIOS, CARATULES], "readwrite");
+  const tx = db.transaction([CANCONS, AUDIOS, CARATULES, LLETRES], "readwrite");
   tx.objectStore(CANCONS).delete(id);
   tx.objectStore(AUDIOS).delete(id);
   tx.objectStore(CARATULES).delete(id);
+  tx.objectStore(LLETRES).delete(id);
   await esperaTransaccio(tx);
+}
+
+export async function obtenLletra(id: string): Promise<string> {
+  const db = await obreDb();
+  const tx = db.transaction(LLETRES, "readonly");
+  const desada = await esperaPeticio<{ text: string } | undefined>(tx.objectStore(LLETRES).get(id));
+  return desada?.text ?? "";
+}
+
+export async function desaLletra(id: string, text: string): Promise<void> {
+  const db = await obreDb();
+  const tx = db.transaction(LLETRES, "readwrite");
+  // Es desa com a objecte, i no com a text pelat, per poder-hi afegir més
+  // endavant els temps de cada línia sense haver de migrar res.
+  if (text.trim()) tx.objectStore(LLETRES).put({ text }, id);
+  else tx.objectStore(LLETRES).delete(id);
+  await esperaTransaccio(tx);
+}
+
+/** Quines cançons tenen lletra, sense carregar-ne cap: només les claus. */
+export async function idsAmbLletra(): Promise<string[]> {
+  const db = await obreDb();
+  const tx = db.transaction(LLETRES, "readonly");
+  const claus = await esperaPeticio<IDBValidKey[]>(tx.objectStore(LLETRES).getAllKeys());
+  return claus.map(String);
 }
 
 export async function buidaBiblioteca(): Promise<void> {
   const db = await obreDb();
-  const tx = db.transaction([CANCONS, AUDIOS, CARATULES, LLISTES], "readwrite");
+  const tx = db.transaction([CANCONS, AUDIOS, CARATULES, LLISTES, LLETRES], "readwrite");
   tx.objectStore(CANCONS).clear();
   tx.objectStore(AUDIOS).clear();
   tx.objectStore(CARATULES).clear();
+  tx.objectStore(LLETRES).clear();
   // Sense cançons, les llistes quedarien totes buides i amb nom de fantasma.
   tx.objectStore(LLISTES).clear();
   await esperaTransaccio(tx);

@@ -232,6 +232,20 @@ export function IconaEnrere({ className }: Props) {
   );
 }
 
+export function IconaLletra({ className }: Props) {
+  return (
+    <Svg className={className}>
+      <path
+        d="M5 5h14M5 9.5h14M5 14h9M5 18.5h6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}
+
 export function IconaCerca({ className }: Props) {
   return (
     <Svg className={className}>

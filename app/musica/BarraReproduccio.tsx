@@ -6,6 +6,7 @@ import type { Repeticio } from "./tipus";
 import {
   IconaAnterior,
   IconaBarreja,
+  IconaLletra,
   IconaNota,
   IconaPausa,
   IconaReprodueix,
@@ -23,6 +24,8 @@ type Props = {
   volum: number;
   barreja: boolean;
   repeticio: Repeticio;
+  teLletra: boolean;
+  onLletra: () => void;
   onAlterna: () => void;
   onAnterior: () => void;
   onSeguent: () => void;
@@ -47,6 +50,8 @@ export function BarraReproduccio({
   volum,
   barreja,
   repeticio,
+  teLletra,
+  onLletra,
   onAlterna,
   onAnterior,
   onSeguent,
@@ -158,6 +163,19 @@ export function BarraReproduccio({
               }`}
             >
               <IconaRepeticio className="h-5 w-5" una={repeticio === "una"} />
+            </button>
+
+            <button
+              type="button"
+              onClick={onLletra}
+              disabled={!canco}
+              title={teLletra ? "Mira la lletra" : "Encara no té lletra: enganxa-la"}
+              aria-label="Lletra de la cançó"
+              className={`rounded-lg p-2 transition-colors disabled:opacity-30 ${
+                teLletra ? "bg-teal-400/15 text-teal-300" : "text-zinc-500 hover:bg-white/10"
+              }`}
+            >
+              <IconaLletra className="h-5 w-5" />
             </button>
           </div>
 
