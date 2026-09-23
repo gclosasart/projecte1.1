@@ -20,6 +20,7 @@ import {
   ordenaCancons,
   ordenaPerEtiquetes,
   type Canco,
+  type Lletra,
   type Llista,
 } from "./biblioteca";
 import { etiquetesDelNom, llegeixDurada, llegeixEtiquetes } from "./etiquetes";
@@ -30,6 +31,7 @@ import { DialegAfegirCancons } from "./DialegAfegirCancons";
 import { BarraReproduccio } from "./BarraReproduccio";
 import { DialegLletra } from "./DialegLletra";
 import { Karaoke } from "./Karaoke";
+import { Sincronitzador } from "./Sincronitzador";
 import { DialegLlistes } from "./DialegLlistes";
 import { InstalaApp } from "./InstalaApp";
 import { LlistaCancons } from "./LlistaCancons";
@@ -72,9 +74,10 @@ export function Reproductor() {
   const [afegintALlista, setAfegintALlista] = useState(false);
   // Només els ids: saber qui té lletra no ha de costar carregar-les totes.
   const [ambLletra, setAmbLletra] = useState<Set<string>>(new Set());
-  const [lletraOberta, setLletraOberta] = useState<{ canco: Canco; text: string } | null>(null);
+  const [lletraOberta, setLletraOberta] = useState<{ canco: Canco; lletra: Lletra } | null>(null);
   const [modeKaraoke, setModeKaraoke] = useState(false);
   const [veniaDeKaraoke, setVeniaDeKaraoke] = useState(false);
+  const [sincronitzant, setSincronitzant] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const urlAudio = useRef<string | null>(null);
@@ -377,7 +380,7 @@ export function Reproductor() {
   // Barra espaiadora per posar en marxa i aturar, com a qualsevol reproductor.
   useEffect(() => {
     const alPremer = (event: KeyboardEvent) => {
-      if (event.code !== "Space") return;
+      if (event.code !== "Space" || sincronitzant) return;
       const origen = event.target as HTMLElement | null;
       const etiqueta = origen?.tagName;
       if (etiqueta === "INPUT" || etiqueta === "TEXTAREA" || etiqueta === "BUTTON") return;
@@ -386,7 +389,7 @@ export function Reproductor() {
     };
     window.addEventListener("keydown", alPremer);
     return () => window.removeEventListener("keydown", alPremer);
-  }, [alterna]);
+  }, [alterna, sincronitzant]);
 
   const importa = useCallback(
     async (fitxers: File[]) => {
@@ -534,10 +537,10 @@ export function Reproductor() {
   const obreLletra = useCallback(async () => {
     if (!cancoActual) return;
     try {
-      const text = await obtenLletra(cancoActual.id);
-      setLletraOberta({ canco: cancoActual, text });
+      const lletra = await obtenLletra(cancoActual.id);
+      setLletraOberta({ canco: cancoActual, lletra });
       // Amb lletra, el que vols és cantar; sense, escriure-la.
-      setModeKaraoke(Boolean(text.trim()));
+      setModeKaraoke(Boolean(lletra.text.trim()));
     } catch (error) {
       setAvis(missatge(error));
     }
@@ -547,18 +550,19 @@ export function Reproductor() {
     setLletraOberta(null);
     setModeKaraoke(false);
     setVeniaDeKaraoke(false);
+    setSincronitzant(false);
   }, []);
 
-  const desaLletraDe = useCallback(async (canco: Canco, text: string) => {
+  const desaLletraDe = useCallback(async (canco: Canco, lletra: Lletra) => {
     try {
-      await desaLletra(canco.id, text);
+      await desaLletra(canco.id, lletra);
       setAmbLletra((previs) => {
         const seguents = new Set(previs);
-        if (text.trim()) seguents.add(canco.id);
+        if (lletra.text.trim()) seguents.add(canco.id);
         else seguents.delete(canco.id);
         return seguents;
       });
-      setLletraOberta((oberta) => (oberta ? { ...oberta, text } : oberta));
+      setLletraOberta((oberta) => (oberta ? { ...oberta, lletra } : oberta));
     } catch (error) {
       setAvis(missatge(error));
     }
@@ -569,8 +573,8 @@ export function Reproductor() {
     let cancelat = false;
     (async () => {
       try {
-        const text = await obtenLletra(cancoActual.id);
-        if (!cancelat) setLletraOberta({ canco: cancoActual, text });
+        const lletra = await obtenLletra(cancoActual.id);
+        if (!cancelat) setLletraOberta({ canco: cancoActual, lletra });
       } catch (error) {
         if (!cancelat) setAvis(missatge(error));
       }
@@ -878,10 +882,30 @@ export function Reproductor() {
         </section>
       </main>
 
-      {lletraOberta && modeKaraoke && (
+      {lletraOberta && sincronitzant && (
+        <Sincronitzador
+          canco={lletraOberta.canco}
+          lletra={lletraOberta.lletra}
+          reproduint={reproduint}
+          posicio={posicio}
+          onAlterna={alterna}
+          onSalta={salta}
+          onDesa={(temps) => {
+            void desaLletraDe(lletraOberta.canco, { ...lletraOberta.lletra, temps });
+            setSincronitzant(false);
+            setModeKaraoke(true);
+          }}
+          onTanca={() => {
+            setSincronitzant(false);
+            setModeKaraoke(true);
+          }}
+        />
+      )}
+
+      {lletraOberta && modeKaraoke && !sincronitzant && (
         <Karaoke
           canco={lletraOberta.canco}
-          lletra={lletraOberta.text}
+          lletra={lletraOberta.lletra}
           reproduint={reproduint}
           posicio={posicio}
           durada={durada}
@@ -893,18 +917,35 @@ export function Reproductor() {
             setVeniaDeKaraoke(true);
             setModeKaraoke(false);
           }}
+          onSincronitza={() => {
+            // Per marcar les línies cal sentir-les des del principi.
+            salta(0);
+            reprodueixEnCarregar.current = false;
+            audioRef.current?.play().catch(() => setReproduint(false));
+            setSincronitzant(true);
+          }}
           onTanca={tancaLletra}
         />
       )}
 
-      {lletraOberta && !modeKaraoke && (
+      {lletraOberta && !modeKaraoke && !sincronitzant && (
         <DialegLletra
           canco={lletraOberta.canco}
-          lletra={lletraOberta.text}
-          onDesa={(text) => void desaLletraDe(lletraOberta.canco, text)}
+          lletra={lletraOberta.lletra.text}
+          onDesa={(text) => {
+            // Si el text canvia de nombre de línies, els temps marcats ja no
+            // hi encaixen i es descarten; si només s'hi ha corregit una
+            // paraula, es conserven.
+            const mateixesLinies =
+              lletraOberta.lletra.temps?.length === text.split("\n").length;
+            void desaLletraDe(lletraOberta.canco, {
+              text,
+              temps: mateixesLinies ? lletraOberta.lletra.temps : null,
+            });
+          }}
           onTanca={() => {
             // Si s'hi ha entrat des del karaoke, s'hi torna en acabar.
-            if (veniaDeKaraoke && lletraOberta.text.trim()) {
+            if (veniaDeKaraoke && lletraOberta.lletra.text.trim()) {
               setVeniaDeKaraoke(false);
               setModeKaraoke(true);
               return;

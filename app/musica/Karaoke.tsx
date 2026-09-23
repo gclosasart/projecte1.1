@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { Canco } from "./biblioteca";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { Canco, Lletra } from "./biblioteca";
 import { formatDurada } from "./format";
 import {
   IconaAnterior,
@@ -14,7 +14,7 @@ import {
 
 type Props = {
   canco: Canco;
-  lletra: string;
+  lletra: Lletra;
   reproduint: boolean;
   posicio: number;
   durada: number;
@@ -23,6 +23,7 @@ type Props = {
   onSeguent: () => void;
   onSalta: (segons: number) => void;
   onEdita: () => void;
+  onSincronitza: () => void;
   onTanca: () => void;
 };
 
@@ -41,9 +42,45 @@ export function Karaoke({
   onSeguent,
   onSalta,
   onEdita,
+  onSincronitza,
   onTanca,
 }: Props) {
   const [mida, setMida] = useState(() => llegeixMida());
+  const contenidor = useRef<HTMLElement>(null);
+  const referencies = useRef<(HTMLParagraphElement | null)[]>([]);
+
+  const linies = useMemo(() => lletra.text.split("\n"), [lletra.text]);
+  // Els temps només valen si encaixen amb el text que hi ha ara.
+  const temps = lletra.temps && lletra.temps.length === linies.length ? lletra.temps : null;
+
+  // La línia que sona és la del temps més tardà que ja hagi passat, no
+  // l'última de la llista que hagi passat: si en sincronitzar-la se n'ha
+  // repetit alguna fora d'ordre, així no es despista.
+  const actual = useMemo(() => {
+    if (!temps) return -1;
+    let trobada = -1;
+    let millor = -Infinity;
+    for (let i = 0; i < temps.length; i += 1) {
+      const quan = temps[i];
+      if (typeof quan === "number" && quan <= posicio && quan >= millor) {
+        millor = quan;
+        trobada = i;
+      }
+    }
+    return trobada;
+  }, [temps, posicio]);
+
+  // La línia que sona, sempre al mig de la pantalla. Es mou la caixa i no
+  // scrollIntoView, que arrossegaria també la pàgina de sota.
+  useEffect(() => {
+    const caixa = contenidor.current;
+    const linia = referencies.current[actual];
+    if (!caixa || !linia || actual < 0) return;
+    caixa.scrollTo({
+      top: linia.offsetTop - caixa.clientHeight / 2 + linia.offsetHeight / 2,
+      behavior: "smooth",
+    });
+  }, [actual]);
 
   useEffect(() => {
     const ambEscapada = (event: KeyboardEvent) => event.key === "Escape" && onTanca();
@@ -118,12 +155,33 @@ export function Karaoke({
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 pb-4">
-        {lletra.trim() ? (
+      <main
+        ref={contenidor}
+        className="relative mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-6 pb-4"
+      >
+        {lletra.text.trim() && temps ? (
+          linies.map((linia, i) => (
+            <p
+              key={`${i}-${linia}`}
+              ref={(element) => {
+                referencies.current[i] = element;
+              }}
+              onClick={() => {
+                const quan = temps[i];
+                if (typeof quan === "number") onSalta(quan);
+              }}
+              className={`cursor-pointer py-1 text-center font-semibold leading-relaxed transition-colors ${MIDES[mida]} ${
+                i === actual ? "text-teal-300" : "text-zinc-500"
+              }`}
+            >
+              {linia || "\u00a0"}
+            </p>
+          ))
+        ) : lletra.text.trim() ? (
           <p
             className={`whitespace-pre-wrap text-center font-semibold leading-relaxed text-zinc-100 ${MIDES[mida]}`}
           >
-            {lletra}
+            {lletra.text}
           </p>
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
@@ -192,14 +250,21 @@ export function Karaoke({
             </button>
           </div>
 
-          {lletra.trim() && (
-            <div className="mt-1 flex justify-center">
+          {lletra.text.trim() && (
+            <div className="mt-1 flex justify-center gap-4">
               <button
                 type="button"
                 onClick={onEdita}
                 className="rounded-full px-3 py-1 text-xs font-semibold text-zinc-500 transition-colors hover:text-teal-300"
               >
                 Edita la lletra
+              </button>
+              <button
+                type="button"
+                onClick={onSincronitza}
+                className="rounded-full px-3 py-1 text-xs font-semibold text-zinc-500 transition-colors hover:text-teal-300"
+              >
+                {temps ? "Torna a sincronitzar" : "Sincronitza-la"}
               </button>
             </div>
           )}

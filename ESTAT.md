@@ -217,9 +217,7 @@ importants:
   carregar-les totes; com a objecte `{ text }` i no com a text pelat, per
   poder-hi afegir els temps de cada línia sense migrar res. Saber quines
   cançons en tenen es fa amb `getAllKeys` (només els ids). Els dos passos que
-  falta el tercer pas: un sincronitzador que marqui el temps de cada línia
-  tocant un botó mentre sona, perquè la lletra vagi sola i es ressalti la
-  línia que toca.
+  El mode karaoke està acabat: lletra, pantalla i sincronització.
 - **Pantalla de karaoke** (`Karaoke.tsx`, segon pas): el botó de la lletra hi
   entra directament quan la cançó ja en té (si no, obre la caixa per
   enganxar-la). Ocupa tota la pantalla amb la classe `bg-estudi`, així que
@@ -231,6 +229,22 @@ importants:
   el permís es perd en amagar-la). Amb el karaoke obert, la lletra segueix la
   cançó que sona: si la següent no en té, ofereix enganxar-la. Editant-la des
   d'aquí, en tancar l'editor es torna al karaoke.
+- **Sincronitzador** (`Sincronitzador.tsx`, tercer pas): des del karaoke,
+  "Sincronitza-la" torna la cançó al principi, la posa en marxa i ensenya les
+  línies d'una en una; es toca "Marca" (o la barra espaiadora) quan entra
+  cadascuna. Es desa un temps per línia a `Lletra.temps`, amb `null` a les que
+  no s'han marcat, i es descompten 0,25 s de reacció perquè la lletra no vagi
+  al darrere del so. Les línies buides se salten soles (separen estrofes) i
+  "Desfés" treu l'última marca i torna el so on començava la línia anterior.
+  Es pot desar a mitges. Amb temps desats, el karaoke ressalta la línia que
+  sona, la manté centrada i deixa saltar a qualsevol línia tocant-la.
+  **Dos detalls que van costar de trobar**: els temps només s'apliquen si
+  n'hi ha exactament un per línia del text (si s'edita la lletra i canvia el
+  nombre de línies, es descarten; si només es corregeix una paraula, es
+  conserven), i la línia que sona es tria pel **temps més tardà que ja ha
+  passat**, no per l'última de la llista que hagi passat: si en sincronitzar
+  se'n repeteix alguna fora d'ordre, amb la regla ingènua el ressaltat feia
+  salts.
   Per escurçar el camí de copiar-enganxar hi ha tres ajudes (2026-09-23):
   el nom dels fitxers de YouTube es neteja en importar-los (`netejaSoroll` a
   `etiquetes.ts` treu "Video Oficial", "youtube", resolucions, i descarta

@@ -20,6 +20,16 @@ export type Canco = {
   afegit: number; // epoch ms
 };
 
+/**
+ * La lletra d'una cançó. "temps" té una entrada per cada línia del text, amb
+ * el segon en què entra; val null a les línies que encara no s'han marcat, i
+ * tot ell és null mentre la lletra no s'ha sincronitzat.
+ */
+export type Lletra = {
+  text: string;
+  temps: (number | null)[] | null;
+};
+
 /** Una llista de reproducció: un nom i les cançons que hi ha, en ordre. */
 export type Llista = {
   id: string;
@@ -166,19 +176,17 @@ export async function esborraCanco(id: string): Promise<void> {
   await esperaTransaccio(tx);
 }
 
-export async function obtenLletra(id: string): Promise<string> {
+export async function obtenLletra(id: string): Promise<Lletra> {
   const db = await obreDb();
   const tx = db.transaction(LLETRES, "readonly");
-  const desada = await esperaPeticio<{ text: string } | undefined>(tx.objectStore(LLETRES).get(id));
-  return desada?.text ?? "";
+  const desada = await esperaPeticio<Partial<Lletra> | undefined>(tx.objectStore(LLETRES).get(id));
+  return { text: desada?.text ?? "", temps: desada?.temps ?? null };
 }
 
-export async function desaLletra(id: string, text: string): Promise<void> {
+export async function desaLletra(id: string, lletra: Lletra): Promise<void> {
   const db = await obreDb();
   const tx = db.transaction(LLETRES, "readwrite");
-  // Es desa com a objecte, i no com a text pelat, per poder-hi afegir més
-  // endavant els temps de cada línia sense haver de migrar res.
-  if (text.trim()) tx.objectStore(LLETRES).put({ text }, id);
+  if (lletra.text.trim()) tx.objectStore(LLETRES).put(lletra, id);
   else tx.objectStore(LLETRES).delete(id);
   await esperaTransaccio(tx);
 }
