@@ -316,6 +316,37 @@ importants:
   amb la variable `--progres` que hi posa el component): amb `accent-color`
   sol, el Chrome deixa el solc buit d'un gris clar fix i quedava una ratlla
   blanca damunt del fons fosc.
+- **Sincronització entre dispositius** (2026-09-23): projecte de Supabase
+  **a part**, `musica` (ref `didfulvurpupsooacrzu`, eu-west-2) — no toca ni
+  el de Trempt (`NXing`) ni `avi`, per petició explícita de l'usuari. Taules
+  `cancons`, `llistes` i `sincronitzacions`, totes amb RLS per `auth.uid()`.
+  Cal configurar dues variables d'entorn (a Vercel i, per provar-ho en local,
+  a `.env.local`); **són `NEXT_PUBLIC_`, o sigui que s'incrusten a la compilació
+  i cal tornar a desplegar després d'afegir-les**:
+  - `NEXT_PUBLIC_MUSICA_SUPABASE_URL` = `https://didfulvurpupsooacrzu.supabase.co`
+  - `NEXT_PUBLIC_MUSICA_SUPABASE_ANON_KEY` = la clau `anon` del projecte
+    (Supabase → musica → Settings → API Keys). És pública per disseny: qui
+    protegeix les dades és l'RLS.
+
+  Sense aquestes variables, la targeta de sincronització no es dibuixa i
+  l'app funciona exactament com abans. **Al núvol no hi puja cap fitxer
+  d'àudio**: només llistes, lletres, temps de cada línia, ordre i títols. Les
+  cançons es casen entre dispositius per empremta (`nomFitxer:mida`), el
+  mateix criteri que ja evitava importar dos cops el mateix fitxer.
+  "Puja el que tinc" deixa el núvol igual que el dispositiu (esborra al núvol
+  el que ja no hi és) i només surt al dispositiu marcat com a principal
+  (`musica:dispositiu-principal` al localStorage). "Porta'm l'últim" no
+  esborra mai cap cançó ni cap fitxer: actualitza les que hi ha i refà les
+  llistes amb les cançons presents. Codi a `nuvol.ts` (dades) i
+  `Sincronitzacio.tsx` (interfície).
+  **Pendent de provar de debò**: des del contenidor de les sessions de Claude
+  no s'hi arriba (la política de xarxa bloqueja `supabase.co`), així que la
+  volta completa —crear compte, pujar i baixar— l'ha de fer l'usuari. El que
+  sí que està comprovat: l'esquema, que l'RLS no dispara cap avís de
+  seguretat, i que la targeta es dibuixa i falla amb educació sense servidor.
+  **Compte amb el pla gratuït**: els projectes s'adormen després d'una
+  setmana sense activitat i la sincronització no respondrà fins que es
+  desperti des del panell de Supabase.
 - Per fer-lo anar en local: `npm run dev` i obrir
   `http://localhost:3000/musica` (no `127.0.0.1`, que en desenvolupament fa
   que Next bloquegi el websocket de recàrrega automàtica i la pàgina es

@@ -36,7 +36,9 @@ import { Sincronitzador } from "./Sincronitzador";
 import { DialegLlistes } from "./DialegLlistes";
 import { InstalaApp } from "./InstalaApp";
 import { LlistaCancons } from "./LlistaCancons";
+import { nuvolConfigurat } from "./nuvol";
 import { PanellAraSona } from "./PanellAraSona";
+import { Sincronitzacio } from "./Sincronitzacio";
 import { IconaCarpeta, IconaCerca, IconaMes, IconaNota } from "./icones";
 import type { Repeticio } from "./tipus";
 
@@ -569,6 +571,23 @@ export function Reproductor() {
     };
   }, [idActual]);
 
+  /** Torna a llegir del dispositiu tot el que pot haver canviat de cop. */
+  const recarrega = useCallback(async () => {
+    try {
+      const [desades, desadesLlistes, idsLletres] = await Promise.all([
+        llistaCancons(),
+        llistaLlistes(),
+        idsAmbLletra(),
+      ]);
+      setCancons(desades);
+      setLlistes(desadesLlistes);
+      setAmbLletra(new Set(idsLletres));
+      if (idActual) setLletraActual(await obtenLletra(idActual));
+    } catch (error) {
+      setAvis(missatge(error));
+    }
+  }, [idActual]);
+
   const obreLletra = useCallback(async () => {
     if (!cancoActual) return;
     try {
@@ -906,6 +925,8 @@ export function Reproductor() {
               </div>
             )}
           </section>
+
+          {nuvolConfigurat && !llista && <Sincronitzacio onCanvis={() => void recarrega()} />}
         </div>
 
         <PanellAraSona
