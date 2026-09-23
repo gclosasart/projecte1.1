@@ -268,6 +268,17 @@ importants:
   no nota cap salt (provat sembrant una base de dades v1 a mà i obrint el
   reproductor). El pas a la v3 no migra res: qui no tingui llistes comença
   amb el magatzem buit.
+- **Pantalla partida a l'escriptori** (a partir de `lg`): a l'esquerra la
+  biblioteca de sempre, a la dreta un panell enganxat (`PanellAraSona.tsx`)
+  amb la caràtula gran, el títol i la lletra de la cançó que sona, avançant
+  sola si està sincronitzada. Es va fer perquè en pantalla ampla l'app era
+  una columna estreta amb molt buit als costats (l'usuari va triar aquesta
+  opció per sobre de decorar els marges amb dibuixos, que queda pendent). Per
+  sota de `lg` el panell no es dibuixa: al mòbil l'espai és per a la llista.
+  El ressaltat de la línia que sona viu a `LletraEnCurs.tsx`, compartit entre
+  el panell i el karaoke perquè els dos ensenyin exactament el mateix. La
+  lletra de la cançó que sona es carrega un sol cop a `lletraActual` i la fan
+  servir el panell, el karaoke, l'editor i el sincronitzador.
 - **Paleta fosca** (només aquí): fons `.bg-estudi` a `globals.css`, base
   `#23262b` amb les mateixes taques difuminades que el fons clar però en to
   mitjanit; targetes `bg-white/[0.06]` amb vora `border-white/10`; barra del

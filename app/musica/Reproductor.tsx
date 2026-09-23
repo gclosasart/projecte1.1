@@ -35,6 +35,7 @@ import { Sincronitzador } from "./Sincronitzador";
 import { DialegLlistes } from "./DialegLlistes";
 import { InstalaApp } from "./InstalaApp";
 import { LlistaCancons } from "./LlistaCancons";
+import { PanellAraSona } from "./PanellAraSona";
 import { IconaCarpeta, IconaCerca, IconaMes, IconaNota } from "./icones";
 import type { Repeticio } from "./tipus";
 
@@ -74,7 +75,8 @@ export function Reproductor() {
   const [afegintALlista, setAfegintALlista] = useState(false);
   // Només els ids: saber qui té lletra no ha de costar carregar-les totes.
   const [ambLletra, setAmbLletra] = useState<Set<string>>(new Set());
-  const [lletraOberta, setLletraOberta] = useState<{ canco: Canco; lletra: Lletra } | null>(null);
+  const [lletraActual, setLletraActual] = useState<Lletra | null>(null);
+  const [editantLletra, setEditantLletra] = useState(false);
   const [modeKaraoke, setModeKaraoke] = useState(false);
   const [veniaDeKaraoke, setVeniaDeKaraoke] = useState(false);
   const [sincronitzant, setSincronitzant] = useState(false);
@@ -534,47 +536,14 @@ export function Reproductor() {
     [cancons, llista],
   );
 
-  const obreLletra = useCallback(async () => {
-    if (!cancoActual) return;
-    try {
-      const lletra = await obtenLletra(cancoActual.id);
-      setLletraOberta({ canco: cancoActual, lletra });
-      // Amb lletra, el que vols és cantar; sense, escriure-la.
-      setModeKaraoke(Boolean(lletra.text.trim()));
-    } catch (error) {
-      setAvis(missatge(error));
-    }
-  }, [cancoActual]);
-
-  const tancaLletra = useCallback(() => {
-    setLletraOberta(null);
-    setModeKaraoke(false);
-    setVeniaDeKaraoke(false);
-    setSincronitzant(false);
-  }, []);
-
-  const desaLletraDe = useCallback(async (canco: Canco, lletra: Lletra) => {
-    try {
-      await desaLletra(canco.id, lletra);
-      setAmbLletra((previs) => {
-        const seguents = new Set(previs);
-        if (lletra.text.trim()) seguents.add(canco.id);
-        else seguents.delete(canco.id);
-        return seguents;
-      });
-      setLletraOberta((oberta) => (oberta ? { ...oberta, lletra } : oberta));
-    } catch (error) {
-      setAvis(missatge(error));
-    }
-  }, []);
-
+  // La lletra de la cançó que sona es té sempre a punt: la fan servir el
+  // panell de la dreta, el karaoke i el sincronitzador.
   useEffect(() => {
-    if (!modeKaraoke || !cancoActual) return;
     let cancelat = false;
     (async () => {
       try {
-        const lletra = await obtenLletra(cancoActual.id);
-        if (!cancelat) setLletraOberta({ canco: cancoActual, lletra });
+        const lletra = idActual ? await obtenLletra(idActual) : null;
+        if (!cancelat) setLletraActual(lletra);
       } catch (error) {
         if (!cancelat) setAvis(missatge(error));
       }
@@ -582,7 +551,45 @@ export function Reproductor() {
     return () => {
       cancelat = true;
     };
-  }, [modeKaraoke, cancoActual]);
+  }, [idActual]);
+
+  const obreLletra = useCallback(async () => {
+    if (!cancoActual) return;
+    try {
+      const lletra = await obtenLletra(cancoActual.id);
+      setLletraActual(lletra);
+      // Amb lletra, el que vols és cantar; sense, escriure-la.
+      if (lletra.text.trim()) setModeKaraoke(true);
+      else setEditantLletra(true);
+    } catch (error) {
+      setAvis(missatge(error));
+    }
+  }, [cancoActual]);
+
+  const tancaLletra = useCallback(() => {
+    setEditantLletra(false);
+    setModeKaraoke(false);
+    setVeniaDeKaraoke(false);
+    setSincronitzant(false);
+  }, []);
+
+  const desaLletraDe = useCallback(
+    async (canco: Canco, lletra: Lletra) => {
+      try {
+        await desaLletra(canco.id, lletra);
+        setAmbLletra((previs) => {
+          const seguents = new Set(previs);
+          if (lletra.text.trim()) seguents.add(canco.id);
+          else seguents.delete(canco.id);
+          return seguents;
+        });
+        if (canco.id === idActual) setLletraActual(lletra);
+      } catch (error) {
+        setAvis(missatge(error));
+      }
+    },
+    [idActual],
+  );
 
   const obreLlista = useCallback((id: string | null) => {
     setCerca("");
@@ -705,193 +712,204 @@ export function Reproductor() {
         </p>
       </header>
 
-      <main className="mx-auto w-full max-w-3xl flex-1 space-y-4 px-4 pb-8 sm:px-6">
-        <InstalaApp />
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-8 sm:px-6 lg:grid lg:max-w-6xl lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-5">
+        <div className="space-y-4">
+          <InstalaApp />
 
-        {avis && (
-          <div className="flex items-start justify-between gap-3 rounded-2xl border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
-            <p>{avis}</p>
-            <button
-              type="button"
-              onClick={() => setAvis(null)}
-              className="shrink-0 text-xs font-semibold uppercase tracking-wide text-amber-300 hover:text-amber-100"
-            >
-              Entesos
-            </button>
-          </div>
-        )}
-
-        <section
-          onDragOver={(event) => {
-            if (llista) return;
-            event.preventDefault();
-            setArrossegant(true);
-          }}
-          onDragLeave={() => setArrossegant(false)}
-          onDrop={(event) => {
-            if (llista) return;
-            event.preventDefault();
-            setArrossegant(false);
-            const fitxers = Array.from(event.dataTransfer.files ?? []);
-            if (fitxers.length) void importa(fitxers);
-          }}
-          className={`rounded-2xl border px-4 py-4 shadow-lg shadow-black/20 transition-colors sm:px-6 ${
-            arrossegant ? "border-teal-400 bg-teal-400/15" : "border-white/10 bg-white/[0.06]"
-          }`}
-        >
-          {llista ? (
-            <CapcaleraLlista
-              llista={llista}
-              onTorna={() => obreLlista(null)}
-              onCanviaNom={canviaNomLlista}
-              onEsborra={treuLlista}
-              onAfegeix={() => setAfegintALlista(true)}
-            />
-          ) : (
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h2 className="text-sm font-semibold text-zinc-50">La teva biblioteca</h2>
-                <p className="text-xs text-zinc-400">
-                  {carregant
-                    ? "Carregant…"
-                    : `${cancons.length} ${cancons.length === 1 ? "cançó" : "cançons"} · ${formatMida(totalMida)}`}
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => inputFitxers.current?.click()}
-                  className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition-colors hover:bg-teal-400"
-                >
-                  <IconaMes className="h-5 w-5" />
-                  Afegeix cançons
-                </button>
-                <button
-                  type="button"
-                  onClick={() => inputCarpeta.current?.click()}
-                  className="hidden items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 sm:inline-flex"
-                >
-                  <IconaCarpeta className="h-5 w-5" />
-                  Una carpeta
-                </button>
-              </div>
-            </div>
-          )}
-
-          <input
-            ref={inputFitxers}
-            type="file"
-            accept="audio/*,.mp3,.m4a,.aac,.flac,.ogg,.oga,.opus,.wav"
-            multiple
-            onChange={desDelInput}
-            className="hidden"
-          />
-          <input ref={inputCarpeta} type="file" multiple onChange={desDelInput} className="hidden" />
-
-          {progres && (
-            <div className="mt-4">
-              <p className="text-xs text-zinc-400">
-                Afegint cançons… {progres.fets} de {progres.total}
-              </p>
-              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-full rounded-full bg-teal-400 transition-all"
-                  style={{ width: `${Math.round((progres.fets / progres.total) * 100)}%` }}
-                />
-              </div>
-            </div>
-          )}
-
-          {!llista && cancons.length > 0 && (
-            <BarraLlistes llistes={llistes} onObre={obreLlista} onCrea={creaLlista} />
-          )}
-
-          {!llista && cancons.length > 0 && (
-            <div className="relative mt-4">
-              <IconaCerca className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
-              <input
-                type="search"
-                value={cerca}
-                onChange={(event) => setCerca(event.target.value)}
-                placeholder="Cerca per títol, artista o àlbum"
-                aria-label="Cerca a la biblioteca"
-                className="w-full rounded-xl border border-white/10 bg-white/[0.06] py-2 pl-11 pr-3 text-sm text-zinc-50 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
-              />
-              {cerca.trim() && visibles.length > 1 && (
-                <p className="mt-2 text-xs text-zinc-500">
-                  Buida la cerca per poder tornar a canviar l&apos;ordre arrossegant.
-                </p>
-              )}
-            </div>
-          )}
-
-          <div className="mt-2">
-            {carregant ? null : cancons.length === 0 ? (
-              <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
-                <IconaNota className="h-10 w-10 text-teal-400" />
-                <p className="text-sm font-semibold text-zinc-50">Encara no hi ha cap cançó</p>
-                <p className="max-w-sm text-xs text-zinc-400">
-                  Afegeix fitxers d&apos;àudio del teu dispositiu (o arrossega&apos;ls aquí, si ets a l&apos;ordinador).
-                  Es queden desats aquí dins: no es pugen enlloc.
-                </p>
-              </div>
-            ) : visibles.length === 0 && cerca.trim() ? (
-              <p className="px-2 py-8 text-center text-sm text-zinc-400">
-                Cap cançó coincideix amb «{cerca}».
-              </p>
-            ) : visibles.length === 0 ? (
-              <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
-                <IconaNota className="h-10 w-10 text-teal-400" />
-                <p className="text-sm font-semibold text-zinc-50">Aquesta llista encara és buida</p>
-                <p className="max-w-sm text-xs text-zinc-400">
-                  Ves a «Totes les cançons» i toca el botó de llistes de cada cançó que hi vulguis
-                  posar.
-                </p>
-              </div>
-            ) : (
-              <LlistaCancons
-                cancons={visibles}
-                idActual={idActual}
-                reproduint={reproduint}
-                reordenable={!cerca.trim()}
-                enLlista={Boolean(llista)}
-                onTria={triaCanco}
-                onEsborra={treu}
-                onReordena={reordena}
-                onAfegeixALlista={setCancoPerAfegir}
-                onTreuDeLlista={treuDeLlista}
-              />
-            )}
-          </div>
-
-          {cancons.length > 0 && !llista && (
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3 text-xs text-zinc-400">
-              <span>
-                {espai
-                  ? `${formatMida(espai.usat)} ocupats en aquest dispositiu${
-                      espai.disponible ? ` de ${formatMida(espai.disponible)} disponibles` : ""
-                    }`
-                  : "Desat en aquest dispositiu"}
-              </span>
-              <button type="button" onClick={buida} className="font-semibold text-red-400 hover:text-red-300">
-                Esborra-ho tot
+          {avis && (
+            <div className="flex items-start justify-between gap-3 rounded-2xl border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
+              <p>{avis}</p>
+              <button
+                type="button"
+                onClick={() => setAvis(null)}
+                className="shrink-0 text-xs font-semibold uppercase tracking-wide text-amber-300 hover:text-amber-100"
+              >
+                Entesos
               </button>
             </div>
           )}
-        </section>
+
+          <section
+            onDragOver={(event) => {
+              if (llista) return;
+              event.preventDefault();
+              setArrossegant(true);
+            }}
+            onDragLeave={() => setArrossegant(false)}
+            onDrop={(event) => {
+              if (llista) return;
+              event.preventDefault();
+              setArrossegant(false);
+              const fitxers = Array.from(event.dataTransfer.files ?? []);
+              if (fitxers.length) void importa(fitxers);
+            }}
+            className={`rounded-2xl border px-4 py-4 shadow-lg shadow-black/20 transition-colors sm:px-6 ${
+              arrossegant ? "border-teal-400 bg-teal-400/15" : "border-white/10 bg-white/[0.06]"
+            }`}
+          >
+            {llista ? (
+              <CapcaleraLlista
+                llista={llista}
+                onTorna={() => obreLlista(null)}
+                onCanviaNom={canviaNomLlista}
+                onEsborra={treuLlista}
+                onAfegeix={() => setAfegintALlista(true)}
+              />
+            ) : (
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-sm font-semibold text-zinc-50">La teva biblioteca</h2>
+                  <p className="text-xs text-zinc-400">
+                    {carregant
+                      ? "Carregant…"
+                      : `${cancons.length} ${cancons.length === 1 ? "cançó" : "cançons"} · ${formatMida(totalMida)}`}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => inputFitxers.current?.click()}
+                    className="inline-flex items-center gap-2 rounded-full bg-teal-500 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition-colors hover:bg-teal-400"
+                  >
+                    <IconaMes className="h-5 w-5" />
+                    Afegeix cançons
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => inputCarpeta.current?.click()}
+                    className="hidden items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/10 sm:inline-flex"
+                  >
+                    <IconaCarpeta className="h-5 w-5" />
+                    Una carpeta
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <input
+              ref={inputFitxers}
+              type="file"
+              accept="audio/*,.mp3,.m4a,.aac,.flac,.ogg,.oga,.opus,.wav"
+              multiple
+              onChange={desDelInput}
+              className="hidden"
+            />
+            <input ref={inputCarpeta} type="file" multiple onChange={desDelInput} className="hidden" />
+
+            {progres && (
+              <div className="mt-4">
+                <p className="text-xs text-zinc-400">
+                  Afegint cançons… {progres.fets} de {progres.total}
+                </p>
+                <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-teal-400 transition-all"
+                    style={{ width: `${Math.round((progres.fets / progres.total) * 100)}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {!llista && cancons.length > 0 && (
+              <BarraLlistes llistes={llistes} onObre={obreLlista} onCrea={creaLlista} />
+            )}
+
+            {!llista && cancons.length > 0 && (
+              <div className="relative mt-4">
+                <IconaCerca className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
+                <input
+                  type="search"
+                  value={cerca}
+                  onChange={(event) => setCerca(event.target.value)}
+                  placeholder="Cerca per títol, artista o àlbum"
+                  aria-label="Cerca a la biblioteca"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.06] py-2 pl-11 pr-3 text-sm text-zinc-50 outline-none transition-colors placeholder:text-zinc-500 focus:border-teal-400"
+                />
+                {cerca.trim() && visibles.length > 1 && (
+                  <p className="mt-2 text-xs text-zinc-500">
+                    Buida la cerca per poder tornar a canviar l&apos;ordre arrossegant.
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div className="mt-2">
+              {carregant ? null : cancons.length === 0 ? (
+                <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
+                  <IconaNota className="h-10 w-10 text-teal-400" />
+                  <p className="text-sm font-semibold text-zinc-50">Encara no hi ha cap cançó</p>
+                  <p className="max-w-sm text-xs text-zinc-400">
+                    Afegeix fitxers d&apos;àudio del teu dispositiu (o arrossega&apos;ls aquí, si ets a l&apos;ordinador).
+                    Es queden desats aquí dins: no es pugen enlloc.
+                  </p>
+                </div>
+              ) : visibles.length === 0 && cerca.trim() ? (
+                <p className="px-2 py-8 text-center text-sm text-zinc-400">
+                  Cap cançó coincideix amb «{cerca}».
+                </p>
+              ) : visibles.length === 0 ? (
+                <div className="flex flex-col items-center gap-3 px-4 py-10 text-center">
+                  <IconaNota className="h-10 w-10 text-teal-400" />
+                  <p className="text-sm font-semibold text-zinc-50">Aquesta llista encara és buida</p>
+                  <p className="max-w-sm text-xs text-zinc-400">
+                    Ves a «Totes les cançons» i toca el botó de llistes de cada cançó que hi vulguis
+                    posar.
+                  </p>
+                </div>
+              ) : (
+                <LlistaCancons
+                  cancons={visibles}
+                  idActual={idActual}
+                  reproduint={reproduint}
+                  reordenable={!cerca.trim()}
+                  enLlista={Boolean(llista)}
+                  onTria={triaCanco}
+                  onEsborra={treu}
+                  onReordena={reordena}
+                  onAfegeixALlista={setCancoPerAfegir}
+                  onTreuDeLlista={treuDeLlista}
+                />
+              )}
+            </div>
+
+            {cancons.length > 0 && !llista && (
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3 text-xs text-zinc-400">
+                <span>
+                  {espai
+                    ? `${formatMida(espai.usat)} ocupats en aquest dispositiu${
+                        espai.disponible ? ` de ${formatMida(espai.disponible)} disponibles` : ""
+                      }`
+                    : "Desat en aquest dispositiu"}
+                </span>
+                <button type="button" onClick={buida} className="font-semibold text-red-400 hover:text-red-300">
+                  Esborra-ho tot
+                </button>
+              </div>
+            )}
+          </section>
+        </div>
+
+        <PanellAraSona
+          canco={cancoActual}
+          caratulaUrl={caratulaUrl}
+          lletra={lletraActual}
+          posicio={posicio}
+          onSalta={salta}
+          onLletra={() => void obreLletra()}
+        />
       </main>
 
-      {lletraOberta && sincronitzant && (
+      {cancoActual && lletraActual && sincronitzant && (
         <Sincronitzador
-          canco={lletraOberta.canco}
-          lletra={lletraOberta.lletra}
+          canco={cancoActual}
+          lletra={lletraActual}
           reproduint={reproduint}
           posicio={posicio}
           onAlterna={alterna}
           onSalta={salta}
           onDesa={(temps) => {
-            void desaLletraDe(lletraOberta.canco, { ...lletraOberta.lletra, temps });
+            void desaLletraDe(cancoActual, { ...lletraActual, temps });
             setSincronitzant(false);
             setModeKaraoke(true);
           }}
@@ -902,10 +920,10 @@ export function Reproductor() {
         />
       )}
 
-      {lletraOberta && modeKaraoke && !sincronitzant && (
+      {cancoActual && lletraActual && modeKaraoke && !sincronitzant && (
         <Karaoke
-          canco={lletraOberta.canco}
-          lletra={lletraOberta.lletra}
+          canco={cancoActual}
+          lletra={lletraActual}
           reproduint={reproduint}
           posicio={posicio}
           durada={durada}
@@ -928,24 +946,24 @@ export function Reproductor() {
         />
       )}
 
-      {lletraOberta && !modeKaraoke && !sincronitzant && (
+      {cancoActual && editantLletra && !modeKaraoke && !sincronitzant && (
         <DialegLletra
-          canco={lletraOberta.canco}
-          lletra={lletraOberta.lletra.text}
+          canco={cancoActual}
+          lletra={lletraActual?.text ?? ""}
           onDesa={(text) => {
             // Si el text canvia de nombre de línies, els temps marcats ja no
             // hi encaixen i es descarten; si només s'hi ha corregit una
             // paraula, es conserven.
             const mateixesLinies =
-              lletraOberta.lletra.temps?.length === text.split("\n").length;
-            void desaLletraDe(lletraOberta.canco, {
+              lletraActual?.temps?.length === text.split("\n").length;
+            void desaLletraDe(cancoActual, {
               text,
-              temps: mateixesLinies ? lletraOberta.lletra.temps : null,
+              temps: mateixesLinies ? (lletraActual?.temps ?? null) : null,
             });
           }}
           onTanca={() => {
             // Si s'hi ha entrat des del karaoke, s'hi torna en acabar.
-            if (veniaDeKaraoke && lletraOberta.lletra.text.trim()) {
+            if (veniaDeKaraoke && lletraActual?.text.trim()) {
               setVeniaDeKaraoke(false);
               setModeKaraoke(true);
               return;
