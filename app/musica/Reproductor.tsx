@@ -5,6 +5,7 @@ import {
   buidaBiblioteca,
   demanaEmmagatzematgePersistent,
   desaCanco,
+  desaMetadades,
   esborraCanco,
   esborraLlista,
   espaiUsat,
@@ -23,7 +24,7 @@ import {
   type Lletra,
   type Llista,
 } from "./biblioteca";
-import { etiquetesDelNom, llegeixDurada, llegeixEtiquetes } from "./etiquetes";
+import { etiquetesDelNom, llegeixDurada, llegeixEtiquetes, netejaEtiquetes } from "./etiquetes";
 import { formatMida } from "./format";
 import { BarraLlistes } from "./BarraLlistes";
 import { CapcaleraLlista } from "./CapcaleraLlista";
@@ -138,7 +139,22 @@ export function Reproductor() {
           idsAmbLletra(),
         ]);
         if (!viu) return;
-        setCancons(desades);
+
+        // Les cançons importades abans que existís la neteja del nom porten
+        // encara la brossa de YouTube al títol ("[VIDEOCLIP OFICIAL]", el
+        // canal...). S'endrecen aquí i es desen ja netes. Als títols que
+        // vénen d'etiquetes bones no els toca res, així que passar-hi cada
+        // cop no fa cap mal.
+        const netejades = desades.map((canco) => {
+          const { titol, artista } = netejaEtiquetes(canco.titol, canco.artista);
+          return titol === canco.titol && artista === canco.artista
+            ? canco
+            : { ...canco, titol, artista };
+        });
+        const canviades = netejades.filter((canco, i) => canco !== desades[i]);
+        if (canviades.length) void desaMetadades(canviades);
+
+        setCancons(netejades);
         setLlistes(desadesLlistes);
         setAmbLletra(new Set(idsLletres));
 

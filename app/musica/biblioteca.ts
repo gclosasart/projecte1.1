@@ -129,6 +129,15 @@ export function ordenaPerEtiquetes(cancons: Canco[]): Canco[] {
   );
 }
 
+/** Desa títol, artista i companyia d'unes quantes cançons, sense tocar el so. */
+export async function desaMetadades(cancons: Canco[]): Promise<void> {
+  if (!cancons.length) return;
+  const db = await obreDb();
+  const tx = db.transaction(CANCONS, "readwrite");
+  for (const canco of cancons) tx.objectStore(CANCONS).put(canco);
+  await esperaTransaccio(tx);
+}
+
 /** Desa el número d'ordre de les cançons que han canviat de lloc. */
 export async function desaOrdre(posicions: { id: string; ordre: number }[]): Promise<void> {
   if (!posicions.length) return;

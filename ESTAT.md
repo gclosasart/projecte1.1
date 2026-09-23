@@ -245,6 +245,13 @@ importants:
   passat**, no per l'última de la llista que hagi passat: si en sincronitzar
   se'n repeteix alguna fora d'ordre, amb la regla ingènua el ressaltat feia
   salts.
+  En obrir l'app, els títols i artistes ja desats passen per `netejaEtiquetes`
+  (`etiquetes.ts`) i, si canvien, es tornen a desar: així les cançons
+  importades abans que existís la neteja del nom deixen de portar la brossa de
+  YouTube. **No es torna a deduir del nom del fitxer a posta**: les cançons
+  amb etiquetes ID3 bones hi perdrien. Passar-hi a cada arrencada no fa cap
+  mal perquè netejar el que ja és net no canvia res, i només s'escriu al disc
+  el que canvia.
   Per escurçar el camí de copiar-enganxar hi ha tres ajudes (2026-09-23):
   el nom dels fitxers de YouTube es neteja en importar-los (`netejaSoroll` a
   `etiquetes.ts` treu "Video Oficial", "youtube", resolucions, i descarta

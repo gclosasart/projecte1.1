@@ -158,18 +158,71 @@ function sincSegur(bytes: Uint8Array): number {
 const SOROLL =
   /\b(?:official\s+(?:music\s+)?video|official\s+audio|video\s+oficial|audio\s+oficial|videoclip(?:\s+oficial)?|lyrics?\s+video|video\s+lyrics?|con\s+letra|letra\s+oficial|visualizer|youtube|hd|hq|4k|1080p|720p|320\s*kbps)\b/gi;
 
+// Paraules que, si són les úniques dins d'un parèntesi o claudàtor, el fan
+// tot ell prescindible: "(LETRA)", "[Official Video]", "(Audio Oficial)".
+// Fora de parèntesis no es toquen, que "letra" pot ser part d'un títol.
+const PARAULES_BROSSA = new Set([
+  "letra", "letras", "lyric", "lyrics", "video", "vídeo", "videoclip", "audio", "àudio",
+  "oficial", "official", "music", "musica", "música", "visualizer", "hd", "hq", "4k",
+  "1080p", "720p", "youtube", "con", "subtitulada", "subtitulado", "full", "completa",
+]);
+
+function nomesBrossa(tros: string): boolean {
+  const paraules = tros
+    .replace(/^[([{]|[)\]}]$/g, "")
+    .split(/[\s.·|_-]+/)
+    .filter(Boolean);
+  return paraules.length > 0 && paraules.every((paraula) => PARAULES_BROSSA.has(paraula.toLowerCase()));
+}
+
 /**
  * Treu del text la brossa típica dels noms de YouTube i els claudàtors o
- * parèntesis que només la contenien. No toca coses com "feat. X", que sí que
- * ajuden a trobar la cançó.
+ * parèntesis que només la contenien. No toca coses com "feat. X" o el "(s)"
+ * de "Me Encanta(s)", que sí que formen part del títol.
  */
 export function netejaSoroll(text: string): string {
   return text
-    .replace(/[([{][^)\]}]*[)\]}]/g, (tros) => (SOROLL.test(tros) ? " " : tros))
+    .replace(/[([{][^)\]}]*[)\]}]/g, (tros) => (SOROLL.test(tros) || nomesBrossa(tros) ? " " : tros))
     .replace(SOROLL, " ")
     .replace(/\s{2,}/g, " ")
     .replace(/^[\s\-–—_.·|]+|[\s\-–—_.·|]+$/g, "")
     .trim();
+}
+
+/**
+ * Si un tros del nom és, de fet, el canal de qui ha penjat el vídeo: repeteix
+ * l'artista, sencer o en part ("Eminem" dins de "EminemVEVO").
+ */
+function esElCanalDeLArtista(tros: string, artista: string): boolean {
+  const net = (text: string) => text.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, "").trim();
+  const candidat = net(tros);
+  const referencia = net(artista);
+  if (!candidat || !referencia) return false;
+  if (candidat.includes(referencia) || referencia.includes(candidat)) return true;
+  const sensEspais = candidat.replace(/\s+/g, "");
+  return referencia
+    .split(/\s+/)
+    .filter((paraula) => paraula.length >= 4)
+    .some((paraula) => sensEspais.includes(paraula));
+}
+
+/**
+ * Neteja un títol i un artista que ja estaven desats. No torna a mirar el nom
+ * del fitxer a posta: les cançons que portessin etiquetes bones hi perdrien.
+ */
+export function netejaEtiquetes(
+  titol: string,
+  artista: string,
+): { titol: string; artista: string } {
+  const artistaNet = netejaSoroll(artista) || artista;
+  const parts = netejaSoroll(titol)
+    .split(/\s+[-–—]\s+/)
+    .map((tros) => netejaSoroll(tros))
+    .filter(Boolean);
+
+  if (parts.length >= 2 && esElCanalDeLArtista(parts[parts.length - 1], artistaNet)) parts.pop();
+
+  return { titol: parts.join(" - ") || titol, artista: artistaNet };
 }
 
 /** Pla B quan el fitxer no porta etiquetes: "01 - Artista - Títol.mp3". */
@@ -189,11 +242,7 @@ export function etiquetesDelNom(nomFitxer: string): { titol: string; artista?: s
 
   // "WOS - MELON VINO - WOS DS3": l'últim tros repeteix l'artista perquè és
   // el nom del canal de YouTube, no part del títol.
-  if (parts.length >= 3) {
-    const primer = parts[0].toLowerCase();
-    const ultim = parts[parts.length - 1].toLowerCase();
-    if (ultim.includes(primer) || primer.includes(ultim)) parts.pop();
-  }
+  if (parts.length >= 3 && esElCanalDeLArtista(parts[parts.length - 1], parts[0])) parts.pop();
 
   if (parts.length >= 2) {
     const artista = parts[0];
