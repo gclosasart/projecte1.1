@@ -217,8 +217,20 @@ importants:
   carregar-les totes; com a objecte `{ text }` i no com a text pelat, per
   poder-hi afegir els temps de cada línia sense migrar res. Saber quines
   cançons en tenen es fa amb `getAllKeys` (només els ids). Els dos passos que
-  falten: la pantalla de karaoke a pantalla completa, i un sincronitzador que
-  marqui el temps de cada línia tocant un botó mentre sona.
+  falta el tercer pas: un sincronitzador que marqui el temps de cada línia
+  tocant un botó mentre sona, perquè la lletra vagi sola i es ressalti la
+  línia que toca.
+- **Pantalla de karaoke** (`Karaoke.tsx`, segon pas): el botó de la lletra hi
+  entra directament quan la cançó ja en té (si no, obre la caixa per
+  enganxar-la). Ocupa tota la pantalla amb la classe `bg-estudi`, així que
+  hereta el fons i l'estil de les barres del reproductor. Porta els controls
+  mínims per no haver-ne de sortir (enrere, pausa, següent i la barra de
+  progrés), botons A-/A+ per a la mida de la lletra (es recorda a
+  `musica:karaoke-mida`), i demana un `wakeLock` de pantalla perquè el mòbil
+  no s'apagui mentre es canta (es torna a demanar en tornar a l'app, perquè
+  el permís es perd en amagar-la). Amb el karaoke obert, la lletra segueix la
+  cançó que sona: si la següent no en té, ofereix enganxar-la. Editant-la des
+  d'aquí, en tancar l'editor es torna al karaoke.
   **Context**: es va comprovar que els MP3 baixats de YouTube de l'usuari no
   porten cap etiqueta (ni ID3, ni ID3v1, ni APE: cap ni una, ni tan sols
   títol), així que la via de llegir la lletra del fitxer no serveix amb els

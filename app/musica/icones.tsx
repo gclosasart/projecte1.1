@@ -246,6 +246,20 @@ export function IconaLletra({ className }: Props) {
   );
 }
 
+export function IconaTanca({ className }: Props) {
+  return (
+    <Svg className={className}>
+      <path
+        d="m6 6 12 12M18 6 6 18"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}
+
 export function IconaCerca({ className }: Props) {
   return (
     <Svg className={className}>

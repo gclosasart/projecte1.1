@@ -29,6 +29,7 @@ import { CapcaleraLlista } from "./CapcaleraLlista";
 import { DialegAfegirCancons } from "./DialegAfegirCancons";
 import { BarraReproduccio } from "./BarraReproduccio";
 import { DialegLletra } from "./DialegLletra";
+import { Karaoke } from "./Karaoke";
 import { DialegLlistes } from "./DialegLlistes";
 import { InstalaApp } from "./InstalaApp";
 import { LlistaCancons } from "./LlistaCancons";
@@ -72,6 +73,8 @@ export function Reproductor() {
   // Només els ids: saber qui té lletra no ha de costar carregar-les totes.
   const [ambLletra, setAmbLletra] = useState<Set<string>>(new Set());
   const [lletraOberta, setLletraOberta] = useState<{ canco: Canco; text: string } | null>(null);
+  const [modeKaraoke, setModeKaraoke] = useState(false);
+  const [veniaDeKaraoke, setVeniaDeKaraoke] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const urlAudio = useRef<string | null>(null);
@@ -531,11 +534,20 @@ export function Reproductor() {
   const obreLletra = useCallback(async () => {
     if (!cancoActual) return;
     try {
-      setLletraOberta({ canco: cancoActual, text: await obtenLletra(cancoActual.id) });
+      const text = await obtenLletra(cancoActual.id);
+      setLletraOberta({ canco: cancoActual, text });
+      // Amb lletra, el que vols és cantar; sense, escriure-la.
+      setModeKaraoke(Boolean(text.trim()));
     } catch (error) {
       setAvis(missatge(error));
     }
   }, [cancoActual]);
+
+  const tancaLletra = useCallback(() => {
+    setLletraOberta(null);
+    setModeKaraoke(false);
+    setVeniaDeKaraoke(false);
+  }, []);
 
   const desaLletraDe = useCallback(async (canco: Canco, text: string) => {
     try {
@@ -551,6 +563,22 @@ export function Reproductor() {
       setAvis(missatge(error));
     }
   }, []);
+
+  useEffect(() => {
+    if (!modeKaraoke || !cancoActual) return;
+    let cancelat = false;
+    (async () => {
+      try {
+        const text = await obtenLletra(cancoActual.id);
+        if (!cancelat) setLletraOberta({ canco: cancoActual, text });
+      } catch (error) {
+        if (!cancelat) setAvis(missatge(error));
+      }
+    })();
+    return () => {
+      cancelat = true;
+    };
+  }, [modeKaraoke, cancoActual]);
 
   const obreLlista = useCallback((id: string | null) => {
     setCerca("");
@@ -850,12 +878,39 @@ export function Reproductor() {
         </section>
       </main>
 
-      {lletraOberta && (
+      {lletraOberta && modeKaraoke && (
+        <Karaoke
+          canco={lletraOberta.canco}
+          lletra={lletraOberta.text}
+          reproduint={reproduint}
+          posicio={posicio}
+          durada={durada}
+          onAlterna={alterna}
+          onAnterior={anterior}
+          onSeguent={() => seguent()}
+          onSalta={salta}
+          onEdita={() => {
+            setVeniaDeKaraoke(true);
+            setModeKaraoke(false);
+          }}
+          onTanca={tancaLletra}
+        />
+      )}
+
+      {lletraOberta && !modeKaraoke && (
         <DialegLletra
           canco={lletraOberta.canco}
           lletra={lletraOberta.text}
           onDesa={(text) => void desaLletraDe(lletraOberta.canco, text)}
-          onTanca={() => setLletraOberta(null)}
+          onTanca={() => {
+            // Si s'hi ha entrat des del karaoke, s'hi torna en acabar.
+            if (veniaDeKaraoke && lletraOberta.text.trim()) {
+              setVeniaDeKaraoke(false);
+              setModeKaraoke(true);
+              return;
+            }
+            tancaLletra();
+          }}
         />
       )}
 
