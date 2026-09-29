@@ -1,92 +1,23 @@
-// Service worker del reproductor de música (/musica).
+// Làpida del reproductor de música.
 //
-// Viu a l'arrel del lloc, i no dins de /musica/, perquè l'àmbit d'un service
-// worker només pot ser el seu propi directori o un de més avall: des d'aquí
-// es pot registrar amb àmbit "/musica" (sense barra final), que és la ruta
-// exacta de la pàgina. La resta de l'app (el SaaS de coworking) queda fora de
-// l'àmbit i no la toca mai.
+// El reproductor vivia a /musica i ara viu al seu propi projecte
+// (musica.trempt.es). Els dispositius que se'l van instal·lar des d'aquí
+// encara duen registrat aquest service worker, i mentre existeixi seguiran
+// veient la còpia desada d'una app que ja no hi és.
 //
-// Només guarda a la memòria cau l'"esquelet" de l'aplicació. Les cançons no hi
-// passen: viuen a IndexedDB perquè és qui les hi ha posat des del seu
-// dispositiu, no s'han descarregat mai d'aquest servidor.
-
-// En desenvolupament es registra com a "/musica-sw.js?dev=1": llavors res no
-// se serveix mai de la memòria cau mentre hi hagi xarxa, perquè els fragments
-// de Next.js canvien a cada recàrrega i una còpia desada trencaria la pàgina.
-// Sense connexió, en canvi, la còpia desada segueix servint igual.
-const DESENVOLUPAMENT = new URL(self.location.href).searchParams.has("dev");
-const CAU = DESENVOLUPAMENT ? "musica-dev" : "musica-v1";
-const ESQUELET = [
-  "/musica",
-  "/musica/icona-192.png",
-  "/musica/icona-512.png",
-  "/musica/manifest.webmanifest",
-];
-
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches
-      .open(CAU)
-      // addAll és tot-o-res: si una sola peça falla (posem, sense xarxa a
-      // mig registre), no volem que el service worker no s'instal·li mai.
-      .then((cau) => Promise.allSettled(ESQUELET.map((ruta) => cau.add(ruta))))
-      .then(() => self.skipWaiting()),
-  );
-});
+// Aquest fitxer el substitueix: buida la memòria cau, es dona de baixa i
+// envia les pestanyes obertes a la casa nova. Es pot esborrar del projecte
+// quan faci temps que no li arribi cap petició.
+self.addEventListener("install", () => self.skipWaiting());
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((claus) => Promise.all(claus.filter((clau) => clau !== CAU).map((clau) => caches.delete(clau))))
-      .then(() => self.clients.claim()),
+    (async () => {
+      const claus = await caches.keys();
+      await Promise.all(claus.filter((clau) => clau.startsWith("musica")).map((clau) => caches.delete(clau)));
+      await self.registration.unregister();
+      const finestres = await self.clients.matchAll({ type: "window" });
+      for (const finestra of finestres) finestra.navigate("https://musica.trempt.es");
+    })(),
   );
 });
-
-self.addEventListener("fetch", (event) => {
-  const peticio = event.request;
-  if (peticio.method !== "GET") return;
-
-  const url = new URL(peticio.url);
-  if (url.origin !== self.location.origin) return;
-
-  // Navegació cap al reproductor: primer la xarxa (per estrenar desplegaments
-  // nous de seguida), i si no n'hi ha, la còpia desada.
-  if (peticio.mode === "navigate" && url.pathname.startsWith("/musica")) {
-    event.respondWith(xarxaPrimer(peticio, "/musica"));
-    return;
-  }
-
-  // Estàtics de Next.js i icones: en producció tenen un hash al nom o no
-  // canvien mai, així que la còpia desada sempre és bona i estalvia xarxa.
-  const esEstatic =
-    url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/musica/");
-  if (!esEstatic) return;
-
-  event.respondWith(DESENVOLUPAMENT ? xarxaPrimer(peticio) : cauPrimer(peticio));
-});
-
-async function xarxaPrimer(peticio, alternativa) {
-  try {
-    const resposta = await fetch(peticio);
-    desa(peticio, resposta.clone());
-    return resposta;
-  } catch (error) {
-    const desada = (await caches.match(peticio)) ?? (alternativa ? await caches.match(alternativa) : null);
-    if (desada) return desada;
-    throw error;
-  }
-}
-
-async function cauPrimer(peticio) {
-  const desada = await caches.match(peticio);
-  if (desada) return desada;
-  const resposta = await fetch(peticio);
-  desa(peticio, resposta.clone());
-  return resposta;
-}
-
-function desa(peticio, resposta) {
-  if (!resposta || !resposta.ok || resposta.type === "opaque") return;
-  caches.open(CAU).then((cau) => cau.put(peticio, resposta));
-}

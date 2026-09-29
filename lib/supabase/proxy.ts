@@ -9,11 +9,11 @@ const PUBLIC_PATHS = ["/login", "/invitat", "/reserva"];
 const NO_REDIRECT_IF_AUTHED = ["/invitat", "/reserva"];
 
 export async function updateSession(request: NextRequest) {
-  // El reproductor de música ("/musica" i el seu service worker
-  // "/musica-sw.js") no té res a veure amb els comptes: surt d'aquí abans de
-  // crear el client de Supabase. Així funciona igual amb la sessió oberta o
-  // sense, no paga una crida d'autenticació a cada petició, i sobretot
-  // s'obre en local encara que no hi hagi cap variable d'entorn configurada.
+  // El reproductor de música ja no viu aquí: "/musica" redirigeix al seu
+  // projecte propi i "/musica-sw.js" és la làpida que desinstal·la el service
+  // worker dels dispositius que encara el duen. Ni l'un ni l'altre tenen res a
+  // veure amb els comptes, i han de respondre encara que no hi hagi cap
+  // variable d'entorn configurada.
   if (request.nextUrl.pathname.startsWith("/musica")) {
     return NextResponse.next({ request });
   }

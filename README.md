@@ -14,23 +14,6 @@ Eina de gestió interna per a coworkings: reserves d'espais (puntuals i recurren
 - [`model-dades-v1_1.md`](./model-dades-v1_1.md)
 - [`flux-usuari-v1.pdf`](./flux-usuari-v1.pdf)
 
-## Reproductor de música (`/musica`)
-
-Dins del mateix projecte hi viu una segona aplicació, independent del SaaS: un
-reproductor de les cançons que ja tens descarregades al dispositiu. S'instal·la
-com una app (PWA) tant a l'ordinador com al mòbil, funciona sense connexió i la
-música no surt mai del navegador (es desa a IndexedDB). No comparteix compte ni
-base de dades amb la gestió de coworkings.
-
-Per provar-lo en local no calen les variables d'entorn de Supabase: `npm run dev`
-i obrir `http://localhost:3000/musica`. Des d'allà ja es pot instal·lar, i un cop
-instal·lat funciona sense connexió i sense el servidor.
-
-Opcionalment sincronitza llistes i lletres entre dispositius (mai els fitxers
-d'àudio) contra un projecte de Supabase propi, separat del SaaS. S'activa amb
-`NEXT_PUBLIC_MUSICA_SUPABASE_URL` i `NEXT_PUBLIC_MUSICA_SUPABASE_ANON_KEY`; sense
-elles, la funció no apareix.
-
 ## Desenvolupament local
 
 ```bash
